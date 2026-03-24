@@ -58,7 +58,7 @@ app.get('/api', (req, res) => {
 
 // Import routes
 import authRoutes from './routes/authRoutes.js';
-// import userRoutes from './routes/userRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 // import institutionRoutes from './routes/institutionRoutes.js';
 // import verifierRoutes from './routes/verifierRoutes.js';
 // import credentialRoutes from './routes/credentialRoutes.js';
@@ -66,7 +66,7 @@ import authRoutes from './routes/authRoutes.js';
 
 // Use routes
 app.use('/api/auth', authRoutes);
-// app.use('/api/users', userRoutes);
+app.use('/api/user', userRoutes);
 // app.use('/api/institutions', institutionRoutes);
 // app.use('/api/verifiers', verifierRoutes);
 // app.use('/api/credentials', credentialRoutes);

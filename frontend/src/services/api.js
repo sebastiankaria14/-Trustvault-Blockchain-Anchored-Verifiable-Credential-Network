@@ -120,6 +120,62 @@ export const getStoredUser = () => {
   return user ? { user: JSON.parse(user), userType } : null;
 };
 
+// ==========================================
+// User Dashboard & Wallet API Functions
+// ==========================================
+
+/**
+ * Get user dashboard statistics
+ */
+export const getDashboardStats = async () => {
+  return apiRequest('/user/dashboard/stats', { method: 'GET' });
+};
+
+/**
+ * Get all user credentials
+ */
+export const getUserCredentials = async () => {
+  return apiRequest('/user/credentials', { method: 'GET' });
+};
+
+/**
+ * Get single credential by ID
+ */
+export const getCredentialById = async (id) => {
+  return apiRequest(`/user/credentials/${id}`, { method: 'GET' });
+};
+
+/**
+ * Get verification logs for a credential
+ */
+export const getCredentialLogs = async (id) => {
+  return apiRequest(`/user/credentials/${id}/logs`, { method: 'GET' });
+};
+
+/**
+ * Get user audit log
+ */
+export const getUserAuditLog = async () => {
+  return apiRequest('/user/audit-log', { method: 'GET' });
+};
+
+/**
+ * Get user profile
+ */
+export const getUserProfile = async () => {
+  return apiRequest('/user/profile', { method: 'GET' });
+};
+
+/**
+ * Update user profile
+ */
+export const updateUserProfile = async (profileData) => {
+  return apiRequest('/user/profile', {
+    method: 'PUT',
+    body: JSON.stringify(profileData)
+  });
+};
+
 export default {
   registerUser,
   registerInstitution,
@@ -130,5 +186,12 @@ export default {
   isAuthenticated,
   getToken,
   storeAuthData,
-  getStoredUser
+  getStoredUser,
+  getDashboardStats,
+  getUserCredentials,
+  getCredentialById,
+  getCredentialLogs,
+  getUserAuditLog,
+  getUserProfile,
+  updateUserProfile
 };
