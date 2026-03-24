@@ -56,8 +56,8 @@ app.get('/api', (req, res) => {
   });
 });
 
-// Import routes (will be created later)
-// import authRoutes from './routes/authRoutes.js';
+// Import routes
+import authRoutes from './routes/authRoutes.js';
 // import userRoutes from './routes/userRoutes.js';
 // import institutionRoutes from './routes/institutionRoutes.js';
 // import verifierRoutes from './routes/verifierRoutes.js';
@@ -65,7 +65,7 @@ app.get('/api', (req, res) => {
 // import verifyRoutes from './routes/verifyRoutes.js';
 
 // Use routes
-// app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 // app.use('/api/users', userRoutes);
 // app.use('/api/institutions', institutionRoutes);
 // app.use('/api/verifiers', verifierRoutes);

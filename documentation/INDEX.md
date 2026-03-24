@@ -12,15 +12,16 @@
 |---|----------|-------|--------|------|
 | 00 | [RULES](./00-RULES.md) | - | 📘 Reference | Mar 24, 2026 |
 | 01 | [PROJECT SETUP](./01-PROJECT-SETUP.md) | Phase 0 | ✅ Complete | Mar 24, 2026 |
-| 02 | PUBLIC WEBSITE PAGES | Phase 1 | ⏳ Pending | - |
-| 03 | AUTHENTICATION SYSTEM | Phase 2 | ⏳ Pending | - |
-| 04 | USER WALLET PORTAL | Phase 3 | ⏳ Pending | - |
-| 05 | INSTITUTION PORTAL | Phase 4 | ⏳ Pending | - |
-| 06 | VERIFIER PORTAL | Phase 5 | ⏳ Pending | - |
-| 07 | SUPER ADMIN PANEL | Phase 6 | ⏳ Pending | - |
-| 08 | BLOCKCHAIN INTEGRATION | Phase 7 | ⏳ Pending | - |
-| 09 | TESTING & OPTIMIZATION | Phase 8 | ⏳ Pending | - |
-| 10 | DEPLOYMENT | Phase 9 | ⏳ Pending | - |
+| 02 | [PUBLIC WEBSITE PAGES](./02-PUBLIC-WEBSITE-PAGES.md) | Phase 1 | ✅ Complete | Mar 24, 2026 |
+| 03 | [AUTHENTICATION SYSTEM](./03-AUTHENTICATION-SYSTEM.md) | Phase 2 | ✅ Complete | Mar 24, 2026 |
+| 04 | [HOW TO RUN](./04-HOW-TO-RUN.md) | - | 📘 Reference | Mar 24, 2026 |
+| 05 | USER WALLET PORTAL | Phase 3 | ⏳ Pending | - |
+| 06 | INSTITUTION PORTAL | Phase 4 | ⏳ Pending | - |
+| 07 | VERIFIER PORTAL | Phase 5 | ⏳ Pending | - |
+| 08 | SUPER ADMIN PANEL | Phase 6 | ⏳ Pending | - |
+| 09 | BLOCKCHAIN INTEGRATION | Phase 7 | ⏳ Pending | - |
+| 10 | TESTING & OPTIMIZATION | Phase 8 | ⏳ Pending | - |
+| 11 | DEPLOYMENT | Phase 9 | ⏳ Pending | - |
 
 ---
 
@@ -43,13 +44,13 @@
 
 ## 📊 PROJECT PROGRESS
 
-### Overall Progress: 11% (Phase 0 Complete)
+### Overall Progress: 33% (Phases 0, 1, 2 Complete)
 
 | Phase | Progress | Status |
 |-------|----------|--------|
 | Phase 0: Setup | 100% | ✅ Complete |
-| Phase 1: Public Website | 20% | 🟡 In Progress |
-| Phase 2: Auth & Database | 0% | ⏳ Pending |
+| Phase 1: Public Website | 100% | ✅ Complete |
+| Phase 2: Auth & Database | 100% | ✅ Complete |
 | Phase 3: User Portal | 0% | ⏳ Pending |
 | Phase 4: Institution Portal | 0% | ⏳ Pending |
 | Phase 5: Verifier Portal | 0% | ⏳ Pending |
@@ -100,17 +101,17 @@ Express Server
 
 ## 📈 STATISTICS
 
-### Files Created: 17
-- Frontend: 7 files
-- Backend: 3 files
+### Files Created: 35+
+- Frontend: 15+ files (pages, components, services, context)
+- Backend: 10+ files (controllers, routes, middleware, utils)
 - Database: 1 file
-- Documentation: 6 files
+- Documentation: 9+ files
 
-### Lines of Code: ~900
-- Frontend: ~300 lines
-- Backend: ~150 lines
-- Database: ~200 lines
-- Documentation: ~250 lines
+### Lines of Code: ~3000+
+- Frontend: ~1500 lines
+- Backend: ~800 lines
+- Database: ~250 lines
+- Documentation: ~500 lines
 
 ### Technologies: 8
 1. React.js
@@ -148,6 +149,9 @@ Express Server
 |------|--------------|--------------|
 | Mar 24, 2026 | Initial project setup | 01-PROJECT-SETUP.md |
 | Mar 24, 2026 | Created documentation index | INDEX.md |
+| Mar 24, 2026 | Public website pages | 02-PUBLIC-WEBSITE-PAGES.md |
+| Mar 24, 2026 | Authentication system complete | 03-AUTHENTICATION-SYSTEM.md |
+| Mar 24, 2026 | Setup guide for developers | 04-HOW-TO-RUN.md |
 
 ---
 
@@ -155,7 +159,10 @@ Express Server
 
 - **00-RULES.md** ✅ Complete
 - **01-PROJECT-SETUP.md** ✅ Complete
-- **02+ docs** ⏳ Will be created as we build
+- **02-PUBLIC-WEBSITE-PAGES.md** ✅ Complete
+- **03-AUTHENTICATION-SYSTEM.md** ✅ Complete
+- **04-HOW-TO-RUN.md** ✅ Complete
+- **05+ docs** ⏳ Will be created as we build
 
 ---
 
