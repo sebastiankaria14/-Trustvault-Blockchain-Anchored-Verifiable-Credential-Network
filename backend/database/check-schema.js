@@ -1,43 +1,36 @@
-import { Pool } from 'pg';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import pkg from 'pg';
+const { Pool } = pkg;
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  connectionString: process.env.DATABASE_URL || 'postgresql://postgres.igirpljuupwspigyaqzm:trustvault%40123@aws-1-ap-southeast-2.pooler.supabase.com:5432/postgres',
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 async function checkSchema() {
   try {
-    // Get all tables
-    const tables = await pool.query(`
-      SELECT table_name
-      FROM information_schema.tables
-      WHERE table_schema = 'public'
-      ORDER BY table_name
-    `);
+    console.log('🔍 Checking verification_logs table structure...\n');
 
-    console.log('📊 Existing tables:');
-    tables.rows.forEach(row => console.log(`   - ${row.table_name}`));
-
-    // Get columns for institutions table
-    const institutionsColumns = await pool.query(`
-      SELECT column_name, data_type
+    const result = await pool.query(`
+      SELECT column_name, data_type, is_nullable
       FROM information_schema.columns
-      WHERE table_name = 'institutions'
-      ORDER BY ordinal_position
+      WHERE table_name = 'verification_logs'
+      ORDER BY ordinal_position;
     `);
 
-    console.log('\n📋 Institutions table columns:');
-    institutionsColumns.rows.forEach(row => {
-      console.log(`   - ${row.column_name} (${row.data_type})`);
+    console.log('Columns in verification_logs table:');
+    console.log('=====================================');
+    result.rows.forEach(row => {
+      console.log(`${row.column_name} (${row.data_type}) ${row.is_nullable === 'YES' ? 'NULL' : 'NOT NULL'}`);
     });
 
-  } catch (error) {
-    console.error('Error:', error.message);
-  } finally {
     await pool.end();
+    process.exit(0);
+  } catch (error) {
+    console.error('❌ Error:', error.message);
+    await pool.end();
+    process.exit(1);
   }
 }
 

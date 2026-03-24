@@ -60,17 +60,13 @@ app.get('/api', (req, res) => {
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import institutionRoutes from './routes/institutionRoutes.js';
-// import verifierRoutes from './routes/verifierRoutes.js';
-// import credentialRoutes from './routes/credentialRoutes.js';
-// import verifyRoutes from './routes/verifyRoutes.js';
+import verifierRoutes from './routes/verifierRoutes.js';
 
 // Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/institution', institutionRoutes);
-// app.use('/api/verifiers', verifierRoutes);
-// app.use('/api/credentials', credentialRoutes);
-// app.use('/api/verify', verifyRoutes);
+app.use('/api/verifier', verifierRoutes);
 
 // 404 Handler
 app.use((req, res) => {
