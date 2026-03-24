@@ -15,13 +15,14 @@
 | 02 | [PUBLIC WEBSITE PAGES](./02-PUBLIC-WEBSITE-PAGES.md) | Phase 1 | ✅ Complete | Mar 24, 2026 |
 | 03 | [AUTHENTICATION SYSTEM](./03-AUTHENTICATION-SYSTEM.md) | Phase 2 | ✅ Complete | Mar 24, 2026 |
 | 04 | [HOW TO RUN](./04-HOW-TO-RUN.md) | - | 📘 Reference | Mar 24, 2026 |
-| 05 | USER WALLET PORTAL | Phase 3 | ⏳ Pending | - |
-| 06 | INSTITUTION PORTAL | Phase 4 | ⏳ Pending | - |
-| 07 | VERIFIER PORTAL | Phase 5 | ⏳ Pending | - |
-| 08 | SUPER ADMIN PANEL | Phase 6 | ⏳ Pending | - |
-| 09 | BLOCKCHAIN INTEGRATION | Phase 7 | ⏳ Pending | - |
-| 10 | TESTING & OPTIMIZATION | Phase 8 | ⏳ Pending | - |
-| 11 | DEPLOYMENT | Phase 9 | ⏳ Pending | - |
+| 05 | [GIT COLLABORATION](./05-GIT-COLLABORATION.md) | - | 📘 Reference | Mar 24, 2026 |
+| 06 | [USER WALLET PORTAL](./06-USER-WALLET-PORTAL.md) | Phase 3 | ✅ Complete | Mar 24, 2026 |
+| 07 | INSTITUTION PORTAL | Phase 4 | ⏳ Pending | - |
+| 08 | VERIFIER PORTAL | Phase 5 | ⏳ Pending | - |
+| 09 | SUPER ADMIN PANEL | Phase 6 | ⏳ Pending | - |
+| 10 | BLOCKCHAIN INTEGRATION | Phase 7 | ⏳ Pending | - |
+| 11 | TESTING & OPTIMIZATION | Phase 8 | ⏳ Pending | - |
+| 12 | DEPLOYMENT | Phase 9 | ⏳ Pending | - |
 
 ---
 
@@ -44,14 +45,14 @@
 
 ## 📊 PROJECT PROGRESS
 
-### Overall Progress: 33% (Phases 0, 1, 2 Complete)
+### Overall Progress: 44% (Phases 0, 1, 2, 3 Complete)
 
 | Phase | Progress | Status |
 |-------|----------|--------|
 | Phase 0: Setup | 100% | ✅ Complete |
 | Phase 1: Public Website | 100% | ✅ Complete |
 | Phase 2: Auth & Database | 100% | ✅ Complete |
-| Phase 3: User Portal | 0% | ⏳ Pending |
+| Phase 3: User Portal | 100% | ✅ Complete |
 | Phase 4: Institution Portal | 0% | ⏳ Pending |
 | Phase 5: Verifier Portal | 0% | ⏳ Pending |
 | Phase 6: Admin Panel | 0% | ⏳ Pending |

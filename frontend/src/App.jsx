@@ -18,6 +18,10 @@ import RegisterPage from './pages/auth/RegisterPage'
 
 // User Portal
 import UserDashboard from './pages/user/UserDashboard'
+import WalletPage from './pages/user/WalletPage'
+import CredentialDetailPage from './pages/user/CredentialDetailPage'
+import ProfilePage from './pages/user/ProfilePage'
+import AuditLogPage from './pages/user/AuditLogPage'
 
 // Institution Portal
 import InstitutionDashboard from './pages/institution/InstitutionDashboard'
@@ -54,6 +58,38 @@ function App() {
               element={
                 <ProtectedRoute allowedUserTypes={['user']}>
                   <UserDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user/wallet"
+              element={
+                <ProtectedRoute allowedUserTypes={['user']}>
+                  <WalletPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user/credentials/:id"
+              element={
+                <ProtectedRoute allowedUserTypes={['user']}>
+                  <CredentialDetailPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user/profile"
+              element={
+                <ProtectedRoute allowedUserTypes={['user']}>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user/audit-log"
+              element={
+                <ProtectedRoute allowedUserTypes={['user']}>
+                  <AuditLogPage />
                 </ProtectedRoute>
               }
             />
