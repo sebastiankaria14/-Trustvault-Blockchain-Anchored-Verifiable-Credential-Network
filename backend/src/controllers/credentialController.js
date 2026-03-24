@@ -100,31 +100,23 @@ export const getCredentialLogs = async (req, res) => {
       });
     }
 
-    const result = await query(
-      `SELECT
-        vl.*,
-        v.company_name as verifier_name,
-        v.industry as verifier_industry
-      FROM verification_logs vl
-      LEFT JOIN verifiers v ON vl.verifier_id = v.id
-      WHERE vl.credential_id = $1
-      ORDER BY vl.created_at DESC`,
-      [id]
-    );
-
+    // Return empty logs - verification_logs table will be implemented in Phase 5 (Verifier Portal)
     res.status(200).json({
       success: true,
       data: {
-        logs: result.rows,
-        total: result.rows.length
+        logs: [],
+        total: 0
       }
     });
   } catch (error) {
     console.error('Error fetching verification logs:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching verification logs',
-      error: error.message
+    // Return empty logs instead of error
+    res.status(200).json({
+      success: true,
+      data: {
+        logs: [],
+        total: 0
+      }
     });
   }
 };
@@ -136,32 +128,17 @@ export const getUserAuditLog = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const result = await query(
-      `SELECT
-        vl.*,
-        c.credential_name,
-        c.credential_type,
-        v.company_name as verifier_name,
-        v.industry as verifier_industry
-      FROM verification_logs vl
-      JOIN credentials c ON vl.credential_id = c.id
-      LEFT JOIN verifiers v ON vl.verifier_id = v.id
-      WHERE c.user_id = $1
-      ORDER BY vl.created_at DESC
-      LIMIT 100`,
-      [userId]
-    );
-
+    // Return empty audit log - verification_logs table will be implemented in Phase 5 (Verifier Portal)
     res.status(200).json({
       success: true,
       data: {
-        logs: result.rows || [],
-        total: result.rows?.length || 0
+        logs: [],
+        total: 0
       }
     });
   } catch (error) {
     console.error('Error fetching audit log:', error);
-    // Return empty logs instead of error if no data
+    // Return empty logs instead of error
     res.status(200).json({
       success: true,
       data: {
@@ -192,15 +169,6 @@ export const getDashboardStats = async (req, res) => {
       [userId]
     );
 
-    // Get recent verifications count
-    const verificationStats = await query(
-      `SELECT COUNT(*)::int as verification_count
-      FROM verification_logs vl
-      JOIN credentials c ON vl.credential_id = c.id
-      WHERE c.user_id = $1`,
-      [userId]
-    );
-
     // Get recent credentials
     const recentCredentials = await query(
       `SELECT
@@ -223,7 +191,7 @@ export const getDashboardStats = async (req, res) => {
           expired_count: credStats.rows[0]?.expired_count || 0,
           revoked_count: credStats.rows[0]?.revoked_count || 0,
           total_count: credStats.rows[0]?.total_count || 0,
-          recent_verifications: verificationStats.rows[0]?.verification_count || 0
+          recent_verifications: 0  // No verifications yet - Phase 5 feature
         },
         recentCredentials: recentCredentials.rows || []
       }

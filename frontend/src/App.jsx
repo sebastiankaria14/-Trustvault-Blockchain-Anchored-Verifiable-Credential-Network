@@ -25,6 +25,9 @@ import AuditLogPage from './pages/user/AuditLogPage'
 
 // Institution Portal
 import InstitutionDashboard from './pages/institution/InstitutionDashboard'
+import IssueCredentialPage from './pages/institution/IssueCredentialPage'
+import ManageCredentialsPage from './pages/institution/ManageCredentialsPage'
+import HistoryPage from './pages/institution/HistoryPage'
 
 // Verifier Portal
 import VerifierDashboard from './pages/verifier/VerifierDashboard'
@@ -100,6 +103,30 @@ function App() {
               element={
                 <ProtectedRoute allowedUserTypes={['institution']}>
                   <InstitutionDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/institution/issue"
+              element={
+                <ProtectedRoute allowedUserTypes={['institution']}>
+                  <IssueCredentialPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/institution/manage"
+              element={
+                <ProtectedRoute allowedUserTypes={['institution']}>
+                  <ManageCredentialsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/institution/history"
+              element={
+                <ProtectedRoute allowedUserTypes={['institution']}>
+                  <HistoryPage />
                 </ProtectedRoute>
               }
             />

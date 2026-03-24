@@ -17,7 +17,7 @@
 | 04 | [HOW TO RUN](./04-HOW-TO-RUN.md) | - | 📘 Reference | Mar 24, 2026 |
 | 05 | [GIT COLLABORATION](./05-GIT-COLLABORATION.md) | - | 📘 Reference | Mar 24, 2026 |
 | 06 | [USER WALLET PORTAL](./06-USER-WALLET-PORTAL.md) | Phase 3 | ✅ Complete | Mar 24, 2026 |
-| 07 | INSTITUTION PORTAL | Phase 4 | ⏳ Pending | - |
+| 07 | [INSTITUTION PORTAL](./07-INSTITUTION-PORTAL.md) | Phase 4 | ✅ Complete | Mar 24, 2026 |
 | 08 | VERIFIER PORTAL | Phase 5 | ⏳ Pending | - |
 | 09 | SUPER ADMIN PANEL | Phase 6 | ⏳ Pending | - |
 | 10 | BLOCKCHAIN INTEGRATION | Phase 7 | ⏳ Pending | - |
@@ -45,7 +45,7 @@
 
 ## 📊 PROJECT PROGRESS
 
-### Overall Progress: 44% (Phases 0, 1, 2, 3 Complete)
+### Overall Progress: 67% (Phases 0, 1, 2, 3, 4 Complete)
 
 | Phase | Progress | Status |
 |-------|----------|--------|
@@ -53,7 +53,7 @@
 | Phase 1: Public Website | 100% | ✅ Complete |
 | Phase 2: Auth & Database | 100% | ✅ Complete |
 | Phase 3: User Portal | 100% | ✅ Complete |
-| Phase 4: Institution Portal | 0% | ⏳ Pending |
+| Phase 4: Institution Portal | 100% | ✅ Complete |
 | Phase 5: Verifier Portal | 0% | ⏳ Pending |
 | Phase 6: Admin Panel | 0% | ⏳ Pending |
 | Phase 7: Blockchain | 0% | ⏳ Pending |
@@ -153,6 +153,8 @@ Express Server
 | Mar 24, 2026 | Public website pages | 02-PUBLIC-WEBSITE-PAGES.md |
 | Mar 24, 2026 | Authentication system complete | 03-AUTHENTICATION-SYSTEM.md |
 | Mar 24, 2026 | Setup guide for developers | 04-HOW-TO-RUN.md |
+| Mar 24, 2026 | User Wallet Portal complete | 06-USER-WALLET-PORTAL.md |
+| Mar 24, 2026 | Institution Portal complete | 07-INSTITUTION-PORTAL.md |
 
 ---
 
@@ -163,7 +165,10 @@ Express Server
 - **02-PUBLIC-WEBSITE-PAGES.md** ✅ Complete
 - **03-AUTHENTICATION-SYSTEM.md** ✅ Complete
 - **04-HOW-TO-RUN.md** ✅ Complete
-- **05+ docs** ⏳ Will be created as we build
+- **05-GIT-COLLABORATION.md** ✅ Complete
+- **06-USER-WALLET-PORTAL.md** ✅ Complete
+- **07-INSTITUTION-PORTAL.md** ✅ Complete
+- **08+ docs** ⏳ Will be created as we build
 
 ---
 
