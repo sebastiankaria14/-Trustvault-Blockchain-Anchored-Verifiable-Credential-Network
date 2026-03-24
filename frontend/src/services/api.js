@@ -188,7 +188,7 @@ export const getInstitutionStats = async () => {
 };
 
 /**
- * Issue new credential
+ * Issue a new credential
  */
 export const issueCredential = async (credentialData) => {
   return apiRequest('/institution/credentials', {
@@ -207,9 +207,10 @@ export const getInstitutionCredentials = async () => {
 /**
  * Revoke a credential
  */
-export const revokeCredential = async (credentialId) => {
-  return apiRequest(`/institution/credentials/${credentialId}`, {
-    method: 'DELETE'
+export const revokeCredential = async (id, reason) => {
+  return apiRequest(`/institution/credentials/${id}/revoke`, {
+    method: 'POST',
+    body: JSON.stringify({ reason })
   });
 };
 
@@ -218,6 +219,83 @@ export const revokeCredential = async (credentialId) => {
  */
 export const getInstitutionHistory = async () => {
   return apiRequest('/institution/history', { method: 'GET' });
+};
+
+// ==========================================
+// Verifier Portal API Functions
+// ==========================================
+
+/**
+ * Get verifier dashboard statistics
+ */
+export const getVerifierDashboardStats = async () => {
+  return apiRequest('/verifier/dashboard/stats', { method: 'GET' });
+};
+
+/**
+ * Get all verification requests
+ */
+export const getVerificationRequests = async (filters = {}) => {
+  const params = new URLSearchParams();
+  if (filters.status) params.append('status', filters.status);
+  if (filters.search) params.append('search', filters.search);
+  if (filters.page) params.append('page', filters.page);
+  if (filters.limit) params.append('limit', filters.limit);
+
+  return apiRequest(`/verifier/verification-requests?${params.toString()}`, { method: 'GET' });
+};
+
+/**
+ * Get credential for verification
+ */
+export const getCredentialForVerification = async (id) => {
+  return apiRequest(`/verifier/credential/${id}`, { method: 'GET' });
+};
+
+/**
+ * Verify a credential
+ */
+export const verifyCredential = async (id, verificationData) => {
+  return apiRequest(`/verifier/credential/${id}/verify`, {
+    method: 'POST',
+    body: JSON.stringify(verificationData)
+  });
+};
+
+/**
+ * Get verifier verification history
+ */
+export const getVerificationHistory = async (filters = {}) => {
+  const params = new URLSearchParams();
+  if (filters.result) params.append('result', filters.result);
+  if (filters.page) params.append('page', filters.page);
+  if (filters.limit) params.append('limit', filters.limit);
+
+  return apiRequest(`/verifier/history?${params.toString()}`, { method: 'GET' });
+};
+
+/**
+ * Get verifier profile
+ */
+export const getVerifierProfile = async () => {
+  return apiRequest('/verifier/profile', { method: 'GET' });
+};
+
+/**
+ * Update verifier profile
+ */
+export const updateVerifierProfile = async (profileData) => {
+  return apiRequest('/verifier/profile', {
+    method: 'PUT',
+    body: JSON.stringify(profileData)
+  });
+};
+
+/**
+ * Download credential PDF
+ */
+export const downloadCredentialPDF = async (id) => {
+  return apiRequest(`/verifier/credential/${id}/download`, { method: 'GET' });
 };
 
 export default {
@@ -242,5 +320,13 @@ export default {
   issueCredential,
   getInstitutionCredentials,
   revokeCredential,
-  getInstitutionHistory
+  getInstitutionHistory,
+  getVerifierDashboardStats,
+  getVerificationRequests,
+  getCredentialForVerification,
+  verifyCredential,
+  getVerificationHistory,
+  getVerifierProfile,
+  updateVerifierProfile,
+  downloadCredentialPDF
 };

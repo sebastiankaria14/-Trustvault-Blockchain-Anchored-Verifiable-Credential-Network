@@ -31,6 +31,10 @@ import HistoryPage from './pages/institution/HistoryPage'
 
 // Verifier Portal
 import VerifierDashboard from './pages/verifier/VerifierDashboard'
+import VerificationRequestsPage from './pages/verifier/VerificationRequestsPage'
+import VerificationDetailPage from './pages/verifier/VerificationDetailPage'
+import VerificationHistoryPage from './pages/verifier/VerificationHistoryPage'
+import VerifierProfilePage from './pages/verifier/VerifierProfilePage'
 
 function App() {
   useEffect(() => {
@@ -137,6 +141,38 @@ function App() {
               element={
                 <ProtectedRoute allowedUserTypes={['verifier']}>
                   <VerifierDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/verifier/verification-requests"
+              element={
+                <ProtectedRoute allowedUserTypes={['verifier']}>
+                  <VerificationRequestsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/verifier/credential/:id"
+              element={
+                <ProtectedRoute allowedUserTypes={['verifier']}>
+                  <VerificationDetailPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/verifier/history"
+              element={
+                <ProtectedRoute allowedUserTypes={['verifier']}>
+                  <VerificationHistoryPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/verifier/profile"
+              element={
+                <ProtectedRoute allowedUserTypes={['verifier']}>
+                  <VerifierProfilePage />
                 </ProtectedRoute>
               }
             />
