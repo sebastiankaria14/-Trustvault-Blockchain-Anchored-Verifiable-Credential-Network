@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import { initializeAnimations } from './utils/animations'
 
 // Public Pages
 import LandingPage from './pages/public/LandingPage'
@@ -24,6 +26,11 @@ import InstitutionDashboard from './pages/institution/InstitutionDashboard'
 import VerifierDashboard from './pages/verifier/VerifierDashboard'
 
 function App() {
+  useEffect(() => {
+    // Initialize all animations on mount
+    initializeAnimations()
+  }, [])
+
   return (
     <Router>
       <AuthProvider>

@@ -1,110 +1,253 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const InstitutionDashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
+  const stats = [
+    {
+      title: 'Credentials Issued',
+      value: 0,
+      description: 'Total credentials issued',
+      icon: '📋',
+      color: 'from-blue-500 to-cyan-500',
+      bgColor: 'bg-blue-50',
+    },
+    {
+      title: 'Active Credentials',
+      value: 0,
+      description: 'Currently active credentials',
+      icon: '✓',
+      color: 'from-green-500 to-emerald-500',
+      bgColor: 'bg-green-50',
+    },
+    {
+      title: 'Revoked Credentials',
+      value: 0,
+      description: 'Credentials revoked',
+      icon: '✕',
+      color: 'from-red-500 to-pink-500',
+      bgColor: 'bg-red-50',
+    },
+  ];
+
+  const verificationStatus = user?.verification_status || user?.verificationStatus || 'pending';
+  const isApproved = verificationStatus === 'approved';
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-neutral-50">
       {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Institution Dashboard</h1>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-          >
-            Logout
-          </button>
+      <header className="bg-gradient-to-r from-emerald-600 to-blue-600 text-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-white/20 backdrop-blur-lg rounded-full flex items-center justify-center text-2xl font-bold border border-white/30">
+                {(user?.name || 'I')[0].toUpperCase()}
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold">Welcome, {user?.name || 'Institution'}!</h1>
+                <p className="text-emerald-100 text-sm mt-1">{user?.email}</p>
+              </div>
+            </div>
+
+            <div className="relative">
+              <button
+                onClick={() => setShowLogoutConfirm(!showLogoutConfirm)}
+                className="btn bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-lg transition-all duration-200"
+              >
+                Logout
+              </button>
+              {showLogoutConfirm && (
+                <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl p-4 min-w-max z-50 slide-in-down">
+                  <p className="text-neutral-900 font-medium mb-3">Are you sure you want to logout?</p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleLogout}
+                      className="btn btn-sm bg-error-600 text-white hover:bg-error-700"
+                    >
+                      Yes, Logout
+                    </button>
+                    <button
+                      onClick={() => setShowLogoutConfirm(false)}
+                      className="btn btn-sm btn-outline"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Welcome, {user?.name}!</h2>
-          <p className="text-gray-600 mb-2">
-            <strong>Email:</strong> {user?.email}
-          </p>
-          <p className="text-gray-600 mb-2">
-            <strong>Type:</strong> {user?.type}
-          </p>
-          <p className="text-gray-600 mb-2">
-            <strong>Verification Status:</strong>{' '}
-            <span
-              className={`px-2 py-1 rounded text-sm ${
-                user?.verification_status === 'approved' || user?.verificationStatus === 'approved'
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-yellow-100 text-yellow-800'
-              }`}
+        {/* Verification Status Card */}
+        <div className={`slide-in-up mb-8 card ${isApproved ? 'border-2 border-success-300 bg-success-50' : 'border-2 border-warning-300 bg-warning-50'}`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold text-neutral-900 mb-1">
+                Institution Verification
+              </h2>
+              <p className={`text-sm ${isApproved ? 'text-success-700' : 'text-warning-700'}`}>
+                <span className="text-lg">•</span> Institution Type: <strong>{user?.type}</strong>
+              </p>
+              <p className={`text-sm mt-1 ${isApproved ? 'text-success-700' : 'text-warning-700'}`}>
+                {isApproved
+                  ? '✓ Your institution is verified and can issue credentials'
+                  : '⏳ Your institution is pending admin verification'}
+              </p>
+            </div>
+            <div className={`px-6 py-3 rounded-full font-bold uppercase tracking-wide text-sm ${
+              isApproved
+                ? 'bg-success-500 text-white'
+                : 'bg-warning-500 text-white'
+            }`}>
+              {isApproved ? 'Approved' : 'Pending'}
+            </div>
+          </div>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {stats.map((stat, index) => (
+            <div
+              key={index}
+              className={`slide-in-up card hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1`}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
-              {user?.verification_status || user?.verificationStatus || 'Pending'}
-            </span>
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <p className="text-neutral-600 text-sm font-medium mb-2">{stat.title}</p>
+                  <div className={`text-4xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`} data-count={stat.value} data-duration="1000">
+                    {stat.value}
+                  </div>
+                </div>
+                <div className={`${stat.bgColor} rounded-full w-16 h-16 flex items-center justify-center text-3xl font-bold`}>
+                  {stat.icon}
+                </div>
+              </div>
+              <p className="text-neutral-500 text-xs">{stat.description}</p>
+              <div className="mt-4 h-1 bg-neutral-200 rounded-full overflow-hidden">
+                <div className={`h-full bg-gradient-to-r ${stat.color} w-1/3`} />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Action Cards */}
+        {isApproved ? (
+          <div className="slide-in-up card mb-8">
+            <h3 className="text-lg font-bold text-neutral-900 mb-4">Actions</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button
+                data-ripple
+                onClick={() => {/* Issue credential */}}
+                className="p-6 bg-gradient-to-br from-emerald-500 to-blue-500 text-white rounded-xl hover:shadow-xl transition-all duration-200 text-left group hover:-translate-y-1 transform"
+              >
+                <div className="text-3xl mb-3">📝</div>
+                <h4 className="text-lg font-bold group-hover:text-emerald-100 transition-colors">Issue New Credential</h4>
+                <p className="text-emerald-100 text-sm mt-2">Create and issue a new credential to a user</p>
+              </button>
+
+              <button
+                data-ripple
+                onClick={() => {/* View credentials */}}
+                className="p-6 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-xl hover:shadow-xl transition-all duration-200 text-left group hover:-translate-y-1 transform"
+              >
+                <div className="text-3xl mb-3">📊</div>
+                <h4 className="text-lg font-bold group-hover:text-blue-100 transition-colors">View All Credentials</h4>
+                <p className="text-blue-100 text-sm mt-2">Manage and monitor all issued credentials</p>
+              </button>
+
+              <button
+                data-ripple
+                onClick={() => {/* API Keys */}}
+                className="p-6 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-xl hover:shadow-xl transition-all duration-200 text-left group hover:-translate-y-1 transform"
+              >
+                <div className="text-3xl mb-3">🔑</div>
+                <h4 className="text-lg font-bold group-hover:text-purple-100 transition-colors">API Keys</h4>
+                <p className="text-purple-100 text-sm mt-2">Manage your API keys and integrations</p>
+              </button>
+
+              <button
+                data-ripple
+                onClick={() => {/* Settings */}}
+                className="p-6 bg-gradient-to-br from-orange-500 to-red-500 text-white rounded-xl hover:shadow-xl transition-all duration-200 text-left group hover:-translate-y-1 transform"
+              >
+                <div className="text-3xl mb-3">⚙️</div>
+                <h4 className="text-lg font-bold group-hover:text-orange-100 transition-colors">Settings</h4>
+                <p className="text-orange-100 text-sm mt-2">Configure institution details and preferences</p>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="slide-in-up card border-2 border-warning-300 bg-warning-50 mb-8">
+            <div className="text-center py-8">
+              <div className="text-5xl mb-4">⏳</div>
+              <h3 className="text-2xl font-bold text-warning-900 mb-2">Verification Pending</h3>
+              <p className="text-warning-800 mb-6 max-w-md mx-auto">
+                Your institution account is currently under review by our administrators. You'll be able to issue credentials once your account is approved.
+              </p>
+              <p className="text-sm text-warning-700">
+                📧 You'll receive an email notification once the review is complete.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Recent Activity */}
+        <div className="slide-in-up card">
+          <h3 className="text-lg font-bold text-neutral-900 mb-4">Recent Activity</h3>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 bg-neutral-50 rounded-lg hover:bg-neutral-100 transition-colors">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-lg">🏢</div>
+                <div>
+                  <p className="font-medium text-neutral-900 text-sm">Account Created</p>
+                  <p className="text-xs text-neutral-600">Today</p>
+                </div>
+              </div>
+              <span className="badge badge-primary">Today</span>
+            </div>
+          </div>
+          <p className="text-center text-neutral-600 text-sm mt-4 py-4">
+            No recent activity. Your actions will appear here.
           </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Credentials Issued</h3>
-              <div className="bg-indigo-100 text-indigo-600 rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold">
-                0
-              </div>
-            </div>
-            <p className="text-gray-600 text-sm">Total credentials issued</p>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Active Credentials</h3>
-              <div className="bg-green-100 text-green-600 rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold">
-                0
-              </div>
-            </div>
-            <p className="text-gray-600 text-sm">Currently active credentials</p>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Revoked</h3>
-              <div className="bg-red-100 text-red-600 rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold">
-                0
-              </div>
-            </div>
-            <p className="text-gray-600 text-sm">Revoked credentials</p>
-          </div>
-        </div>
-
-        {(user?.verification_status === 'pending' || user?.verificationStatus === 'pending') && (
-          <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-yellow-900 mb-2">Pending Approval</h3>
-            <p className="text-yellow-800 mb-4">
-              Your institution account is pending admin approval. You'll be able to issue credentials once approved.
-            </p>
-          </div>
-        )}
-
-        {(user?.verification_status === 'approved' || user?.verificationStatus === 'approved') && (
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <button className="bg-indigo-600 text-white p-6 rounded-lg hover:bg-indigo-700 text-left">
-              <h3 className="text-lg font-semibold mb-2">Issue New Credential</h3>
-              <p className="text-indigo-100 text-sm">Create and issue a new credential to a user</p>
-            </button>
-
-            <button className="bg-green-600 text-white p-6 rounded-lg hover:bg-green-700 text-left">
-              <h3 className="text-lg font-semibold mb-2">View All Credentials</h3>
-              <p className="text-green-100 text-sm">Manage all issued credentials</p>
-            </button>
-          </div>
-        )}
       </main>
+
+      <style>{`
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .slide-in-up {
+          animation: slideInUp 0.6s ease-out forwards;
+          opacity: 0;
+        }
+
+        [style*="animation-delay"] {
+          animation: slideInUp 0.6s ease-out var(--animation-delay, 0s) forwards;
+          opacity: 0;
+        }
+      `}</style>
     </div>
   );
 };
