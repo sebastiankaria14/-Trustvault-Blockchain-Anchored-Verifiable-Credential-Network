@@ -28,8 +28,8 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // Body Parser Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Health Check Route
 app.get('/health', (req, res) => {
@@ -59,7 +59,7 @@ app.get('/api', (req, res) => {
 // Import routes
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-// import institutionRoutes from './routes/institutionRoutes.js';
+import institutionRoutes from './routes/institutionRoutes.js';
 // import verifierRoutes from './routes/verifierRoutes.js';
 // import credentialRoutes from './routes/credentialRoutes.js';
 // import verifyRoutes from './routes/verifyRoutes.js';
@@ -67,7 +67,7 @@ import userRoutes from './routes/userRoutes.js';
 // Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
-// app.use('/api/institutions', institutionRoutes);
+app.use('/api/institution', institutionRoutes);
 // app.use('/api/verifiers', verifierRoutes);
 // app.use('/api/credentials', credentialRoutes);
 // app.use('/api/verify', verifyRoutes);

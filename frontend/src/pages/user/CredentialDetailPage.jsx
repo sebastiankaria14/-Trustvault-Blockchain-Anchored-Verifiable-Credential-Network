@@ -242,6 +242,15 @@ const CredentialDetailPage = () => {
                     </div>
                   </div>
                 )}
+
+                {credential.document_url && (
+                  <div>
+                    <label className="text-sm font-medium text-gray-500">Document / Certificate Photo</label>
+                    <div className="mt-3 border border-gray-300 rounded-lg p-4 bg-gray-50">
+                      <img src={credential.document_url} alt="Credential Document" className="max-w-full max-h-96 rounded-lg mx-auto" />
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
