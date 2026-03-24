@@ -1,0 +1,566 @@
+# TrustVault Development Plan
+
+**Project:** Digital Credential Verification System
+**Started:** March 24, 2026
+**Deployment:** Option 1 - Quick & Free (MVP/Testing)
+
+---
+
+## 🎯 PROJECT OVERVIEW
+
+**What we're building:** A platform where:
+- Institutions (colleges, banks) issue verified digital credentials
+- Users store credentials in a digital wallet
+- Organizations verify credentials instantly via API
+- Everything is backed by blockchain for security
+
+---
+
+## 🛠️ TECH STACK
+
+### Frontend
+- **Framework:** React.js (with Vite)
+- **Styling:** Tailwind CSS
+- **Routing:** React Router
+- **State Management:** React Context / Redux (if needed)
+- **Deployment:** Vercel (Free)
+
+### Backend
+- **Runtime:** Node.js
+- **Framework:** Express.js
+- **Authentication:** JWT + bcrypt
+- **API:** RESTful APIs
+- **Deployment:** Render.com (Free)
+
+### Database
+- **Primary DB:** PostgreSQL (Supabase Free Tier)
+- **Cache:** Redis (Redis Cloud Free Tier)
+
+### Blockchain
+- **Network:** Polygon (Mumbai Testnet for MVP)
+- **Library:** ethers.js or web3.js
+
+### Tools
+- **Version Control:** Git/GitHub
+- **API Testing:** Postman
+- **Environment:** .env files
+
+---
+
+## 📦 DEPLOYMENT SETUP (Option 1 - Free)
+
+| Service | Provider | Plan | Cost |
+|---------|----------|------|------|
+| Frontend | Vercel | Free | $0 |
+| Backend API | Render.com | Free | $0 |
+| PostgreSQL | Supabase | Free (500MB) | $0 |
+| Redis Cache | Redis Cloud | Free (30MB) | $0 |
+| Blockchain | Polygon Mumbai | Testnet | $0 |
+| **Total** | | | **$0/month** |
+
+---
+
+## 🗂️ PROJECT STRUCTURE
+
+```
+TrustVault/
+├── frontend/                  # React application
+│   ├── public/
+│   ├── src/
+│   │   ├── components/        # Reusable components
+│   │   ├── pages/            # Page components
+│   │   │   ├── public/       # Public website
+│   │   │   ├── user/         # User wallet portal
+│   │   │   ├── institution/  # Institution portal
+│   │   │   ├── verifier/     # Verifier portal
+│   │   │   └── admin/        # Super admin panel
+│   │   ├── services/         # API calls
+│   │   ├── context/          # State management
+│   │   ├── utils/            # Helper functions
+│   │   └── App.jsx
+│   ├── package.json
+│   └── vite.config.js
+│
+├── backend/                   # Node.js API
+│   ├── src/
+│   │   ├── controllers/      # Request handlers
+│   │   ├── models/           # Database models
+│   │   ├── routes/           # API routes
+│   │   ├── middleware/       # Auth, validation
+│   │   ├── services/         # Business logic
+│   │   ├── utils/            # Helpers
+│   │   └── server.js
+│   ├── package.json
+│   └── .env
+│
+├── database/                  # Database files
+│   ├── schema.sql            # Database schema
+│   └── seeds.sql             # Sample data
+│
+├── docs/                      # Documentation
+│   └── API_DOCUMENTATION.md
+│
+├── TrustVault_SRS.pdf        # Requirements doc
+├── DEVELOPMENT_PLAN.md       # This file
+└── README.md                 # Project overview
+
+```
+
+---
+
+## 📋 DEVELOPMENT PHASES
+
+### ✅ PHASE 0: SETUP (COMPLETED)
+- [x] Read and understand SRS document
+- [x] Create development plan
+- [x] Set up project folder structure
+- [x] Initialize Git repository
+- [ ] Create GitHub repository (Optional - do this when ready)
+- [x] Set up frontend (React + Vite)
+- [x] Set up backend (Node.js + Express)
+- [x] Create database schema SQL file
+- [x] Set up environment variables template
+- [x] Create landing page with full design
+- [x] Create README and documentation
+
+---
+
+### 🎨 PHASE 1: PUBLIC WEBSITE (Week 1)
+
+**Goal:** Build the marketing/landing site that explains TrustVault
+
+#### Pages to Build:
+1. **Landing Page** (`/`)
+   - [ ] Hero section with tagline
+   - [ ] Feature highlights
+   - [ ] How it works (3-step process)
+   - [ ] Call-to-action buttons
+   - [ ] Footer
+
+2. **How It Works** (`/how-it-works`)
+   - [ ] Visual flow diagram
+   - [ ] Explanation for each user type
+   - [ ] Benefits section
+
+3. **For Institutions** (`/for-institutions`)
+   - [ ] Institution benefits
+   - [ ] Integration process
+   - [ ] Pricing (if applicable)
+   - [ ] Sign-up CTA
+
+4. **For Verifiers** (`/for-verifiers`)
+   - [ ] Verifier benefits
+   - [ ] API documentation preview
+   - [ ] Use cases
+   - [ ] Sign-up CTA
+
+5. **API Documentation** (`/api-docs`)
+   - [ ] API endpoints list
+   - [ ] Example requests/responses
+   - [ ] Authentication guide
+   - [ ] Rate limits
+
+6. **Contact/Support** (`/contact`)
+   - [ ] Contact form
+   - [ ] FAQ section
+   - [ ] Support email/links
+
+#### Components Needed:
+- [ ] Navbar (responsive)
+- [ ] Footer
+- [ ] Button component
+- [ ] Card component
+- [ ] Form inputs
+
+**Deliverable:** Fully functional public website
+
+---
+
+### 🔐 PHASE 2: AUTHENTICATION & DATABASE (Week 2)
+
+#### Backend Setup:
+- [ ] Database schema design
+- [ ] Create tables (users, institutions, verifiers, credentials, etc.)
+- [ ] User registration API
+- [ ] Login API (JWT)
+- [ ] Password hashing (bcrypt)
+- [ ] Email verification (optional for MVP)
+- [ ] Forgot password flow
+
+#### Database Tables:
+- [ ] `users` - End users
+- [ ] `institutions` - Colleges, banks, hospitals
+- [ ] `verifiers` - Employers, organizations
+- [ ] `credentials` - Issued credentials
+- [ ] `verification_logs` - Audit trail
+- [ ] `consent_records` - User permissions
+
+#### Frontend:
+- [ ] Login page (all roles)
+- [ ] Registration pages (User, Institution, Verifier)
+- [ ] Protected routes setup
+- [ ] Auth context/state management
+
+**Deliverable:** Working auth system for all user types
+
+---
+
+### 👤 PHASE 3: USER WALLET PORTAL (Week 3)
+
+**Goal:** Users can register, complete KYC, and view credentials
+
+#### Pages:
+1. **Registration & KYC** (`/user/register`)
+   - [ ] Personal info form
+   - [ ] KYC document upload (ID proof)
+   - [ ] Email/phone verification
+   - [ ] Status: Pending/Approved
+
+2. **Dashboard** (`/user/dashboard`)
+   - [ ] Welcome message
+   - [ ] Total credentials count
+   - [ ] Recent verifications
+   - [ ] Quick actions
+
+3. **My Credential Wallet** (`/user/wallet`)
+   - [ ] List all credentials (cards/table)
+   - [ ] Filter by type (education, income, medical, etc.)
+   - [ ] View credential details
+   - [ ] Download credential
+
+4. **Consent Management** (`/user/consent`)
+   - [ ] Active consents list
+   - [ ] Revoke consent button
+   - [ ] Grant consent to verifiers
+
+5. **Audit Log** (`/user/audit`)
+   - [ ] Table of all verifications
+   - [ ] Columns: Date, Verifier, Credential, Status
+   - [ ] Export to CSV
+
+6. **Profile & Security** (`/user/profile`)
+   - [ ] Edit profile info
+   - [ ] Change password
+   - [ ] Enable 2FA (optional)
+   - [ ] Delete account
+
+#### Backend APIs:
+- [ ] `GET /api/user/dashboard` - Dashboard data
+- [ ] `GET /api/user/credentials` - List credentials
+- [ ] `POST /api/user/consent` - Grant consent
+- [ ] `DELETE /api/user/consent/:id` - Revoke consent
+- [ ] `GET /api/user/audit-log` - Verification history
+- [ ] `PUT /api/user/profile` - Update profile
+
+**Deliverable:** Fully functional user portal
+
+---
+
+### 🏢 PHASE 4: INSTITUTION PORTAL (Week 4)
+
+**Goal:** Institutions can register, get approved, and issue credentials
+
+#### Pages:
+1. **Registration** (`/institution/register`)
+   - [ ] Institution details form
+   - [ ] Admin approval required
+   - [ ] Verification documents upload
+
+2. **Dashboard** (`/institution/dashboard`)
+   - [ ] Total credentials issued
+   - [ ] Recent activity
+   - [ ] Stats graphs
+
+3. **Issue New Credential** (`/institution/issue`)
+   - [ ] Form to issue credential
+   - [ ] User search/lookup
+   - [ ] Credential type selection
+   - [ ] Upload supporting docs
+   - [ ] Submit & hash to blockchain
+
+4. **Manage Credentials** (`/institution/credentials`)
+   - [ ] List all issued credentials
+   - [ ] Search/filter
+   - [ ] Revoke credential option
+   - [ ] View details
+
+5. **API Integration** (`/institution/api`)
+   - [ ] Generate API key
+   - [ ] View API documentation
+   - [ ] Test API endpoints
+   - [ ] Usage stats
+
+6. **Settings** (`/institution/settings`)
+   - [ ] Manage staff accounts
+   - [ ] Credential templates
+   - [ ] Institution profile
+
+#### Backend APIs:
+- [ ] `POST /api/institution/register` - Register
+- [ ] `GET /api/institution/dashboard` - Stats
+- [ ] `POST /api/institution/issue-credential` - Issue new
+- [ ] `GET /api/institution/credentials` - List issued
+- [ ] `PUT /api/institution/credentials/:id/revoke` - Revoke
+- [ ] `POST /api/institution/api-key` - Generate API key
+
+**Deliverable:** Fully functional institution portal
+
+---
+
+### ✔️ PHASE 5: VERIFIER PORTAL (Week 5)
+
+**Goal:** Verifiers can verify credentials via portal and API
+
+#### Pages:
+1. **Registration** (`/verifier/register`)
+   - [ ] Company details
+   - [ ] Admin approval
+   - [ ] Business verification
+
+2. **Dashboard** (`/verifier/dashboard`)
+   - [ ] Total verifications run
+   - [ ] Success/failure rate
+   - [ ] Recent activity
+
+3. **Run Verification** (`/verifier/verify`)
+   - [ ] Enter user ID/email
+   - [ ] Select credential type
+   - [ ] Request consent
+   - [ ] View results in <2 seconds
+   - [ ] Blockchain hash verification
+
+4. **Reports** (`/verifier/reports`)
+   - [ ] History of all verifications
+   - [ ] Export to CSV/PDF
+   - [ ] Filter by date/status
+
+5. **API Management** (`/verifier/api`)
+   - [ ] API key management
+   - [ ] Usage statistics
+   - [ ] Rate limit info
+   - [ ] Integration guide
+
+#### Backend APIs:
+- [ ] `POST /api/verifier/register` - Register
+- [ ] `POST /api/verifier/verify` - Run verification
+- [ ] `GET /api/verifier/reports` - Verification history
+- [ ] `POST /api/verifier/api-key` - Generate API key
+
+#### Core Verification API (Public):
+- [ ] `POST /api/verify/degree` - Verify education
+- [ ] `POST /api/verify/income` - Verify salary
+- [ ] `POST /api/verify/medical` - Verify medical records
+- [ ] `POST /api/verify/employment` - Verify employment
+
+**Deliverable:** Working verification system
+
+---
+
+### 👨‍💼 PHASE 6: SUPER ADMIN PANEL (Week 6)
+
+**Goal:** Internal control panel for TrustVault team
+
+#### Pages:
+1. **Dashboard** (`/admin/dashboard`)
+   - [ ] Total users/institutions/verifiers
+   - [ ] System health
+   - [ ] Revenue stats (if applicable)
+
+2. **User Management** (`/admin/users`)
+   - [ ] List all users
+   - [ ] Search/filter
+   - [ ] Block/unblock users
+   - [ ] View user details
+
+3. **Institution Management** (`/admin/institutions`)
+   - [ ] Approve/reject institutions
+   - [ ] View institution details
+   - [ ] Suspend institutions
+
+4. **Verifier Management** (`/admin/verifiers`)
+   - [ ] Approve/reject verifiers
+   - [ ] Set API rate limits
+   - [ ] Monitor usage
+
+5. **Blockchain Monitor** (`/admin/blockchain`)
+   - [ ] View blockchain transactions
+   - [ ] Verify hashes
+   - [ ] Network status
+
+6. **System Settings** (`/admin/settings`)
+   - [ ] Global configs
+   - [ ] Feature flags
+   - [ ] Email templates
+
+#### Backend APIs:
+- [ ] `GET /api/admin/stats` - System stats
+- [ ] `GET /api/admin/users` - List users
+- [ ] `PUT /api/admin/institution/:id/approve` - Approve
+- [ ] `PUT /api/admin/verifier/:id/approve` - Approve
+- [ ] `GET /api/admin/blockchain` - Blockchain logs
+
+**Deliverable:** Full admin control panel
+
+---
+
+### ⛓️ PHASE 7: BLOCKCHAIN INTEGRATION (Week 7)
+
+**Goal:** Store credential hashes on blockchain for immutability
+
+#### Tasks:
+- [ ] Set up Polygon Mumbai testnet
+- [ ] Create MetaMask wallet for system
+- [ ] Get testnet MATIC tokens
+- [ ] Write smart contract (Solidity)
+- [ ] Deploy smart contract
+- [ ] Integrate web3.js/ethers.js
+- [ ] Hash credentials (SHA-256)
+- [ ] Store hash on blockchain when issuing
+- [ ] Verify hash during verification
+- [ ] Add blockchain explorer links
+
+#### Smart Contract Functions:
+- [ ] `storeCredential(hash, userId, institutionId)`
+- [ ] `verifyCredential(hash)` - Returns true/false
+- [ ] `revokeCredential(hash)`
+
+**Deliverable:** Blockchain-backed credential system
+
+---
+
+### 🧪 PHASE 8: TESTING & OPTIMIZATION (Week 8)
+
+#### Testing:
+- [ ] Unit tests (Jest)
+- [ ] API tests (Postman/Supertest)
+- [ ] End-to-end tests (Cypress)
+- [ ] Security audit
+- [ ] Performance testing (load testing)
+
+#### Optimization:
+- [ ] API response time <2 seconds
+- [ ] Database query optimization
+- [ ] Implement Redis caching
+- [ ] Image optimization
+- [ ] Code splitting (React)
+- [ ] Bundle size reduction
+
+#### Security:
+- [ ] SQL injection prevention
+- [ ] XSS protection
+- [ ] CSRF tokens
+- [ ] Rate limiting
+- [ ] Input validation
+- [ ] Secure headers (Helmet.js)
+
+**Deliverable:** Production-ready system
+
+---
+
+### 🚀 PHASE 9: DEPLOYMENT (Week 9)
+
+#### Frontend Deployment (Vercel):
+- [ ] Create Vercel account
+- [ ] Connect GitHub repo
+- [ ] Configure build settings
+- [ ] Set environment variables
+- [ ] Deploy frontend
+- [ ] Get production URL
+
+#### Backend Deployment (Render.com):
+- [ ] Create Render account
+- [ ] Create new Web Service
+- [ ] Connect GitHub repo
+- [ ] Configure build/start commands
+- [ ] Set environment variables
+- [ ] Deploy backend
+- [ ] Get API URL
+
+#### Database Setup (Supabase):
+- [ ] Create Supabase project
+- [ ] Run schema migrations
+- [ ] Get connection string
+- [ ] Update backend .env
+
+#### Redis Setup (Redis Cloud):
+- [ ] Create Redis Cloud account
+- [ ] Create free database
+- [ ] Get connection URL
+- [ ] Update backend .env
+
+#### Final Steps:
+- [ ] Update frontend API URLs
+- [ ] Test all features in production
+- [ ] Set up custom domain (optional)
+- [ ] Enable HTTPS
+- [ ] Set up monitoring (optional)
+
+**Deliverable:** Live production system
+
+---
+
+## 📊 PROGRESS TRACKER
+
+| Phase | Status | Progress | Completion Date |
+|-------|--------|----------|----------------|
+| Phase 0: Setup | ✅ Complete | 100% | March 24, 2026 |
+| Phase 1: Public Website | 🟡 In Progress | 20% | - |
+| Phase 2: Auth & DB | ⚪ Not Started | 0% | - |
+| Phase 3: User Portal | ⚪ Not Started | 0% | - |
+| Phase 4: Institution Portal | ⚪ Not Started | 0% | - |
+| Phase 5: Verifier Portal | ⚪ Not Started | 0% | - |
+| Phase 6: Admin Panel | ⚪ Not Started | 0% | - |
+| Phase 7: Blockchain | ⚪ Not Started | 0% | - |
+| Phase 8: Testing | ⚪ Not Started | 0% | - |
+| Phase 9: Deployment | ⚪ Not Started | 0% | - |
+
+---
+
+## 📝 NOTES & DECISIONS
+
+### Design Decisions:
+- Using React Router for client-side routing
+- JWT stored in httpOnly cookies for security
+- Tailwind CSS for rapid UI development
+- PostgreSQL for relational data
+- Redis for session management and caching
+
+### Future Enhancements (Post-MVP):
+- Mobile app (React Native)
+- Email notifications
+- SMS verification
+- Multi-language support
+- Advanced analytics dashboard
+- OAuth login (Google, Facebook)
+- Mainnet blockchain deployment
+
+---
+
+## 🐛 KNOWN ISSUES
+*Will be updated as we encounter issues*
+
+---
+
+## 📚 HELPFUL RESOURCES
+
+- React Docs: https://react.dev
+- Tailwind CSS: https://tailwindcss.com
+- Express.js: https://expressjs.com
+- PostgreSQL: https://www.postgresql.org/docs
+- Polygon Docs: https://docs.polygon.technology
+- Vercel Deployment: https://vercel.com/docs
+- Render.com: https://render.com/docs
+
+---
+
+## 🎯 NEXT STEPS
+
+**Immediate Next Tasks:**
+1. Set up project folder structure
+2. Initialize Git repository
+3. Create GitHub repository
+4. Set up React frontend with Vite
+5. Set up Node.js backend with Express
+6. Start building landing page
+
+**Ready to start? Let's build this! 🚀**
