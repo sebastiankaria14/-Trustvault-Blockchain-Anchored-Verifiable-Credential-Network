@@ -176,6 +176,50 @@ export const updateUserProfile = async (profileData) => {
   });
 };
 
+// ==========================================
+// Institution Portal API Functions
+// ==========================================
+
+/**
+ * Get institution dashboard statistics
+ */
+export const getInstitutionStats = async () => {
+  return apiRequest('/institution/dashboard/stats', { method: 'GET' });
+};
+
+/**
+ * Issue new credential
+ */
+export const issueCredential = async (credentialData) => {
+  return apiRequest('/institution/credentials', {
+    method: 'POST',
+    body: JSON.stringify(credentialData)
+  });
+};
+
+/**
+ * Get all credentials issued by institution
+ */
+export const getInstitutionCredentials = async () => {
+  return apiRequest('/institution/credentials', { method: 'GET' });
+};
+
+/**
+ * Revoke a credential
+ */
+export const revokeCredential = async (credentialId) => {
+  return apiRequest(`/institution/credentials/${credentialId}`, {
+    method: 'DELETE'
+  });
+};
+
+/**
+ * Get institution issuance history
+ */
+export const getInstitutionHistory = async () => {
+  return apiRequest('/institution/history', { method: 'GET' });
+};
+
 export default {
   registerUser,
   registerInstitution,
@@ -193,5 +237,10 @@ export default {
   getCredentialLogs,
   getUserAuditLog,
   getUserProfile,
-  updateUserProfile
+  updateUserProfile,
+  getInstitutionStats,
+  issueCredential,
+  getInstitutionCredentials,
+  revokeCredential,
+  getInstitutionHistory
 };
