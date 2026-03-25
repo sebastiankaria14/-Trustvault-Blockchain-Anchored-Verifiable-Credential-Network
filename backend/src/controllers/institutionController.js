@@ -1,4 +1,6 @@
 import { query } from '../utils/database.js';
+import crypto from 'crypto';
+import { calculateCredentialHash } from '../utils/hash.js';
 
 /**
  * Get institution dashboard stats
@@ -49,9 +51,6 @@ export const getInstitutionStats = async (req, res) => {
   }
 };
 
-/**
- * Issue new credential to a user
- */
 export const issueCredential = async (req, res) => {
   try {
     const institutionId = req.user.id;
@@ -98,6 +97,10 @@ export const issueCredential = async (req, res) => {
       issuedBy: institutionId
     };
 
+    // IMPORTANT: Calculate SHA-256 hash of credential data for blockchain verification
+    // Use deterministic hashing to ensure same data always produces same hash
+    const blockchainHash = calculateCredentialHash(credentialData);
+
     // Insert credential using correct column names
     const result = await query(
       `INSERT INTO credentials
@@ -114,7 +117,7 @@ export const issueCredential = async (req, res) => {
         issueDate,
         expiryDate || null,
         'active',
-        `0x${Math.random().toString(16).substring(2, 66)}`,
+        blockchainHash,  // Actual SHA-256 hash of credential data
         documentUrl || null
       ]
     );
