@@ -1,5 +1,8 @@
 import { query } from '../utils/database.js';
 import crypto from 'crypto';
+import { hashCredentialData } from '../utils/hashing.js';
+import { generateCredentialDID } from '../utils/did.js';
+import { registerCredentialOnBlockchain } from '../utils/blockchain.js';
 import { calculateCredentialHash } from '../utils/hash.js';
 
 /**
@@ -84,9 +87,6 @@ export const issueCredential = async (req, res) => {
       });
     }
 
-    // Generate unique credential number
-    const credentialNumber = `CRED-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-
     // Create credential data JSON object
     const credentialData = {
       credentialType,
@@ -94,9 +94,16 @@ export const issueCredential = async (req, res) => {
       description: description || '',
       issueDate,
       expiryDate: expiryDate || null,
+      recipientEmail,
       issuedBy: institutionId
     };
 
+    const credentialHash = hashCredentialData(credentialData);
+
+    const did = generateCredentialDID(crypto.randomUUID());
+    const chainResult = await registerCredentialOnBlockchain(did, credentialHash);
+
+    // Insert credential with blockchain metadata
     // IMPORTANT: Calculate SHA-256 hash of credential data for blockchain verification
     // Use deterministic hashing to ensure same data always produces same hash
     const blockchainHash = calculateCredentialHash(credentialData);
@@ -104,8 +111,8 @@ export const issueCredential = async (req, res) => {
     // Insert credential using correct column names
     const result = await query(
       `INSERT INTO credentials
-        (user_id, institution_id, credential_type, credential_name, description, credential_data, issue_date, expiry_date, status, blockchain_hash, document_url)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        (user_id, institution_id, credential_type, credential_name, description, credential_data, issue_date, expiry_date, status, did, blockchain_hash, blockchain_tx_hash, blockchain_network, document_url)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
       RETURNING *`,
       [
         userId,
@@ -117,6 +124,10 @@ export const issueCredential = async (req, res) => {
         issueDate,
         expiryDate || null,
         'active',
+        did,
+        credentialHash,
+        chainResult.txHash,
+        chainResult.network || 'polygon-mumbai',
         blockchainHash,  // Actual SHA-256 hash of credential data
         documentUrl || null
       ]
@@ -125,7 +136,11 @@ export const issueCredential = async (req, res) => {
     res.status(201).json({
       success: true,
       message: 'Credential issued successfully',
-      data: result.rows[0]
+      data: {
+        ...result.rows[0],
+        blockchainAnchored: chainResult.success,
+        blockchainError: chainResult.success ? null : chainResult.error
+      }
     });
   } catch (error) {
     console.error('Error issuing credential:', error);

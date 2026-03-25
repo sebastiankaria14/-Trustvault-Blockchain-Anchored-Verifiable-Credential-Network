@@ -1,4 +1,44 @@
 import { query } from '../utils/database.js';
+import { hashCredentialData } from '../utils/hashing.js';
+import { parseCredentialDID } from '../utils/did.js';
+import { compareCredentialHashWithBlockchain } from '../utils/blockchain.js';
+
+const isConsentActive = (record) => {
+  if (!record) return false;
+  if (record.status !== 'granted') return false;
+  if (!record.expires_at) return true;
+  return new Date(record.expires_at) > new Date();
+};
+
+const checkVerificationConsent = async ({ credentialId, verifierId, userId, credentialType }) => {
+  const granularResult = await query(
+    `SELECT status, expires_at
+     FROM consent_records
+     WHERE credential_id = $1 AND verifier_id = $2 AND user_id = $3
+     ORDER BY created_at DESC
+     LIMIT 1`,
+    [credentialId, verifierId, userId]
+  );
+
+  if (isConsentActive(granularResult.rows[0])) {
+    return true;
+  }
+
+  try {
+    const tierResult = await query(
+      `SELECT status, expires_at
+       FROM consent_tiers
+       WHERE user_id = $1 AND verifier_id = $2 AND credential_type = $3
+       ORDER BY created_at DESC
+       LIMIT 1`,
+      [userId, verifierId, credentialType]
+    );
+
+    return isConsentActive(tierResult.rows[0]);
+  } catch (error) {
+    return false;
+  }
+};
 import crypto from 'crypto';
 import { calculateCredentialHash } from '../utils/hash.js';
 
@@ -355,6 +395,111 @@ export const verifyCredential = async (req, res) => {
 };
 
 /**
+ * Verify credential authenticity using DID + blockchain hash comparison.
+ */
+export const verifyCredentialByDid = async (req, res) => {
+  try {
+    const verifierId = req.user.id;
+    const { did, credentialData } = req.body;
+
+    if (!did || !credentialData || typeof credentialData !== 'object') {
+      return res.status(400).json({
+        success: false,
+        message: 'did and credentialData are required.'
+      });
+    }
+
+    const parsedDid = parseCredentialDID(did);
+    if (!parsedDid.isValid) {
+      return res.status(400).json({
+        success: false,
+        message: parsedDid.error
+      });
+    }
+
+    const credentialResult = await query(
+      `SELECT id, user_id, credential_type, credential_data
+       FROM credentials
+       WHERE id = $1 AND did = $2`,
+      [parsedDid.credentialId, did]
+    );
+
+    if (credentialResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Credential not found for provided DID.'
+      });
+    }
+
+    const credential = credentialResult.rows[0];
+    const requestHash = hashCredentialData(credentialData);
+    const blockchainCheck = await compareCredentialHashWithBlockchain(did, requestHash);
+    const consentGiven = await checkVerificationConsent({
+      credentialId: credential.id,
+      verifierId,
+      userId: credential.user_id,
+      credentialType: credential.credential_type
+    });
+
+    const certificate = blockchainCheck.blockchainHashMatched && consentGiven;
+    const dbResult = certificate ? 'success' : 'failure';
+    const resultDetails = {
+      did,
+      request_hash: blockchainCheck.expectedHash,
+      on_chain_hash: blockchainCheck.onChainHash,
+      blockchain_match: blockchainCheck.blockchainHashMatched,
+      consent_given: consentGiven
+    };
+
+    await query(
+      `INSERT INTO verification_logs (
+        verifier_id,
+        user_id,
+        credential_id,
+        verification_type,
+        verification_method,
+        result,
+        result_details,
+        blockchain_verified,
+        blockchain_hash_matched,
+        ip_address,
+        user_agent,
+        verified_at
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, CURRENT_TIMESTAMP)`,
+      [
+        verifierId,
+        credential.user_id,
+        credential.id,
+        'credential_verification',
+        'api',
+        dbResult,
+        JSON.stringify(resultDetails),
+        blockchainCheck.blockchainVerified,
+        blockchainCheck.blockchainHashMatched,
+        req.ip || req.connection.remoteAddress || null,
+        req.headers['user-agent'] || null
+      ]
+    );
+
+    return res.status(200).json({
+      success: true,
+      certificate,
+      didValid: blockchainCheck.blockchainVerified,
+      blockchainMatch: blockchainCheck.blockchainHashMatched,
+      consentGiven
+    });
+  } catch (error) {
+    console.error('Error verifying credential by DID:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Error verifying credential',
+      error: error.message
+    });
+  }
+};
+
+/**
  * Get verification history for verifier
  */
 export const getVerificationHistory = async (req, res) => {
@@ -622,6 +767,7 @@ export default {
   getVerificationRequests,
   getCredentialForVerification,
   verifyCredential,
+  verifyCredentialByDid,
   getVerificationHistory,
   getVerifierProfile,
   updateVerifierProfile,

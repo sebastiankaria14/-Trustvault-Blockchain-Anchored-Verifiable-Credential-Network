@@ -4,6 +4,7 @@ import {
   getVerificationRequests,
   getCredentialForVerification,
   verifyCredential,
+  verifyCredentialByDid,
   getVerificationHistory,
   getVerifierProfile,
   updateVerifierProfile,
@@ -24,6 +25,7 @@ router.get('/dashboard/stats', getVerifierDashboardStats);
 router.get('/verification-requests', getVerificationRequests);
 router.get('/credential/:id', getCredentialForVerification);
 router.post('/credential/:id/verify', verifyCredential);
+router.post('/verify-did', verifyCredentialByDid);
 
 // Verification History
 router.get('/history', getVerificationHistory);
