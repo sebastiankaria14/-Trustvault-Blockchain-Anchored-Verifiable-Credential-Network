@@ -1,0 +1,18 @@
+{
+  "name": "trustvault",
+  "version": "1.0.0",
+  "description": "TrustVault - Digital Credential Verification Platform",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "start:backend": "npm start --prefix backend",
+    "start:frontend": "npm start --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "install-all": "npm install && npm install --prefix backend && npm install --prefix frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

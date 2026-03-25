@@ -1,201 +1,161 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import Navbar from '../../components/Navbar'
-import Footer from '../../components/Footer'
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Building2, GraduationCap, Landmark, HeartPulse, ShieldCheck, Zap, Globe, BarChart3, Puzzle, FileCheck, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 
-function ForInstitutions() {
+const ForInstitutions = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1, 
+      transition: { staggerChildren: 0.1 } 
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 }
+  };
+
+  const sectors = [
+    { icon: GraduationCap, name: 'Universities', desc: 'Degrees, diplomas, and official transcripts.', color: 'blue' },
+    { icon: Building2, name: 'Employers', desc: 'Work history and performance certificates.', color: 'indigo' },
+    { icon: Landmark, name: 'Financial', desc: 'Credit reports and statement verification.', color: 'cyan' },
+    { icon: HeartPulse, name: 'Healthcare', desc: 'Medical records and health certifications.', color: 'rose' }
+  ];
+
+  const benefits = [
+    { icon: Zap, title: 'Operational Efficiency', desc: 'Cut administrative costs by 80% with automated digital issuance.' },
+    { icon: ShieldCheck, title: 'Fraud Prevention', desc: 'Eliminate forged documents with blockchain-anchored signatures.' },
+    { icon: Globe, title: 'Global Portability', desc: 'Your credentials are recognized and verifiable across borders.' },
+    { icon: BarChart3, title: 'Advanced Analytics', desc: 'Insightful dashboards tracking issuance and verification trends.' },
+    { icon: Puzzle, title: 'Seamless Integration', desc: 'Connect with existing LMS/HRIS systems via our robust API.' },
+    { icon: FileCheck, title: 'Compliance First', desc: 'Full GDPR/CCPA compliance with user-centric consent flows.' }
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FDFDFF]">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold mb-4">TrustVault for Institutions</h1>
-          <p className="text-xl text-primary-100">
-            Issue verified credentials that your students, employees, and clients can use anywhere
-          </p>
-        </div>
-      </section>
-
-      {/* Who Can Use */}
-      <section className="py-16">
+      {/* Hero */}
+      <section className="pt-32 pb-24 relative overflow-hidden bg-white border-b border-slate-100">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-50/50 -skew-x-12 translate-x-1/4 -z-10" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Who Can Issue Credentials?</h2>
-
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-md text-center">
-              <div className="text-5xl mb-3">🎓</div>
-              <h3 className="font-semibold text-lg">Universities</h3>
-              <p className="text-gray-600 text-sm mt-2">Degrees, diplomas, certificates, transcripts</p>
+          <div className="flex flex-col lg:flex-row items-center gap-16">
+            <div className="lg:w-1/2 text-left">
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="inline-block px-4 py-1.5 bg-blue-50 text-blue-700 rounded-full text-sm font-bold mb-6 border border-blue-100">
+                  Institutional Portal
+                </div>
+                <h1 className="text-5xl lg:text-6xl font-extrabold text-slate-900 mb-8 leading-tight">
+                  The Gold Standard for <span className="text-blue-600">Credential Issuance</span>
+                </h1>
+                <p className="text-xl text-slate-600 mb-10 leading-relaxed max-w-xl">
+                  Empower your alumni and employees with verifiable digital credentials that are secure, portable, and instant.
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  <Link to="/register" className="px-8 py-4 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 flex items-center gap-2">
+                    Become an Issuer <ArrowRight size={20} />
+                  </Link>
+                  <Link to="/contact" className="px-8 py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition-all">
+                    Request Demo
+                  </Link>
+                </div>
+              </motion.div>
             </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md text-center">
-              <div className="text-5xl mb-3">🏢</div>
-              <h3 className="font-semibold text-lg">Employers</h3>
-              <p className="text-gray-600 text-sm mt-2">Employment letters, salary slips, experience certificates</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md text-center">
-              <div className="text-5xl mb-3">🏦</div>
-              <h3 className="font-semibold text-lg">Banks</h3>
-              <p className="text-gray-600 text-sm mt-2">Bank statements, loan documents, credit history</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md text-center">
-              <div className="text-5xl mb-3">🏥</div>
-              <h3 className="font-semibold text-lg">Healthcare</h3>
-              <p className="text-gray-600 text-sm mt-2">Medical records, vaccination certificates, prescriptions</p>
+            <div className="lg:w-1/2">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-slate-900 rounded-[3rem] p-10 shadow-2xl relative"
+              >
+                 <div className="flex items-center justify-between mb-12">
+                   <div className="flex gap-2">
+                     <div className="w-3 h-3 rounded-full bg-red-400" />
+                     <div className="w-3 h-3 rounded-full bg-amber-400" />
+                     <div className="w-3 h-3 rounded-full bg-green-400" />
+                   </div>
+                   <div className="px-4 py-1 bg-slate-800 rounded-full text-xs text-slate-400 font-mono">issuer_console_v2.0</div>
+                 </div>
+                 <div className="space-y-6">
+                    <div className="h-4 w-3/4 bg-slate-800 rounded-full" />
+                    <div className="h-4 w-1/2 bg-slate-800 rounded-full" />
+                    <div className="grid grid-cols-2 gap-4 mt-12">
+                       <div className="h-24 bg-blue-600/20 border border-blue-500/30 rounded-2xl flex items-center justify-center">
+                          <BarChart3 className="text-blue-400" size={32} />
+                       </div>
+                       <div className="h-24 bg-slate-800 rounded-2xl" />
+                    </div>
+                 </div>
+              </motion.div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="bg-white py-16">
+      {/* Sectors */}
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Why Choose TrustVault?</h2>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="flex items-start space-x-4">
-              <div className="bg-primary-100 p-3 rounded-lg">
-                <div className="text-2xl text-primary-600">⚡</div>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Reduce Administrative Burden</h3>
-                <p className="text-gray-600">
-                  Issue credentials digitally instead of printing physical documents. Save time, money, and paper.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-4">
-              <div className="bg-primary-100 p-3 rounded-lg">
-                <div className="text-2xl text-primary-600">🔒</div>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Prevent Fraud</h3>
-                <p className="text-gray-600">
-                  Blockchain-backed credentials are impossible to forge. Protect your institution's reputation.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-4">
-              <div className="bg-primary-100 p-3 rounded-lg">
-                <div className="text-2xl text-primary-600">🌐</div>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Global Reach</h3>
-                <p className="text-gray-600">
-                  Your credentials are accessible worldwide. Help your students and employees anywhere they go.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-4">
-              <div className="bg-primary-100 p-3 rounded-lg">
-                <div className="text-2xl text-primary-600">📊</div>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Track & Manage</h3>
-                <p className="text-gray-600">
-                  Dashboard shows all issued credentials, verification requests, and analytics in real-time.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-4">
-              <div className="bg-primary-100 p-3 rounded-lg">
-                <div className="text-2xl text-primary-600">🔌</div>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Easy Integration</h3>
-                <p className="text-gray-600">
-                  Simple API integration with your existing systems. Technical support included.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-4">
-              <div className="bg-primary-100 p-3 rounded-lg">
-                <div className="text-2xl text-primary-600">✅</div>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Compliance Ready</h3>
-                <p className="text-gray-600">
-                  GDPR compliant, audit trails, and full consent management built-in.
-                </p>
-              </div>
-            </div>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Supporting diverse sectors</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">We provide specialized infrastructure for organizations across the global economy.</p>
+          </div>
+          <div className="grid md:grid-cols-4 gap-8">
+            {sectors.map((sector, idx) => (
+              <motion.div
+                key={idx}
+                whileHover={{ y: -5 }}
+                className="p-8 bg-slate-50 rounded-3xl border border-transparent hover:border-blue-100 hover:bg-white hover:shadow-xl transition-all"
+              >
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 bg-white shadow-sm text-blue-600`}>
+                  <sector.icon size={28} />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-3">{sector.name}</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">{sector.desc}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* How to Get Started */}
-      <section className="py-16">
+      {/* Value Prop */}
+      <section className="py-24 bg-slate-50 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Getting Started is Easy</h2>
-
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="bg-primary-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">1</div>
-              <h3 className="font-semibold mb-2">Register</h3>
-              <p className="text-gray-600 text-sm">Sign up and verify your institution</p>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-primary-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">2</div>
-              <h3 className="font-semibold mb-2">Get Approved</h3>
-              <p className="text-gray-600 text-sm">Quick verification process (1-2 business days)</p>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-primary-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">3</div>
-              <h3 className="font-semibold mb-2">Integrate</h3>
-              <p className="text-gray-600 text-sm">Use our portal or integrate via API</p>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-primary-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">4</div>
-              <h3 className="font-semibold mb-2">Issue</h3>
-              <p className="text-gray-600 text-sm">Start issuing verified credentials instantly</p>
-            </div>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-slate-900 mb-4">Enterprise-ready features</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">Everything you need to modernize your credential management lifecycle.</p>
           </div>
-        </div>
-      </section>
-
-      {/* Pricing Section (Optional) */}
-      <section className="bg-gray-100 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Transparent Pricing</h2>
-          <p className="text-xl text-gray-600 mb-8">
-            Pay per credential issued. No setup fees. No hidden costs.
-          </p>
-          <div className="bg-white p-8 rounded-lg shadow-md inline-block">
-            <div className="text-4xl font-bold text-primary-600 mb-2">$0.50</div>
-            <p className="text-gray-600">per credential issued</p>
-            <p className="text-sm text-gray-500 mt-2">Volume discounts available</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="bg-primary-600 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Transform How You Issue Credentials</h2>
-          <p className="text-xl mb-8 text-primary-100">
-            Join leading institutions already using TrustVault
-          </p>
-          <Link to="/register" className="px-8 py-3 bg-white text-primary-600 rounded-lg font-semibold hover:bg-gray-100 transition inline-block">
-            Register Your Institution
-          </Link>
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-3 gap-x-12 gap-y-16"
+          >
+            {benefits.map((benefit, idx) => (
+              <motion.div key={idx} variants={itemVariants} className="flex gap-6">
+                <div className="w-12 h-12 rounded-xl bg-white shadow-sm flex-shrink-0 flex items-center justify-center text-blue-600 border border-slate-100">
+                  <benefit.icon size={24} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">{benefit.title}</h3>
+                  <p className="text-slate-600 leading-relaxed">{benefit.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default ForInstitutions
+export default ForInstitutions;
