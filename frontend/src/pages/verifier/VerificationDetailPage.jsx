@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getCredentialForVerification, verifyCredential } from '../../services/api';
+import { getCredentialForVerification, verifyCredential, requestReVerification } from '../../services/api';
 
 const VerificationDetailPage = () => {
   const { id } = useParams();
@@ -10,9 +10,12 @@ const VerificationDetailPage = () => {
   const [verifying, setVerifying] = useState(false);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('details');
-  const [verificationResult, setVerificationResult] = useState('');
-  const [comments, setComments] = useState('');
   const [verified, setVerified] = useState(false);
+  const [verificationResult, setVerificationResult] = useState(null);
+  const [requestingReVerification, setRequestingReVerification] = useState(false);
+  const [reVerificationMessage, setReVerificationMessage] = useState(null);
+  const [reVerificationReason, setReVerificationReason] = useState('');
+  const [showRequestForm, setShowRequestForm] = useState(false);
 
   useEffect(() => {
     const fetchCredential = async () => {
@@ -34,28 +37,47 @@ const VerificationDetailPage = () => {
   }, [id]);
 
   const handleVerify = async () => {
-    if (!verificationResult) {
-      alert('Please select verification result');
-      return;
-    }
-
     try {
       setVerifying(true);
-      const response = await verifyCredential(id, {
-        verificationResult,
-        comments: comments || null
-      });
+      setError(null);
+
+      // Call API - NO manual input, backend does automatic verification
+      const response = await verifyCredential(id);
 
       if (response.success) {
+        setVerificationResult(response.data);
         setVerified(true);
-        alert('Credential verified successfully!');
-        setTimeout(() => navigate('/verifier/verification-requests'), 2000);
+
+        // Keep window open - user can manually close or navigate back
       }
     } catch (err) {
       console.error('Error verifying credential:', err);
-      setError(err.message);
+      setError(err.message || 'Failed to verify credential');
     } finally {
       setVerifying(false);
+    }
+  };
+
+  const handleRequestReVerification = async () => {
+    try {
+      setRequestingReVerification(true);
+      setError(null);
+
+      const response = await requestReVerification(id, reVerificationReason);
+
+      if (response.success) {
+        setReVerificationMessage('Re-verification request sent to user successfully!');
+        setShowRequestForm(false);
+        setReVerificationReason('');
+
+        // Clear message after 3 seconds
+        setTimeout(() => setReVerificationMessage(null), 3000);
+      }
+    } catch (err) {
+      console.error('Error requesting re-verification:', err);
+      setError(err.message || 'Failed to request re-verification');
+    } finally {
+      setRequestingReVerification(false);
     }
   };
 
@@ -88,6 +110,7 @@ const VerificationDetailPage = () => {
   }
 
   const credentialData = credential.credential_data || {};
+  const isAlreadyVerified = credential.share_status === 'verified' || credential.share_status === 'rejected';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-neutral-50">
@@ -293,68 +316,229 @@ const VerificationDetailPage = () => {
 
           {activeTab === 'verify' && (
             <div className="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
-              <h3 className="font-bold text-neutral-900 mb-4">Verification</h3>
+              <h3 className="font-bold text-neutral-900 mb-6">Blockchain Verification</h3>
 
-              {verified ? (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-                  <p className="text-4xl mb-2">✓</p>
-                  <p className="text-lg font-bold text-green-800 mb-1">Credential Verified!</p>
-                  <p className="text-sm text-green-700">Result: {verificationResult}</p>
-                  <p className="text-xs text-green-600 mt-4">Redirecting...</p>
+              {isAlreadyVerified ? (
+                // Show that it's already been verified
+                <div className={`rounded-lg p-8 text-center border-2 ${
+                  credential.share_status === 'verified'
+                    ? 'bg-green-50 border-green-200'
+                    : 'bg-red-50 border-red-200'
+                }`}>
+                  <div className={`text-5xl mb-4 ${
+                    credential.share_status === 'verified' ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {credential.share_status === 'verified' ? '✓' : '✗'}
+                  </div>
+
+                  <h2 className={`text-xl font-bold mb-2 ${
+                    credential.share_status === 'verified' ? 'text-green-800' : 'text-red-800'
+                  }`}>
+                    {credential.share_status === 'verified' ? 'ALREADY VERIFIED' : 'ALREADY MARKED AS FAKE'}
+                  </h2>
+
+                  <p className={`text-sm mb-6 ${
+                    credential.share_status === 'verified' ? 'text-green-700' : 'text-red-700'
+                  }`}>
+                    {credential.share_status === 'verified'
+                      ? 'You have already verified this credential. The blockchain verification was successful.'
+                      : 'You have already verified this credential. It was marked as inauthentic.'}
+                  </p>
+
+                  {credential.share_verified_at && (
+                    <div className="bg-white rounded-lg p-4 mb-6 text-left">
+                      <p className="text-xs text-neutral-600 font-medium mb-2">VERIFICATION TIMESTAMP</p>
+                      <p className="text-sm text-neutral-900">
+                        Verified on: {new Date(credential.share_verified_at).toLocaleString()}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <p className="text-xs text-blue-800 font-medium">ℹ️ Status</p>
+                    <p className="text-xs text-blue-700 mt-2">
+                      Once a credential is verified, it cannot be verified again. This protects the integrity of the verification process.
+                    </p>
+                  </div>
+
+                  {reVerificationMessage && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                      <p className="text-sm text-green-800">✓ {reVerificationMessage}</p>
+                    </div>
+                  )}
+
+                  {!showRequestForm ? (
+                    <div className="flex gap-4">
+                      <button
+                        onClick={() => setShowRequestForm(true)}
+                        className="flex-1 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg transition-colors"
+                      >
+                        Request Re-verification
+                      </button>
+                      <Link
+                        to="/verifier/verification-requests"
+                        className="flex-1 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors text-center"
+                      >
+                        Back to Requests
+                      </Link>
+                      <Link
+                        to="/verifier/history"
+                        className="flex-1 px-6 py-3 bg-neutral-200 hover:bg-neutral-300 text-neutral-900 font-medium rounded-lg transition-colors text-center"
+                      >
+                        View History
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 space-y-4">
+                      <h4 className="font-semibold text-amber-900">Request Re-verification</h4>
+                      <p className="text-sm text-amber-800">
+                        This will send a request to the user to approve re-verification. Once approved, you can verify this credential again.
+                      </p>
+
+                      <div>
+                        <label className="block text-sm font-medium text-neutral-700 mb-2">
+                          Reason for Re-verification (Optional)
+                        </label>
+                        <textarea
+                          value={reVerificationReason}
+                          onChange={(e) => setReVerificationReason(e.target.value)}
+                          placeholder="e.g., Document quality improved, Need updated verification, etc."
+                          className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:border-indigo-600 resize-none"
+                          rows="3"
+                        />
+                      </div>
+
+                      <div className="flex gap-4">
+                        <button
+                          onClick={handleRequestReVerification}
+                          disabled={requestingReVerification}
+                          className="flex-1 px-6 py-3 bg-amber-600 hover:bg-amber-700 disabled:bg-neutral-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                        >
+                          {requestingReVerification ? (
+                            <>
+                              <span className="animate-spin">⏳</span>
+                              Sending Request...
+                            </>
+                          ) : (
+                            <>
+                              <span>📩</span>
+                              Send Request to User
+                            </>
+                          )}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowRequestForm(false);
+                            setReVerificationReason('');
+                          }}
+                          className="flex-1 px-6 py-3 bg-neutral-200 hover:bg-neutral-300 text-neutral-900 font-medium rounded-lg transition-colors"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : verified ? (
+                // Display automatic result after verification
+                <div className={`rounded-lg p-8 text-center ${
+                  verificationResult?.isAuthentic
+                    ? 'bg-green-50 border border-green-200'
+                    : 'bg-red-50 border border-red-200'
+                }`}>
+                  <div className={`text-6xl mb-4 ${
+                    verificationResult?.isAuthentic ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {verificationResult?.isAuthentic ? '✓' : '✗'}
+                  </div>
+
+                  <h2 className={`text-2xl font-bold mb-2 ${
+                    verificationResult?.isAuthentic ? 'text-green-800' : 'text-red-800'
+                  }`}>
+                    {verificationResult?.isAuthentic ? 'AUTHENTIC' : 'FAKE'}
+                  </h2>
+
+                  <p className={`text-sm mb-6 ${
+                    verificationResult?.isAuthentic ? 'text-green-700' : 'text-red-700'
+                  }`}>
+                    {verificationResult?.isAuthentic
+                      ? 'This credential matches the blockchain record'
+                      : 'This credential does NOT match the blockchain record'}
+                  </p>
+
+                  {/* Hash comparison details */}
+                  {verificationResult && (
+                    <div className="bg-white rounded-lg p-4 mt-6 text-left space-y-3">
+                      <div className="border-b border-neutral-200 pb-3 mb-3">
+                        <p className="text-xs text-neutral-600 font-medium">VERIFICATION DETAILS</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-neutral-600">Blockchain Hash:</p>
+                        <p className="text-xs font-mono text-neutral-900 mt-1 break-all bg-neutral-50 p-2 rounded">
+                          {verificationResult.blockchainHash}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-neutral-600">Calculated Hash:</p>
+                        <p className="text-xs font-mono text-neutral-900 mt-1 break-all bg-neutral-50 p-2 rounded">
+                          {verificationResult.calculatedHash}
+                        </p>
+                      </div>
+                      <div className="pt-3 border-t border-neutral-200">
+                        <p className="text-xs text-neutral-600">Verified At:</p>
+                        <p className="text-sm text-neutral-900 mt-1">
+                          {new Date(verificationResult.verified_at).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="mt-6 flex gap-4">
+                    <button
+                      onClick={() => setVerified(false)}
+                      className="flex-1 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors"
+                    >
+                      Close
+                    </button>
+                    <Link
+                      to="/verifier/verification-requests"
+                      className="flex-1 px-6 py-2 bg-neutral-200 hover:bg-neutral-300 text-neutral-900 font-medium rounded-lg transition-colors text-center"
+                    >
+                      Back to Requests
+                    </Link>
+                  </div>
                 </div>
               ) : (
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-900 mb-3">Verification Result *</label>
-                    <div className="space-y-2">
-                      <label className="flex items-center gap-3 p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 cursor-pointer">
-                        <input
-                          type="radio"
-                          value="authentic"
-                          checked={verificationResult === 'authentic'}
-                          onChange={(e) => setVerificationResult(e.target.value)}
-                          className="w-4 h-4"
-                        />
-                        <div>
-                          <p className="font-medium text-neutral-900">✓ Authentic</p>
-                          <p className="text-xs text-neutral-600">Credential is genuine and valid</p>
-                        </div>
-                      </label>
+                // Verification form - SIMPLIFIED, just a button
+                <div className="space-y-4">
+                  <p className="text-sm text-neutral-600">
+                    Click the button below to run automatic blockchain verification. The system will compare this credential's hash against the blockchain record to determine if it's authentic.
+                  </p>
 
-                      <label className="flex items-center gap-3 p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 cursor-pointer">
-                        <input
-                          type="radio"
-                          value="fake"
-                          checked={verificationResult === 'fake'}
-                          onChange={(e) => setVerificationResult(e.target.value)}
-                          className="w-4 h-4"
-                        />
-                        <div>
-                          <p className="font-medium text-neutral-900">✗ Fake</p>
-                          <p className="text-xs text-neutral-600">Credential is fraudulent or invalid</p>
-                        </div>
-                      </label>
-                    </div>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="text-xs text-blue-800 font-medium">ℹ️ How it works:</p>
+                    <p className="text-xs text-blue-700 mt-2">
+                      The backend will calculate a cryptographic hash of this credential and compare it with the hash stored on the blockchain by the issuing institution. If they match, the credential is AUTHENTIC. If they don't match, the credential is FAKE.
+                    </p>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-900 mb-2">Comments (Optional)</label>
-                    <textarea
-                      value={comments}
-                      onChange={(e) => setComments(e.target.value)}
-                      placeholder="Add any notes about this verification..."
-                      rows="4"
-                      className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
-                    />
-                  </div>
-
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 pt-4">
                     <button
                       onClick={handleVerify}
-                      disabled={verifying || !verificationResult}
-                      className="flex-1 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-neutral-300 text-white font-medium rounded-lg transition-colors"
+                      disabled={verifying}
+                      className="flex-1 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-neutral-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
                     >
-                      {verifying ? 'Verifying...' : 'Submit Verification'}
+                      {verifying ? (
+                        <>
+                          <span className="animate-spin">⏳</span>
+                          Verifying...
+                        </>
+                      ) : (
+                        <>
+                          <span>🔍</span>
+                          Run Blockchain Verification
+                        </>
+                      )}
                     </button>
                     <Link
                       to="/verifier/verification-requests"

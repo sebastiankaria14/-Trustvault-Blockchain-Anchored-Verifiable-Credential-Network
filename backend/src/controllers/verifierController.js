@@ -39,6 +39,8 @@ const checkVerificationConsent = async ({ credentialId, verifierId, userId, cred
     return false;
   }
 };
+import crypto from 'crypto';
+import { calculateCredentialHash } from '../utils/hash.js';
 
 /**
  * Get dashboard statistics for verifier
@@ -100,7 +102,7 @@ export const getVerifierDashboardStats = async (req, res) => {
 
     // Get verifier info
     const verifierInfo = await query(
-      `SELECT id, company_name, industry, contact_email, created_at
+      `SELECT id, company_name, industry, email, phone, website, created_at
       FROM verifiers
       WHERE id = $1`,
       [verifierId]
@@ -232,10 +234,7 @@ export const getCredentialForVerification = async (req, res) => {
     const verifierId = req.user.id;
     const { id } = req.params;
 
-    // For now, allow any verifier to see any credential (until credential_shares is implemented)
-    // Later: Check if credential was shared with this verifier via credential_shares table
-
-    // Get credential details
+    // Get credential details along with share status
     const result = await query(
       `SELECT
         c.*,
@@ -245,12 +244,15 @@ export const getCredentialForVerification = async (req, res) => {
         i.name as issuer_name,
         i.type as issuer_type,
         i.email as issuer_email,
-        i.website as issuer_website
+        i.website as issuer_website,
+        cs.status as share_status,
+        cs.verified_at as share_verified_at
       FROM credentials c
       JOIN users u ON c.user_id = u.id
       LEFT JOIN institutions i ON c.institution_id = i.id
+      LEFT JOIN credential_shares cs ON c.id = cs.credential_id AND cs.verifier_id = $2
       WHERE c.id = $1`,
-      [id]
+      [id, req.user.id]
     );
 
     if (result.rows.length === 0) {
@@ -275,44 +277,86 @@ export const getCredentialForVerification = async (req, res) => {
 };
 
 /**
- * Verify a credential
+ * Verify a credential - AUTOMATIC BLOCKCHAIN VERIFICATION
+ * Compares credential hash with blockchain hash automatically
+ * No manual input from verifier - result is purely algorithmic
  */
 export const verifyCredential = async (req, res) => {
   try {
     const verifierId = req.user.id;
     const { id } = req.params;
-    const { verificationResult, comments } = req.body;
 
-    // Validate input
-    if (!verificationResult || !['authentic', 'fake'].includes(verificationResult)) {
-      return res.status(400).json({
+    // Fetch credential from database
+    const credentialResult = await query(
+      `SELECT
+        credential_data,
+        blockchain_hash,
+        credential_name,
+        issue_date
+      FROM credentials
+      WHERE id = $1`,
+      [id]
+    );
+
+    if (credentialResult.rows.length === 0) {
+      return res.status(404).json({
         success: false,
-        message: 'Invalid verification result. Must be "authentic" or "fake".'
+        message: 'Credential not found'
       });
     }
+
+    const credential = credentialResult.rows[0];
+    const blockchainHash = credential.blockchain_hash;
+
+    if (!blockchainHash) {
+      return res.status(400).json({
+        success: false,
+        message: 'Credential does not have a blockchain hash. Cannot verify.'
+      });
+    }
+
+    // Calculate SHA-256 hash of current credential data using deterministic method
+    const currentHash = calculateCredentialHash(credential.credential_data);
+
+    // AUTOMATIC VERIFICATION: Compare hashes
+    const isAuthentic = currentHash === blockchainHash;
+    const dbVerificationResult = isAuthentic ? 'success' : 'failure';
+
+    // Prepare result_details with blockchain comparison info
+    const resultDetails = {
+      verification_type: 'blockchain_hash_comparison',
+      blockchain_hash: blockchainHash,
+      calculated_hash: currentHash,
+      hash_match: isAuthentic,
+      verified_at: new Date().toISOString()
+    };
 
     const userAgent = req.headers['user-agent'] || null;
     const ipAddress = req.ip || req.connection.remoteAddress || null;
 
-    // Map frontend values to database values
-    const dbVerificationResult = verificationResult === 'authentic' ? 'success' : 'failure';
-    const shareStatus = verificationResult === 'authentic' ? 'verified' : 'rejected';
-
-    // Prepare result_details with comments
-    const resultDetails = comments ? { comments, verification_result: verificationResult } : { verification_result: verificationResult };
-
-    // Log in verification_logs
+    // Log the AUTOMATIC verification in verification_logs
     try {
       await query(
-        `INSERT INTO verification_logs (credential_id, verifier_id, verification_type, result, result_details, user_agent, ip_address, verified_at)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP)`,
-        [id, verifierId, 'credential_verification', dbVerificationResult, JSON.stringify(resultDetails), userAgent, ipAddress]
+        `INSERT INTO verification_logs (credential_id, verifier_id, verification_type, result, result_details, blockchain_verified, blockchain_hash_matched, user_agent, ip_address, verified_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, CURRENT_TIMESTAMP)`,
+        [
+          id,
+          verifierId,
+          'blockchain_hash_comparison',
+          dbVerificationResult,
+          JSON.stringify(resultDetails),
+          true,  // blockchain_verified = true
+          isAuthentic,  // blockchain_hash_matched
+          userAgent,
+          ipAddress
+        ]
       );
     } catch (err) {
       console.warn('Could not log to verification_logs:', err.message);
     }
 
     // Update credential_shares status
+    const shareStatus = isAuthentic ? 'verified' : 'rejected';
     try {
       await query(
         `UPDATE credential_shares
@@ -324,15 +368,20 @@ export const verifyCredential = async (req, res) => {
       console.warn('Could not update credential_shares:', err.message);
     }
 
+    // Return AUTOMATIC result
     res.status(200).json({
       success: true,
-      message: 'Credential verified successfully',
+      message: isAuthentic
+        ? 'Credential is AUTHENTIC - Blockchain hash matches'
+        : 'Credential is FAKE - Blockchain hash does not match',
       data: {
-        verificationLog: {
-          id: id,
-          verified_at: new Date().toISOString()
-        },
-        verificationResult
+        verificationResult: isAuthentic ? 'authentic' : 'fake',
+        isAuthentic: isAuthentic,
+        hashMatch: isAuthentic,
+        blockchainHash: blockchainHash,
+        calculatedHash: currentHash,
+        credentialName: credential.credential_name,
+        verified_at: new Date().toISOString()
       }
     });
   } catch (error) {
@@ -554,7 +603,7 @@ export const getVerifierProfile = async (req, res) => {
     const verifierId = req.user.id;
 
     const result = await query(
-      `SELECT id, company_name, industry, contact_email, phone, website, created_at
+      `SELECT id, company_name, industry, email, phone, website, created_at
       FROM verifiers
       WHERE id = $1`,
       [verifierId]
@@ -568,7 +617,7 @@ export const getVerifierProfile = async (req, res) => {
             id: verifierId,
             company_name: '',
             industry: '',
-            contact_email: '',
+            email: '',
             phone: '',
             website: '',
             created_at: new Date().toISOString()
@@ -591,7 +640,7 @@ export const getVerifierProfile = async (req, res) => {
           id: req.user.id,
           company_name: '',
           industry: '',
-          contact_email: '',
+          email: '',
           phone: '',
           website: '',
           created_at: new Date().toISOString()
@@ -607,18 +656,17 @@ export const getVerifierProfile = async (req, res) => {
 export const updateVerifierProfile = async (req, res) => {
   try {
     const verifierId = req.user.id;
-    const { companyName, industry, contactEmail, phone, website } = req.body;
+    const { companyName, industry, phone, website } = req.body;
 
     const result = await query(
       `UPDATE verifiers
       SET company_name = COALESCE($1, company_name),
           industry = COALESCE($2, industry),
-          contact_email = COALESCE($3, contact_email),
-          phone = COALESCE($4, phone),
-          website = COALESCE($5, website)
-      WHERE id = $6
-      RETURNING id, company_name, industry, contact_email, phone, website, created_at`,
-      [companyName, industry, contactEmail, phone, website, verifierId]
+          phone = COALESCE($3, phone),
+          website = COALESCE($4, website)
+      WHERE id = $5
+      RETURNING id, company_name, industry, email, phone, website, created_at`,
+      [companyName, industry, phone, website, verifierId]
     );
 
     if (result.rows.length === 0) {
@@ -630,7 +678,7 @@ export const updateVerifierProfile = async (req, res) => {
             id: verifierId,
             company_name: companyName || '',
             industry: industry || '',
-            contact_email: contactEmail || '',
+            email: '',
             phone: phone || '',
             website: website || ''
           }
@@ -653,7 +701,7 @@ export const updateVerifierProfile = async (req, res) => {
           id: req.user.id,
           company_name: req.body.companyName || '',
           industry: req.body.industry || '',
-          contact_email: req.body.contactEmail || '',
+          email: '',
           phone: req.body.phone || '',
           website: req.body.website || ''
         }
