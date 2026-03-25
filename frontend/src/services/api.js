@@ -176,6 +176,30 @@ export const updateUserProfile = async (profileData) => {
   });
 };
 
+/**
+ * Get all available verifiers (companies)
+ */
+export const getVerifiers = async () => {
+  return apiRequest('/user/verifiers', { method: 'GET' });
+};
+
+/**
+ * Share a credential with a verifier
+ */
+export const shareCredential = async (credentialId, verifierId) => {
+  return apiRequest(`/user/credentials/${credentialId}/share`, {
+    method: 'POST',
+    body: JSON.stringify({ verifierId })
+  });
+};
+
+/**
+ * Get all credentials shared with verifiers
+ */
+export const getSharedCredentials = async () => {
+  return apiRequest('/user/shared-credentials', { method: 'GET' });
+};
+
 // ==========================================
 // Institution Portal API Functions
 // ==========================================
@@ -253,12 +277,13 @@ export const getCredentialForVerification = async (id) => {
 };
 
 /**
- * Verify a credential
+ * Verify a credential - AUTOMATIC BLOCKCHAIN VERIFICATION
+ * No parameters needed - backend automatically compares blockchain hashes
  */
-export const verifyCredential = async (id, verificationData) => {
+export const verifyCredential = async (id) => {
   return apiRequest(`/verifier/credential/${id}/verify`, {
     method: 'POST',
-    body: JSON.stringify(verificationData)
+    body: JSON.stringify({})  // Empty body - verification is automatic
   });
 };
 
@@ -298,6 +323,54 @@ export const downloadCredentialPDF = async (id) => {
   return apiRequest(`/verifier/credential/${id}/download`, { method: 'GET' });
 };
 
+/**
+ * Request re-verification of an already-verified credential
+ */
+export const requestReVerification = async (credentialId, reason = '') => {
+  return apiRequest(`/re-verification/verifier/credentials/${credentialId}/request-re-verification`, {
+    method: 'POST',
+    body: JSON.stringify({ reason })
+  });
+};
+
+/**
+ * Get pending re-verification requests for user
+ */
+export const getUserReVerificationRequests = async (status = 'pending') => {
+  return apiRequest(`/re-verification/user/re-verification-requests?status=${status}`, {
+    method: 'GET'
+  });
+};
+
+/**
+ * Get status of specific re-verification request
+ */
+export const getReVerificationStatus = async (requestId) => {
+  return apiRequest(`/re-verification/user/re-verification-requests/${requestId}`, {
+    method: 'GET'
+  });
+};
+
+/**
+ * Approve re-verification request
+ */
+export const approveReVerification = async (requestId, reason = '') => {
+  return apiRequest(`/re-verification/user/re-verification-requests/${requestId}/approve`, {
+    method: 'POST',
+    body: JSON.stringify({ reason })
+  });
+};
+
+/**
+ * Decline re-verification request
+ */
+export const declineReVerification = async (requestId, reason = '') => {
+  return apiRequest(`/re-verification/user/re-verification-requests/${requestId}/decline`, {
+    method: 'POST',
+    body: JSON.stringify({ reason })
+  });
+};
+
 export default {
   registerUser,
   registerInstitution,
@@ -316,6 +389,9 @@ export default {
   getUserAuditLog,
   getUserProfile,
   updateUserProfile,
+  getVerifiers,
+  shareCredential,
+  getSharedCredentials,
   getInstitutionStats,
   issueCredential,
   getInstitutionCredentials,
@@ -328,5 +404,10 @@ export default {
   getVerificationHistory,
   getVerifierProfile,
   updateVerifierProfile,
-  downloadCredentialPDF
+  downloadCredentialPDF,
+  requestReVerification,
+  getUserReVerificationRequests,
+  getReVerificationStatus,
+  approveReVerification,
+  declineReVerification
 };

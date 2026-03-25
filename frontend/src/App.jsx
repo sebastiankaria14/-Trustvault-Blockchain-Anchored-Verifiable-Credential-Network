@@ -22,6 +22,7 @@ import WalletPage from './pages/user/WalletPage'
 import CredentialDetailPage from './pages/user/CredentialDetailPage'
 import ProfilePage from './pages/user/ProfilePage'
 import AuditLogPage from './pages/user/AuditLogPage'
+import UserReVerificationRequestsPage from './pages/user/UserReVerificationRequestsPage'
 
 // Institution Portal
 import InstitutionDashboard from './pages/institution/InstitutionDashboard'
@@ -97,6 +98,14 @@ function App() {
               element={
                 <ProtectedRoute allowedUserTypes={['user']}>
                   <AuditLogPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user/re-verification-requests"
+              element={
+                <ProtectedRoute allowedUserTypes={['user']}>
+                  <UserReVerificationRequestsPage />
                 </ProtectedRoute>
               }
             />
