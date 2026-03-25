@@ -20,7 +20,7 @@
 | 07 | [INSTITUTION PORTAL](./07-INSTITUTION-PORTAL.md) | Phase 4 | ✅ Complete | Mar 24, 2026 |
 | 08 | VERIFIER PORTAL | Phase 5 | ⏳ Pending | - |
 | 09 | SUPER ADMIN PANEL | Phase 6 | ⏳ Pending | - |
-| 10 | BLOCKCHAIN INTEGRATION | Phase 7 | ⏳ Pending | - |
+| 10 | [BLOCKCHAIN INTEGRATION](./10-BLOCKCHAIN-INTEGRATION.md) | Phase 7 | 🟡 In Progress | Mar 25, 2026 |
 | 11 | TESTING & OPTIMIZATION | Phase 8 | ⏳ Pending | - |
 | 12 | DEPLOYMENT | Phase 9 | ⏳ Pending | - |
 
