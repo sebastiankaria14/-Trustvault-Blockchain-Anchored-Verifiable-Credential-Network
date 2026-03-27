@@ -122,7 +122,7 @@ const ApiDocumentation = () => {
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
-                {endpoints[key].path.split('/').pop()}
+                {endpoints[key].title}
               </button>
             ))}
           </div>
@@ -133,10 +133,10 @@ const ApiDocumentation = () => {
               <span className="bg-green-500 text-white px-3 py-1 rounded font-semibold text-sm">
                 {endpoints[selectedEndpoint].method}
               </span>
-              <code className="text-lg font-mono">{endpoints[selectedEndpoint].path}</code>
+              <code className="text-lg font-mono">{endpoints[selectedEndpoint].url}</code>
             </div>
 
-            <p className="text-gray-700 mb-6">{endpoints[selectedEndpoint].description}</p>
+            <p className="text-gray-700 mb-6">{endpoints[selectedEndpoint].desc}</p>
 
             <div className="grid md:grid-cols-2 gap-6">
               {/* Request */}
@@ -154,46 +154,30 @@ const ApiDocumentation = () => {
                   <pre>{endpoints[selectedEndpoint].response}</pre>
                 </div>
               </div>
+            </div>
+
+            <div className="mt-8">
               <h1 className="text-4xl font-extrabold text-slate-900 mb-4">Build with confidence</h1>
-              <p className="text-lg text-slate-500 max-w-xl">
+              <p className="text-lg text-slate-500 max-w-xl mb-6">
                 Integrate TrustVault identity verification into your application with our high-performance REST API.
               </p>
+              <div className="flex gap-4">
+                <button className="px-6 py-3 bg-slate-900 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-slate-800 transition-all shadow-lg">
+                  Get API Key <Key size={18} />
+                </button>
+                <button className="px-6 py-3 bg-white text-slate-900 border border-slate-200 rounded-xl font-bold flex items-center gap-2 hover:bg-slate-50 transition-all">
+                  SDKs <ChevronRight size={18} />
+                </button>
+              </div>
             </div>
-            <div className="flex gap-4">
-               <button className="px-6 py-3 bg-slate-900 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-slate-800 transition-all shadow-lg">
-                 Get API Key <Key size={18} />
-               </button>
-               <button className="px-6 py-3 bg-white text-slate-900 border border-slate-200 rounded-xl font-bold flex items-center gap-2 hover:bg-slate-50 transition-all">
-                 SDKs <ChevronRight size={18} />
-               </button>
-            </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      <section className="py-20">
+      {/* Endpoints Reference */}
+      <section className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-12">
-            
-            {/* Sidebar Navigation */}
-            <aside className="lg:w-64 flex-shrink-0">
-               <div className="sticky top-24 space-y-8">
-                  <div>
-                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 ml-2">Getting Started</h3>
-                    <nav className="space-y-1">
-                       <a href="#" className="flex items-center gap-3 px-4 py-2 bg-blue-50 text-blue-600 rounded-xl font-bold text-sm">
-                         <BookOpen size={16} /> Authentication
-                       </a>
-                       <a href="#" className="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl font-medium text-sm transition-colors">
-                         <Globe size={16} /> Base URL
-                       </a>
-                       <a href="#" className="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl font-medium text-sm transition-colors">
-                         <Zap size={16} /> Rate Limits
-                       </a>
-                    </nav>
-                  </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-8">
             {/* Verification Endpoints */}
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h3 className="text-xl font-semibold mb-4 text-primary-900">Verification APIs</h3>

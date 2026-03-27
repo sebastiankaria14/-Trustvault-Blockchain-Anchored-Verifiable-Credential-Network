@@ -149,6 +149,7 @@ const Contact = () => {
                   Send Message
                 </button>
               </form>
+            </motion.div>
             </div>
 
             {/* Contact Information */}

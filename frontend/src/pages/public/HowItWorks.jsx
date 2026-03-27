@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { GraduationCap, Wallet, ShieldCheck, ArrowRight, Server, Database, Globe } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
@@ -243,6 +244,8 @@ const HowItWorks = () => {
               </ul>
             </div>
           </div>
+        </div>
+      </section>
 
       {/* Technology Section */}
       <section className="py-16">

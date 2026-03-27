@@ -141,7 +141,7 @@ const ForInstitutions = () => {
                     Request Demo
                   </Link>
                 </div>
-              </motion.div>
+              </div>
             </div>
 
             <div className="flex items-start space-x-4">
