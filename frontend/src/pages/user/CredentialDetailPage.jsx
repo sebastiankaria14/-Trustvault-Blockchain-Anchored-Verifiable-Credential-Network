@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { getCredentialById, getCredentialLogs, getVerifiers, shareCredential } from '../../services/api';
+import { getCredentialById, getCredentialLogs } from '../../services/api';
 
 const CredentialDetailPage = () => {
   const { id } = useParams();
@@ -11,12 +11,9 @@ const CredentialDetailPage = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('details');
-  const [showShareModal, setShowShareModal] = useState(false);
-  const [verifiers, setVerifiers] = useState([]);
-  const [loadingVerifiers, setLoadingVerifiers] = useState(false);
-  const [selectedVerifier, setSelectedVerifier] = useState(null);
+  const [actionMessage, setActionMessage] = useState({ type: '', text: '' });
+  const [downloading, setDownloading] = useState(false);
   const [sharing, setSharing] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchCredentialData();
@@ -47,42 +44,120 @@ const CredentialDetailPage = () => {
     navigate('/login');
   };
 
-  const handleOpenShareModal = async () => {
-    setShowShareModal(true);
-    if (verifiers.length === 0) {
-      setLoadingVerifiers(true);
-      try {
-        const response = await getVerifiers();
-        if (response.success) {
-          setVerifiers(response.data.verifiers);
-        }
-      } catch (err) {
-        setError('Failed to load companies');
-        console.error('Error loading verifiers:', err);
-      } finally {
-        setLoadingVerifiers(false);
-      }
-    }
+  const showActionMessage = (type, text) => {
+    setActionMessage({ type, text });
+    window.setTimeout(() => {
+      setActionMessage({ type: '', text: '' });
+    }, 2500);
   };
 
-  const handleShareCredential = async () => {
-    if (!selectedVerifier) {
-      setError('Please select a company to share with');
+  const sanitizeFileName = (name) => {
+    return (name || 'credential')
+      .replace(/[^a-z0-9\-_. ]/gi, '')
+      .trim()
+      .replace(/\s+/g, '_')
+      .toLowerCase();
+  };
+
+  const copyToClipboard = async (text) => {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
       return;
     }
 
-    setSharing(true);
-    setError(null);
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'absolute';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+  };
+
+  const triggerBlobDownload = (blob, fileName) => {
+    const blobUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(blobUrl);
+  };
+
+  const handleDownload = async () => {
+    if (!credential || downloading) return;
+    setDownloading(true);
+
     try {
-      const response = await shareCredential(id, selectedVerifier);
-      if (response.success) {
-        alert('Credential shared successfully!');
-        setShowShareModal(false);
-        setSelectedVerifier(null);
+      const baseFileName = sanitizeFileName(credential.credential_name);
+
+      if (credential.document_url) {
+        const blob = await fetch(credential.document_url).then((res) => {
+          if (!res.ok) throw new Error('Failed to fetch credential document');
+          return res.blob();
+        });
+
+        const mime = blob.type || '';
+        const extension = mime.includes('pdf') ? 'pdf' : mime.includes('png') ? 'png' : mime.includes('jpeg') || mime.includes('jpg') ? 'jpg' : 'bin';
+        triggerBlobDownload(blob, `${baseFileName}.${extension}`);
+        showActionMessage('success', 'Credential file downloaded');
+        return;
       }
-    } catch (err) {
-      setError(err.message || 'Failed to share credential');
-      console.error('Error sharing credential:', err);
+
+      const fallbackContent = {
+        credentialName: credential.credential_name,
+        credentialType: credential.credential_type,
+        status: credential.status,
+        issueDate: credential.issue_date,
+        expiryDate: credential.expiry_date,
+        issuerName: credential.issuer_name,
+        blockchainHash: credential.blockchain_hash,
+        credentialNumber: credential.credential_number,
+        generatedAt: new Date().toISOString()
+      };
+
+      const fallbackBlob = new Blob([JSON.stringify(fallbackContent, null, 2)], {
+        type: 'application/json'
+      });
+      triggerBlobDownload(fallbackBlob, `${baseFileName}.json`);
+      showActionMessage('success', 'Credential data downloaded');
+    } catch (error) {
+      console.error('Download failed:', error);
+      showActionMessage('error', 'Download failed. Please try again.');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const handleShare = async () => {
+    if (!credential || sharing) return;
+    setSharing(true);
+
+    try {
+      const shareUrl = `${window.location.origin}/user/credentials/${id}`;
+      const shareText = `Check this credential: ${credential.credential_name} (${credential.credential_type})`;
+
+      if (navigator.share) {
+        await navigator.share({
+          title: credential.credential_name || 'Credential',
+          text: shareText,
+          url: shareUrl
+        });
+        showActionMessage('success', 'Share opened successfully');
+      } else {
+        await copyToClipboard(shareUrl);
+        showActionMessage('success', 'Credential link copied');
+      }
+    } catch (error) {
+      // AbortError is user cancellation in native share dialogs
+      if (error?.name === 'AbortError') {
+        return;
+      }
+      console.error('Share failed:', error);
+      showActionMessage('error', 'Share failed. Please try again.');
     } finally {
       setSharing(false);
     }
@@ -194,19 +269,37 @@ const CredentialDetailPage = () => {
           </div>
 
           <div className="mt-6 flex flex-wrap gap-4">
-            <button className="inline-flex items-center rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-3 text-white shadow-lg shadow-purple-200/50 transition hover:shadow-xl">
+            <button
+              onClick={handleDownload}
+              disabled={downloading}
+              className="inline-flex items-center rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-3 text-white shadow-lg shadow-purple-200/50 transition hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-70"
+            >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
-              Download PDF
+              {downloading ? 'Downloading...' : 'Download PDF'}
             </button>
-            <button className="inline-flex items-center rounded-2xl bg-slate-100 px-4 py-3 text-slate-700 transition hover:bg-slate-200">
+            <button
+              onClick={handleShare}
+              disabled={sharing}
+              className="inline-flex items-center rounded-2xl bg-slate-100 px-4 py-3 text-slate-700 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-70"
+            >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
               </svg>
-              Share with Company
+              {sharing ? 'Sharing...' : 'Share'}
             </button>
           </div>
+
+          {actionMessage.text && (
+            <div
+              className={`mt-4 inline-flex rounded-xl px-3 py-2 text-sm ${
+                actionMessage.type === 'success' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
+              }`}
+            >
+              {actionMessage.text}
+            </div>
+          )}
         </div>
 
         {/* Tabs */}
@@ -425,95 +518,6 @@ const CredentialDetailPage = () => {
             )}
           </div>
         </div>
-
-        {/* Share Modal */}
-        {showShareModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold text-gray-900">Share Credential</h2>
-                  <button
-                    onClick={() => {
-                      setShowShareModal(false);
-                      setSelectedVerifier(null);
-                      setError(null);
-                    }}
-                    className="text-gray-400 hover:text-gray-600"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <p className="text-sm text-gray-600 mb-4">
-                  Select a company to share this credential with for verification.
-                </p>
-
-                {error && (
-                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
-                    {error}
-                  </div>
-                )}
-
-                {loadingVerifiers ? (
-                  <div className="text-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
-                  </div>
-                ) : verifiers.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500">
-                    <p>No companies registered yet</p>
-                  </div>
-                ) : (
-                  <div className="space-y-2 max-h-64 overflow-y-auto mb-4">
-                    {verifiers.map((verifier) => (
-                      <label
-                        key={verifier.id}
-                        className={`flex items-center p-3 border rounded-lg cursor-pointer transition ${
-                          selectedVerifier === verifier.id
-                            ? 'border-indigo-500 bg-indigo-50'
-                            : 'border-gray-200 hover:bg-gray-50'
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name="verifier"
-                          value={verifier.id}
-                          checked={selectedVerifier === verifier.id}
-                          onChange={(e) => setSelectedVerifier(e.target.value)}
-                          className="w-4 h-4 text-indigo-600"
-                        />
-                        <div className="ml-3 flex-1">
-                          <p className="font-medium text-gray-900">{verifier.company_name}</p>
-                          <p className="text-xs text-gray-500">{verifier.industry || 'Company'}</p>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => {
-                      setShowShareModal(false);
-                      setSelectedVerifier(null);
-                      setError(null);
-                    }}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition font-medium"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleShareCredential}
-                    disabled={!selectedVerifier || sharing}
-                    className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-gray-300 transition font-medium"
-                  >
-                    {sharing ? 'Sharing...' : 'Share'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </main>
     </div>
   );
