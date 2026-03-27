@@ -35,45 +35,41 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200 group-hover:scale-110 transition-transform">
-              <Shield size={24} fill="currentColor" fillOpacity={0.2} />
-            </div>
-            <span className="text-xl font-black text-slate-900 tracking-tight">
-              Trust<span className="text-blue-600">Vault</span>
-            </span>
-          </Link>
-
-          {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
-                  location.pathname === link.path
-                    ? 'text-blue-600 bg-blue-50'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
+          <div className="flex items-center">
+            <Link to="/" className="text-2xl font-bold text-primary-800 hover:text-primary-900">
+              TrustVault
+            </Link>
           </div>
 
-          {/* Actions */}
-          <div className="hidden lg:flex items-center gap-3">
-            <Link 
-              to="/login" 
-              className="px-5 py-2.5 text-sm font-bold text-slate-700 hover:text-blue-600 transition-colors"
-            >
-              Sign In
+          {/* Navigation Links */}
+          <div className="hidden md:flex space-x-8">
+            <Link to="/" className="text-gray-700 hover:text-primary-800 transition">
+              Home
             </Link>
-            <Link 
-              to="/register" 
-              className="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 flex items-center gap-2"
-            >
-              Get Started <ArrowRight size={16} />
+            <Link to="/how-it-works" className="text-gray-700 hover:text-primary-800 transition">
+              How It Works
+            </Link>
+            <Link to="/for-institutions" className="text-gray-700 hover:text-primary-800 transition">
+              For Institutions
+            </Link>
+            <Link to="/for-verifiers" className="text-gray-700 hover:text-primary-800 transition">
+              For Verifiers
+            </Link>
+            <Link to="/api-docs" className="text-gray-700 hover:text-primary-800 transition">
+              API Docs
+            </Link>
+            <Link to="/contact" className="text-gray-700 hover:text-primary-800 transition">
+              Contact
+            </Link>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex space-x-4">
+            <Link to="/login" className="px-4 py-2 text-primary-800 hover:text-primary-900 transition">
+              Login
+            </Link>
+            <Link to="/register" className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition">
+              Get Started
             </Link>
           </div>
 

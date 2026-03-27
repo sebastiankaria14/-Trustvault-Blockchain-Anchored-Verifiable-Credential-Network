@@ -1,24 +1,29 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowRight, Building2, Globe, Shield } from 'lucide-react';
 import { login as loginAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+
+const roleOptions = [
+  { key: 'user', label: 'User', icon: Shield },
+  { key: 'institution', label: 'Institution', icon: Building2 },
+  { key: 'verifier', label: 'Verifier', icon: Globe },
+];
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const [userType, setUserType] = useState('user');
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
     setError('');
   };
@@ -30,17 +35,11 @@ const LoginPage = () => {
 
     try {
       const response = await loginAPI(formData.email, formData.password, userType);
-
       if (response.success) {
         login(response.data.token, response.data.user, userType);
-
-        if (userType === 'user') {
-          navigate('/user/dashboard');
-        } else if (userType === 'institution') {
-          navigate('/institution/dashboard');
-        } else if (userType === 'verifier') {
-          navigate('/verifier/dashboard');
-        }
+        if (userType === 'user') navigate('/user/dashboard');
+        if (userType === 'institution') navigate('/institution/dashboard');
+        if (userType === 'verifier') navigate('/verifier/dashboard');
       }
     } catch (err) {
       setError(err.message || 'Login failed. Please try again.');
@@ -49,189 +48,74 @@ const LoginPage = () => {
     }
   };
 
+  const activeRole = roleOptions.find((role) => role.key === userType);
+
   return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      {/* Aurora Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 opacity-90 animate-aurora" />
+    <div className="relative min-h-screen overflow-hidden bg-slate-50">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(99,102,241,0.08),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(168,85,247,0.08),_transparent_28%)]" />
 
-      {/* Animated background shapes */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
-      <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
-      <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
-
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-md">
-        {/* Card Container */}
-        <div className="scale-in bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/20">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-              Welcome Back
-            </h1>
-            <p className="text-neutral-600 text-sm">Sign in to your TrustVault account</p>
+      <main className="relative z-10 mx-auto flex min-h-screen max-w-2xl items-center px-4 py-6 sm:px-6 lg:px-8">
+        <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut' }} className="w-full rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-8">
+          <div className="flex flex-col items-center gap-4 border-b border-slate-100 pb-5 text-center">
+            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-2.5 text-sm font-bold uppercase tracking-[0.28em] text-white shadow-sm">
+              Sign in
+            </div>
           </div>
 
-          {/* User Type Selector */}
-          <div className="form-group mb-6">
-            <label className="block text-sm font-semibold text-neutral-700 mb-3">
-              I am a
-            </label>
-            <div className="grid grid-cols-3 gap-3">
-              {['user', 'institution', 'verifier'].map((type) => (
-                <button
-                  key={type}
+          <div className="mt-5 grid grid-cols-3 gap-2.5">
+            {roleOptions.map((role) => {
+              const Icon = role.icon;
+              const active = userType === role.key;
+
+              return (
+                <motion.button
+                  key={role.key}
                   type="button"
-                  onClick={() => setUserType(type)}
                   data-ripple
-                  className={`py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 relative overflow-hidden ${
-                    userType === type
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105'
-                      : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                  }`}
+                  whileHover={{ y: -1 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setUserType(role.key)}
+                  className={`flex items-center justify-center gap-2 rounded-[1.25rem] border px-3 py-3 text-sm font-semibold transition-all duration-200 ${active ? 'border-transparent bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-purple-200/60' : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-purple-200 hover:bg-white'}`}
                 >
-                  {type.charAt(0).toUpperCase() + type.slice(1)}
-                </button>
-              ))}
-            </div>
+                  <Icon size={16} />
+                  <span>{role.label}</span>
+                </motion.button>
+              );
+            })}
           </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className="mb-4 bg-error-50 border-l-4 border-error-600 text-error-700 px-4 py-3 rounded-lg slide-in-down animate-pulse">
-              <p className="font-medium text-sm">Error</p>
-              <p className="text-sm">{error}</p>
+          <AnimatePresence mode="wait">
+            {error ? (
+              <motion.div key="login-error" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                {error}
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+
+          <motion.form key={userType} initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }} transition={{ duration: 0.22, ease: 'easeOut' }} onSubmit={handleSubmit} className="mt-5 space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="email" className="block text-sm font-semibold text-slate-700">Email</label>
+              <input id="email" name="email" type="email" required value={formData.email} onChange={handleChange} placeholder="your@email.com" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-purple-500 focus:bg-white focus:ring-4 focus:ring-purple-100" />
             </div>
-          )}
-
-          {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email Field */}
-            <div className="form-group">
-              <label htmlFor="email" className="block text-sm font-semibold text-neutral-700 mb-2">
-                Email Address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 bg-white/50 backdrop-blur-sm placeholder-neutral-400"
-                placeholder="your@email.com"
-              />
+            <div className="space-y-2">
+              <label htmlFor="password" className="block text-sm font-semibold text-slate-700">Password</label>
+              <input id="password" name="password" type="password" required value={formData.password} onChange={handleChange} placeholder="Enter your password" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-purple-500 focus:bg-white focus:ring-4 focus:ring-purple-100" />
             </div>
-
-            {/* Password Field */}
-            <div className="form-group">
-              <label htmlFor="password" className="block text-sm font-semibold text-neutral-700 mb-2">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 bg-white/50 backdrop-blur-sm placeholder-neutral-400"
-                placeholder="Enter your password"
-              />
-            </div>
-
-            {/* Remember & Forgot */}
-            <div className="flex items-center justify-between pt-2">
-              <label htmlFor="remember-me" className="flex items-center cursor-pointer">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="w-4 h-4 accent-blue-600 rounded"
-                />
-                <span className="ml-2 text-sm text-neutral-700 font-medium">Remember me</span>
-              </label>
-
-              <Link to="/forgot-password" className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
-                Forgot password?
-              </Link>
-            </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              data-ripple
-              className="w-full mt-6 btn btn-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-2xl transition-all duration-200 relative overflow-hidden"
-            >
-              {loading ? (
-                <>
-                  <span className="inline-block animate-spin mr-2">⏳</span>
-                  Signing in...
-                </>
-              ) : (
-                'Sign In'
-              )}
+            <button type="submit" disabled={loading} data-ripple className="btn btn-lg w-full rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-purple-200/60 transition-all duration-200 hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-50">
+              {loading ? 'Signing in...' : <><span>Sign in</span><ArrowRight size={18} /></>}
             </button>
-          </form>
 
-          {/* Divider */}
-          <div className="relative flex items-center my-6">
-            <div className="flex-grow border-t border-neutral-200" />
-            <span className="flex-shrink mx-4 text-xs text-neutral-500 font-medium">OR</span>
-            <div className="flex-grow border-t border-neutral-200" />
-          </div>
-
-          {/* Register Link */}
-          <div className="text-center">
-            <p className="text-sm text-neutral-600">
-              Don't have an account?{' '}
-              <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
-                Register here
+            <div className="grid gap-3 pt-1 sm:grid-cols-2">
+              <Link to="/" className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-700 transition-all hover:-translate-y-0.5 hover:border-purple-200 hover:bg-slate-50">
+                Go to homepage
               </Link>
-            </p>
-          </div>
-
-          {/* Back to Home */}
-          <div className="mt-4 text-center">
-            <Link to="/" className="text-sm text-neutral-500 hover:text-neutral-700 transition-colors font-medium">
-              ← Back to home
-            </Link>
-          </div>
-        </div>
-
-        {/* Floating Card Bottom */}
-        <div className="mt-8 p-4 bg-white/80 backdrop-blur-lg rounded-2xl border border-white/20 shadow-lg">
-          <p className="text-xs text-neutral-600 text-center leading-relaxed">
-            Your credentials are secure and encrypted. We never share your data with third parties.
-          </p>
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes blob {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-        }
-
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
+              <Link to="/register" state={{ from: 'login' }} className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-700 transition-all hover:-translate-y-0.5 hover:border-purple-200 hover:bg-slate-50">
+                Create account
+              </Link>
+            </div>
+          </motion.form>
+        </motion.section>
+      </main>
     </div>
   );
 };

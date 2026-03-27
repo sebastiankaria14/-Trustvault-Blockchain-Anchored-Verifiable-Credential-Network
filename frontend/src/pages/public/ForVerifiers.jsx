@@ -31,8 +31,17 @@ const ForVerifiers = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_30%,#eff6ff_0%,transparent_50%)] -z-10" />
+      <section className="bg-gradient-to-r from-primary-700 to-primary-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl font-bold mb-4">TrustVault for Verifiers</h1>
+          <p className="text-xl text-slate-200">
+            Verify credentials in seconds, not days. Reduce fraud and streamline your hiring process.
+          </p>
+        </div>
+      </section>
+
+      {/* Who Uses It */}
+      <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <motion.div
@@ -62,41 +71,96 @@ const ForVerifiers = () => {
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="py-24 bg-white">
+      {/* Benefits */}
+      <section className="bg-slate-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              { icon: Zap, title: 'Millisecond Latency', desc: 'Verify any claim in under 100ms through our globally distributed edge network.' },
-              { icon: ShieldAlert, title: 'Zero Fraud', desc: 'Every verification result is backed by a blockchain-anchored proof of authenticity.' },
-              { icon: Cpu, title: 'Scalable API', desc: 'Built for high-volume enterprise integrations with 99.99% infrastructure uptime.' }
-            ].map((feature, idx) => (
-              <motion.div
-                key={idx}
-                whileHover={{ y: -8 }}
-                className="p-10 rounded-[2rem] bg-slate-50 border border-slate-100 hover:bg-white hover:border-blue-100 hover:shadow-2xl transition-all duration-300"
-              >
-                <div className="w-14 h-14 bg-white shadow-sm border border-slate-100 rounded-2xl flex items-center justify-center text-blue-600 mb-8">
-                  <feature.icon size={28} />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-4">{feature.title}</h3>
-                <p className="text-slate-600 leading-relaxed">{feature.desc}</p>
-              </motion.div>
-            ))}
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="text-3xl mb-3">⚡</div>
+              <h3 className="text-xl font-semibold mb-3 text-primary-900">Instant Verification</h3>
+              <p className="text-gray-600">
+                Get verification results in under 2 seconds. No more waiting days or weeks for background checks.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="text-3xl mb-3">💰</div>
+              <h3 className="text-xl font-semibold mb-3 text-primary-900">Reduce Costs</h3>
+              <p className="text-gray-600">
+                Automated verification costs pennies compared to traditional background check services.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="text-3xl mb-3">🛡️</div>
+              <h3 className="text-xl font-semibold mb-3 text-primary-900">Eliminate Fraud</h3>
+              <p className="text-gray-600">
+                Blockchain verification ensures credentials are authentic. Fake documents become impossible.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="text-3xl mb-3">📋</div>
+              <h3 className="text-xl font-semibold mb-3 text-primary-900">Complete Audit Trail</h3>
+              <p className="text-gray-600">
+                Every verification is logged with timestamps, user consent, and blockchain proof.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="text-3xl mb-3">🔌</div>
+              <h3 className="text-xl font-semibold mb-3 text-primary-900">Simple Integration</h3>
+              <p className="text-gray-600">
+                RESTful API that integrates with your existing systems in minutes. SDKs and code examples provided.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="text-3xl mb-3">✅</div>
+              <h3 className="text-xl font-semibold mb-3 text-primary-900">GDPR Compliant</h3>
+              <p className="text-gray-600">
+                Built-in consent management. Users control who accesses their data and for how long.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Use Cases */}
-      <section className="py-24 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-slate-900 mb-16">Enterprise Use Cases</h2>
-          <div className="grid md:grid-cols-4 gap-6">
-            {useCases.map((useCase, idx) => (
-              <div key={idx} className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 text-left">
-                <useCase.icon className="text-blue-600 mb-6" size={32} />
-                <h3 className="text-lg font-bold text-slate-900 mb-3">{useCase.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{useCase.desc}</p>
+      {/* How It Works for Verifiers */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center mb-12">How Verification Works</h2>
+
+          <div className="max-w-4xl mx-auto space-y-6">
+            <div className="flex items-start space-x-4 bg-white p-6 rounded-lg shadow-md">
+              <div className="bg-primary-800 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
+              <div>
+                <h3 className="text-lg font-semibold mb-1">Request Verification</h3>
+                <p className="text-gray-600">Send a verification request via our portal or API. Specify which credentials you need.</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-4 bg-white p-6 rounded-lg shadow-md">
+              <div className="bg-primary-800 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
+              <div>
+                <h3 className="text-lg font-semibold mb-1">User Grants Consent</h3>
+                <p className="text-gray-600">User receives notification and approves or denies your request. They control their data.</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-4 bg-white p-6 rounded-lg shadow-md">
+              <div className="bg-primary-800 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">3</div>
+              <div>
+                <h3 className="text-lg font-semibold mb-1">Get Instant Results</h3>
+                <p className="text-gray-600">Receive verified credential data in JSON format. Blockchain hash confirmed automatically.</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-4 bg-white p-6 rounded-lg shadow-md">
+              <div className="bg-primary-800 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">4</div>
+              <div>
+                <h3 className="text-lg font-semibold mb-1">Make Decisions</h3>
+                <p className="text-gray-600">Use verified data for hiring, loan approvals, admissions, or any other purpose.</p>
               </div>
             ))}
           </div>
@@ -106,48 +170,57 @@ const ForVerifiers = () => {
       {/* Workflow Section */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-center gap-16">
-            <div className="lg:w-1/2">
-              <h2 className="text-4xl font-bold text-slate-900 mb-12">Streamlined Workflow</h2>
-              <div className="space-y-8">
-                {[
-                  'Submit verification request via API or Portal',
-                  'User receives push notification to grant consent',
-                  'Platform performs cryptographic ledger check',
-                  'Instant delivery of authenticated JSON payload'
-                ].map((step, i) => (
-                  <div key={i} className="flex items-center gap-4">
-                    <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold flex-shrink-0">
-                      {i + 1}
-                    </div>
-                    <span className="text-lg text-slate-700 font-medium">{step}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="lg:w-1/2">
-               <div className="bg-slate-900 rounded-[2.5rem] p-1 shadow-2xl overflow-hidden">
-                  <div className="bg-slate-800/50 p-4 border-b border-slate-700 flex justify-between">
-                     <div className="flex gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-slate-600" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-slate-600" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-slate-600" />
-                     </div>
-                     <span className="text-[10px] text-slate-500 font-mono tracking-widest uppercase">Response Payload</span>
-                  </div>
-                  <pre className="p-8 text-blue-400 font-mono text-sm leading-relaxed overflow-x-auto">
-{`{
-  "status": "VERIFIED",
-  "issuer": "Harvard University",
-  "credential": "PhD Computer Science",
-  "verifiedAt": "2026-03-25T10:00:00Z",
-  "blockchainProof": "0x7a2...f3e",
-  "valid": true
-}`}
-                  </pre>
-               </div>
-            </div>
+          <h2 className="text-3xl font-bold text-center mb-8">Simple API Integration</h2>
+          <p className="text-center text-gray-600 mb-12">
+            Just one API call to verify any credential
+          </p>
+
+          <div className="max-w-3xl mx-auto bg-gray-900 rounded-lg p-6 text-white font-mono text-sm overflow-x-auto">
+            <pre>{`// Example: Verify a degree
+const response = await fetch('https://api.trustvault.com/v1/verify/degree', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    userId: 'user-uuid',
+    credentialId: 'credential-uuid'
+  })
+});
+
+const result = await response.json();
+// {
+//   "verified": true,
+//   "credential": {
+//     "degree": "Bachelor of Science",
+//     "major": "Computer Science",
+//     "institution": "MIT",
+//     "graduationYear": 2024,
+//     "blockchainVerified": true
+//   },
+//   "responseTime": "1.2s"
+// }`}</pre>
           </div>
+
+          <div className="text-center mt-8">
+            <Link to="/api-docs" className="text-primary-900 hover:text-primary-800 font-semibold">
+              View Full API Documentation →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="bg-gradient-to-r from-primary-700 to-primary-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold mb-4">Start Verifying Today</h2>
+          <p className="text-xl mb-8 text-slate-200">
+            Get your API key and start verifying credentials in minutes
+          </p>
+          <Link to="/register" className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold transition hover:-translate-y-0.5 hover:shadow-lg inline-block">
+            Register as Verifier
+          </Link>
         </div>
       </section>
 

@@ -68,29 +68,151 @@ const ApiDocumentation = () => {
     <div className="min-h-screen bg-[#FDFDFF]">
       <Navbar />
 
-      <section className="pt-32 pb-20 border-b border-slate-100 bg-white">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-primary-700 to-primary-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl font-bold mb-4">API Documentation</h1>
+          <p className="text-xl text-slate-200">
+            Simple, powerful APIs for instant credential verification
+          </p>
+        </div>
+      </section>
+
+      {/* Getting Started */}
+      <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col md:flex-row md:items-center justify-between gap-8"
-          >
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-50 text-blue-600 text-sm font-bold mb-4">
-                <Code2 size={16} /> API Reference v1.0
+          <h2 className="text-3xl font-bold mb-8">Getting Started</h2>
+
+          <div className="bg-white rounded-lg shadow-md p-8 mb-8">
+            <h3 className="text-xl font-semibold mb-4">Authentication</h3>
+            <p className="text-gray-600 mb-4">
+              All API requests require authentication using an API key. Include your API key in the Authorization header:
+            </p>
+            <div className="bg-gray-900 text-white p-4 rounded font-mono text-sm">
+              Authorization: Bearer YOUR_API_KEY
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-8">
+            <h3 className="text-xl font-semibold mb-4">Base URL</h3>
+            <div className="bg-gray-900 text-white p-4 rounded font-mono text-sm">
+              https://api.trustvault.com/v1
+            </div>
+            <p className="text-gray-600 mt-4">
+              <strong>Rate Limit:</strong> 1000 requests per hour (upgradeable)
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* API Endpoints */}
+      <section className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold mb-8">API Endpoints</h2>
+
+          {/* Endpoint Tabs */}
+          <div className="flex flex-wrap gap-2 mb-8">
+            {Object.keys(endpoints).map((key) => (
+              <button
+                key={key}
+                onClick={() => setSelectedEndpoint(key)}
+                className={`px-4 py-2 rounded-lg font-semibold transition ${
+                  selectedEndpoint === key
+                    ? 'bg-primary-800 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                {endpoints[key].path.split('/').pop()}
+              </button>
+            ))}
+          </div>
+
+          {/* Selected Endpoint Details */}
+          <div className="bg-gray-50 rounded-lg p-8">
+            <div className="flex items-center space-x-4 mb-6">
+              <span className="bg-green-500 text-white px-3 py-1 rounded font-semibold text-sm">
+                {endpoints[selectedEndpoint].method}
+              </span>
+              <code className="text-lg font-mono">{endpoints[selectedEndpoint].path}</code>
+            </div>
+
+            <p className="text-gray-700 mb-6">{endpoints[selectedEndpoint].description}</p>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Request */}
+              <div>
+                <h4 className="font-semibold mb-3 text-gray-700">Request Body</h4>
+                <div className="bg-gray-900 text-white p-4 rounded font-mono text-sm overflow-x-auto">
+                  <pre>{endpoints[selectedEndpoint].request}</pre>
+                </div>
+              </div>
+
+              {/* Response */}
+              <div>
+                <h4 className="font-semibold mb-3 text-gray-700">Response</h4>
+                <div className="bg-gray-900 text-white p-4 rounded font-mono text-sm overflow-x-auto">
+                  <pre>{endpoints[selectedEndpoint].response}</pre>
+                </div>
               </div>
               <h1 className="text-4xl font-extrabold text-slate-900 mb-4">Build with confidence</h1>
               <p className="text-lg text-slate-500 max-w-xl">
                 Integrate TrustVault identity verification into your application with our high-performance REST API.
               </p>
             </div>
-            <div className="flex gap-4">
-               <button className="px-6 py-3 bg-slate-900 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-slate-800 transition-all shadow-lg">
-                 Get API Key <Key size={18} />
-               </button>
-               <button className="px-6 py-3 bg-white text-slate-900 border border-slate-200 rounded-xl font-bold flex items-center gap-2 hover:bg-slate-50 transition-all">
-                 SDKs <ChevronRight size={18} />
-               </button>
+          </div>
+        </div>
+      </section>
+
+      {/* All Endpoints List */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold mb-8">All Available Endpoints</h2>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Verification Endpoints */}
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-xl font-semibold mb-4 text-primary-900">Verification APIs</h3>
+              <ul className="space-y-3">
+                <li className="flex items-center">
+                  <span className="bg-green-500 text-white px-2 py-1 rounded text-xs mr-3">POST</span>
+                  <code className="text-sm">/api/verify/degree</code>
+                </li>
+                <li className="flex items-center">
+                  <span className="bg-green-500 text-white px-2 py-1 rounded text-xs mr-3">POST</span>
+                  <code className="text-sm">/api/verify/income</code>
+                </li>
+                <li className="flex items-center">
+                  <span className="bg-green-500 text-white px-2 py-1 rounded text-xs mr-3">POST</span>
+                  <code className="text-sm">/api/verify/employment</code>
+                </li>
+                <li className="flex items-center">
+                  <span className="bg-green-500 text-white px-2 py-1 rounded text-xs mr-3">POST</span>
+                  <code className="text-sm">/api/verify/medical</code>
+                </li>
+              </ul>
+            </div>
+
+            {/* Management Endpoints */}
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-xl font-semibold mb-4 text-primary-900">Management APIs</h3>
+              <ul className="space-y-3">
+                <li className="flex items-center">
+                  <span className="bg-primary-800 text-white px-2 py-1 rounded text-xs mr-3">GET</span>
+                  <code className="text-sm">/api/verifier/reports</code>
+                </li>
+                <li className="flex items-center">
+                  <span className="bg-green-500 text-white px-2 py-1 rounded text-xs mr-3">POST</span>
+                  <code className="text-sm">/api/verifier/api-key</code>
+                </li>
+                <li className="flex items-center">
+                  <span className="bg-primary-800 text-white px-2 py-1 rounded text-xs mr-3">GET</span>
+                  <code className="text-sm">/api/verifier/usage</code>
+                </li>
+                <li className="flex items-center">
+                  <span className="bg-green-500 text-white px-2 py-1 rounded text-xs mr-3">POST</span>
+                  <code className="text-sm">/api/consent/request</code>
+                </li>
+              </ul>
             </div>
           </motion.div>
         </div>
@@ -201,6 +323,46 @@ const ApiDocumentation = () => {
             </main>
 
           </div>
+        </div>
+      </section>
+
+      {/* SDKs and Libraries */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center mb-12">Client Libraries</h2>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <div className="text-4xl mb-3">📦</div>
+              <h3 className="text-lg font-semibold mb-2">JavaScript/Node.js</h3>
+              <code className="text-sm text-gray-600">npm install trustvault-sdk</code>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <div className="text-4xl mb-3">🐍</div>
+              <h3 className="text-lg font-semibold mb-2">Python</h3>
+              <code className="text-sm text-gray-600">pip install trustvault</code>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <div className="text-4xl mb-3">☕</div>
+              <h3 className="text-lg font-semibold mb-2">Java</h3>
+              <code className="text-sm text-gray-600">Maven/Gradle available</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-gradient-to-r from-primary-700 to-primary-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold mb-4">Ready to Integrate?</h2>
+          <p className="text-xl mb-8 text-slate-200">
+            Get your API key and start verifying in minutes
+          </p>
+          <Link to="/register" className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold transition hover:-translate-y-0.5 hover:shadow-lg inline-block">
+            Get API Key
+          </Link>
         </div>
       </section>
 

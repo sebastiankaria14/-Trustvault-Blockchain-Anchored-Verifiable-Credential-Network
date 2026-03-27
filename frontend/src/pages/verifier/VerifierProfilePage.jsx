@@ -82,7 +82,7 @@ const VerifierProfilePage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-neutral-50 ml-64 p-8">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-violet-50 to-neutral-50 ml-64 p-8">
         <div className="max-w-2xl mx-auto space-y-6">
           {[1, 2, 3].map(() => (
             <div key={Math.random()} className="h-20 bg-white rounded-lg animate-pulse" />
@@ -94,7 +94,7 @@ const VerifierProfilePage = () => {
 
   if (error && !loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-neutral-50 ml-64 p-8">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-violet-50 to-neutral-50 ml-64 p-8">
         <div className="max-w-2xl mx-auto">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-red-800">
             <h3 className="font-bold mb-2">Error</h3>
@@ -106,11 +106,11 @@ const VerifierProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-neutral-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-violet-50 to-neutral-50">
       {/* Sidebar Navigation */}
       <aside className="fixed left-0 top-0 w-64 h-screen bg-white border-r border-neutral-200 shadow-sm sidebar">
         <div className="p-6">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             TrustVault
           </h2>
           <p className="text-xs text-neutral-600 mt-1">Verifier Portal</p>
@@ -137,7 +137,7 @@ const VerifierProfilePage = () => {
           </Link>
           <Link
             to="/verifier/profile"
-            className="flex items-center gap-3 px-6 py-3 text-neutral-900 bg-indigo-50 border-l-4 border-indigo-600 font-medium"
+            className="flex items-center gap-3 px-6 py-3 text-neutral-900 bg-purple-50 border-l-4 border-purple-600 font-medium"
           >
             <span className="text-xl">⚙️</span> Profile
           </Link>
@@ -158,7 +158,7 @@ const VerifierProfilePage = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="ml-64 min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-neutral-50 p-8">
+      <main className="ml-64 min-h-screen bg-gradient-to-br from-purple-50 via-violet-50 to-neutral-50 p-8">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="mb-8">

@@ -38,11 +38,11 @@ const VerifierDashboard = () => {
   const companyName = user?.company_name || user?.companyName || 'Verifier';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-neutral-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-violet-50 to-neutral-50">
       {/* Sidebar Navigation */}
       <aside className="fixed left-0 top-0 w-64 h-screen bg-white border-r border-neutral-200 shadow-sm sidebar">
         <div className="p-6">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             TrustVault
           </h2>
           <p className="text-xs text-neutral-600 mt-1">Verifier Portal</p>
@@ -86,7 +86,7 @@ const VerifierDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="ml-64 min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-neutral-50">
+      <main className="ml-64 min-h-screen bg-gradient-to-br from-purple-50 via-violet-50 to-neutral-50">
         {/* Logout Confirmation */}
         {showLogoutConfirm && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -144,7 +144,7 @@ const VerifierDashboard = () => {
 
                 <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 hover:shadow-md transition-shadow">
                   <p className="text-neutral-600 text-sm font-medium">Today's Verifications</p>
-                  <p className="text-4xl font-bold text-blue-600 mt-2">{stats.stats?.today_verified || 0}</p>
+                  <p className="text-4xl font-bold text-purple-600 mt-2">{stats.stats?.today_verified || 0}</p>
                   <p className="text-xs text-neutral-500 mt-2">Current date</p>
                 </div>
 
@@ -165,7 +165,7 @@ const VerifierDashboard = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <Link
                   to="/verifier/verification-requests"
-                  className="bg-gradient-to-br from-indigo-500 to-blue-500 text-white rounded-xl p-8 hover:shadow-xl transition-all transform hover:-translate-y-1"
+                  className="bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-xl p-8 hover:shadow-xl transition-all transform hover:-translate-y-1"
                 >
                   <div className="text-4xl mb-4">📥</div>
                   <h3 className="text-xl font-bold mb-2">View Verification Requests</h3>
@@ -174,11 +174,11 @@ const VerifierDashboard = () => {
 
                 <Link
                   to="/verifier/history"
-                  className="bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-xl p-8 hover:shadow-xl transition-all transform hover:-translate-y-1"
+                  className="bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-xl p-8 hover:shadow-xl transition-all transform hover:-translate-y-1"
                 >
                   <div className="text-4xl mb-4">📜</div>
                   <h3 className="text-xl font-bold mb-2">Verification History</h3>
-                  <p className="text-blue-100 text-sm">See all your verifications</p>
+                  <p className="text-purple-100 text-sm">See all your verifications</p>
                 </Link>
               </div>
 

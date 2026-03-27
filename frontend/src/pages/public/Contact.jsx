@@ -37,69 +37,133 @@ const Contact = () => {
     <div className="min-h-screen bg-[#FDFDFF]">
       <Navbar />
 
-      <section className="pt-32 pb-20">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-primary-700 to-primary-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
+          <p className="text-xl text-slate-200">
+            Have questions? We're here to help!
+          </p>
+        </div>
+      </section>
+
+      {/* Contact Form & Info Section */}
+      <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-16">
-            {/* Contact Content */}
-            <div className="lg:w-1/3">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-              >
-                <h1 className="text-4xl font-extrabold text-slate-900 mb-6 tracking-tight">Get in touch</h1>
-                <p className="text-lg text-slate-600 mb-12 leading-relaxed">
-                  Have questions about our verification protocol or integration? Our team is standing by to help you scale.
-                </p>
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Contact Form */}
+            <div className="bg-white p-8 rounded-lg shadow-md">
+              <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
 
-                <div className="space-y-8">
-                  {contactInfo.map((info, idx) => (
-                    <div key={idx} className="flex items-center gap-5">
-                      <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 shadow-sm">
-                        <info.icon size={26} />
-                      </div>
-                      <div>
-                        <div className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">{info.label}</div>
-                        <a href={info.href} className="text-lg font-bold text-slate-900 hover:text-blue-600 transition-colors">
-                          {info.value}
-                        </a>
-                      </div>
-                    </div>
-                  ))}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Your Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-800 focus:border-transparent"
+                    placeholder="John Doe"
+                  />
                 </div>
 
-                <div className="mt-16 pt-12 border-t border-slate-100">
-                  <div className="text-sm font-bold text-slate-900 uppercase tracking-widest mb-6">Connect with us</div>
-                  <div className="flex gap-4">
-                    {[X, Globe, MessageCircle].map((Icon, i) => (
-                      <a key={i} href="#" className="w-12 h-12 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-600 hover:bg-blue-600 hover:text-white hover:border-blue-600 hover:-translate-y-1 transition-all shadow-sm">
-                        <Icon size={22} />
-                      </a>
-                    ))}
-                  </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-800 focus:border-transparent"
+                    placeholder="john@example.com"
+                  />
                 </div>
-              </motion.div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    I am a *
+                  </label>
+                  <select
+                    name="userType"
+                    value={formData.userType}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-800 focus:border-transparent"
+                  >
+                    <option value="user">Individual User</option>
+                    <option value="institution">Institution</option>
+                    <option value="verifier">Verifier/Organization</option>
+                    <option value="developer">Developer</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Subject *
+                  </label>
+                  <input
+                    type="text"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-800 focus:border-transparent"
+                    placeholder="How can we help?"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Message *
+                  </label>
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    rows="5"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-800 focus:border-transparent resize-none"
+                    placeholder="Tell us more about your question or inquiry..."
+                  ></textarea>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold transition hover:-translate-y-0.5 hover:shadow-lg"
+                >
+                  Send Message
+                </button>
+              </form>
             </div>
 
-            {/* Contact Form */}
-            <div className="lg:w-2/3">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl shadow-slate-200/40 border border-slate-100"
-              >
-                <form onSubmit={handleSubmit} className="space-y-8">
-                  <div className="grid md:grid-cols-2 gap-8">
-                    <div className="space-y-3">
-                      <label className="text-sm font-bold text-slate-700 ml-1">Full Name</label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        placeholder="John Doe"
-                        required
-                        className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white transition-all"
-                        onChange={handleChange}
-                      />
+            {/* Contact Information */}
+            <div>
+              <div className="bg-white p-8 rounded-lg shadow-md mb-6">
+                <h2 className="text-2xl font-bold mb-6">Get in Touch</h2>
+
+                <div className="space-y-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="bg-primary-900/10 p-3 rounded-lg">
+                      <div className="text-2xl text-primary-900">📧</div>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">Email</h3>
+                      <p className="text-gray-600">support@trustvault.com</p>
+                      <p className="text-gray-600">sales@trustvault.com</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="bg-primary-900/10 p-3 rounded-lg">
+                      <div className="text-2xl text-primary-900">📞</div>
                     </div>
                     <div className="space-y-3">
                       <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
@@ -115,24 +179,9 @@ const Contact = () => {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-8">
-                    <div className="space-y-3">
-                      <label className="text-sm font-bold text-slate-700 ml-1">I am a...</label>
-                      <div className="relative">
-                        <select
-                          name="userType"
-                          value={formData.userType}
-                          required
-                          className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white transition-all appearance-none cursor-pointer"
-                          onChange={handleChange}
-                        >
-                          <option value="user">Individual User</option>
-                          <option value="institution">Institution</option>
-                          <option value="verifier">Verifier/Organization</option>
-                          <option value="developer">Developer</option>
-                        </select>
-                        <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={20} />
-                      </div>
+                  <div className="flex items-start space-x-4">
+                    <div className="bg-primary-900/10 p-3 rounded-lg">
+                      <div className="text-2xl text-primary-900">📍</div>
                     </div>
                     <div className="space-y-3">
                       <label className="text-sm font-bold text-slate-700 ml-1">Subject</label>
@@ -148,29 +197,26 @@ const Contact = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                    <label className="text-sm font-bold text-slate-700 ml-1">Message</label>
-                    <textarea
-                      name="message"
-                      value={formData.message}
-                      rows="5"
-                      placeholder="How can we help you today?"
-                      required
-                      className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white transition-all resize-none"
-                      onChange={handleChange}
-                    ></textarea>
+                  <div className="flex items-start space-x-4">
+                    <div className="bg-primary-900/10 p-3 rounded-lg">
+                      <div className="text-2xl text-primary-900">💬</div>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">Live Chat</h3>
+                      <p className="text-gray-600">Available 24/7</p>
+                      <button className="text-primary-900 hover:text-primary-800 font-semibold text-sm mt-1">
+                        Start Chat →
+                      </button>
+                    </div>
                   </div>
 
-                  <motion.button
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    type="submit"
-                    className="w-full md:w-auto px-12 py-5 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 flex items-center justify-center gap-3 text-lg"
-                  >
-                    Send Message <Send size={20} />
-                  </motion.button>
-                </form>
-              </motion.div>
+              {/* Response Time */}
+              <div className="bg-slate-50 border border-slate-200 p-6 rounded-lg">
+                <h3 className="font-semibold mb-2 text-primary-900">Response Time</h3>
+                <p className="text-sm text-gray-700">
+                  We typically respond within 24 hours during business days. For urgent issues, please call us directly.
+                </p>
+              </div>
             </div>
           </div>
         </div>
