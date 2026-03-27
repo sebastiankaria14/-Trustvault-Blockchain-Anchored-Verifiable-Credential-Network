@@ -50,10 +50,17 @@ const Contact = () => {
       {/* Contact Form & Info Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <div className="bg-white p-8 rounded-lg shadow-md">
-              <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
+          <div className="flex flex-col lg:flex-row gap-16">
+            {/* Contact Content */}
+            <div className="lg:w-1/3">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+              >
+                <h1 className="text-4xl font-extrabold text-slate-900 mb-6 tracking-tight">Get in touch</h1>
+                <p className="text-lg text-slate-600 mb-12 leading-relaxed">
+                  Have questions about our verification protocol or integration? Our team is standing by to help you scale.
+                </p>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -142,6 +149,7 @@ const Contact = () => {
                   Send Message
                 </button>
               </form>
+            </motion.div>
             </div>
 
             {/* Contact Information */}
@@ -153,17 +161,6 @@ const Contact = () => {
                   <div className="flex items-start space-x-4">
                     <div className="bg-primary-900/10 p-3 rounded-lg">
                       <div className="text-2xl text-primary-900">📧</div>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-1">Email</h3>
-                      <p className="text-gray-600">support@trustvault.com</p>
-                      <p className="text-gray-600">sales@trustvault.com</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-4">
-                    <div className="bg-primary-900/10 p-3 rounded-lg">
-                      <div className="text-2xl text-primary-900">📞</div>
                     </div>
                     <div className="space-y-3">
                       <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
@@ -181,7 +178,7 @@ const Contact = () => {
 
                   <div className="flex items-start space-x-4">
                     <div className="bg-primary-900/10 p-3 rounded-lg">
-                      <div className="text-2xl text-primary-900">📍</div>
+                      <div className="text-2xl text-primary-900">📞</div>
                     </div>
                     <div className="space-y-3">
                       <label className="text-sm font-bold text-slate-700 ml-1">Subject</label>
@@ -199,6 +196,18 @@ const Contact = () => {
 
                   <div className="flex items-start space-x-4">
                     <div className="bg-primary-900/10 p-3 rounded-lg">
+                      <div className="text-2xl text-primary-900">📍</div>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">Office</h3>
+                      <p className="text-gray-600">123 Tech Street</p>
+                      <p className="text-gray-600">San Francisco, CA 94105</p>
+                      <p className="text-gray-600">United States</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="bg-primary-900/10 p-3 rounded-lg">
                       <div className="text-2xl text-primary-900">💬</div>
                     </div>
                     <div>
@@ -209,6 +218,8 @@ const Contact = () => {
                       </button>
                     </div>
                   </div>
+                </div>
+              </div>
 
               {/* Response Time */}
               <div className="bg-slate-50 border border-slate-200 p-6 rounded-lg">

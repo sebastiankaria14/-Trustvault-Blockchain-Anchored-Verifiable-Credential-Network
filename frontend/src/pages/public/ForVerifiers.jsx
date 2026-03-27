@@ -162,7 +162,7 @@ const ForVerifiers = () => {
                 <h3 className="text-lg font-semibold mb-1">Make Decisions</h3>
                 <p className="text-gray-600">Use verified data for hiring, loan approvals, admissions, or any other purpose.</p>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>

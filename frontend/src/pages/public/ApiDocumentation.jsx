@@ -122,7 +122,7 @@ const ApiDocumentation = () => {
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
-                {endpoints[key].path.split('/').pop()}
+                {endpoints[key].title}
               </button>
             ))}
           </div>
@@ -133,10 +133,10 @@ const ApiDocumentation = () => {
               <span className="bg-green-500 text-white px-3 py-1 rounded font-semibold text-sm">
                 {endpoints[selectedEndpoint].method}
               </span>
-              <code className="text-lg font-mono">{endpoints[selectedEndpoint].path}</code>
+              <code className="text-lg font-mono">{endpoints[selectedEndpoint].url}</code>
             </div>
 
-            <p className="text-gray-700 mb-6">{endpoints[selectedEndpoint].description}</p>
+            <p className="text-gray-700 mb-6">{endpoints[selectedEndpoint].desc}</p>
 
             <div className="grid md:grid-cols-2 gap-6">
               {/* Request */}
@@ -154,21 +154,30 @@ const ApiDocumentation = () => {
                   <pre>{endpoints[selectedEndpoint].response}</pre>
                 </div>
               </div>
+            </div>
+
+            <div className="mt-8">
               <h1 className="text-4xl font-extrabold text-slate-900 mb-4">Build with confidence</h1>
-              <p className="text-lg text-slate-500 max-w-xl">
+              <p className="text-lg text-slate-500 max-w-xl mb-6">
                 Integrate TrustVault identity verification into your application with our high-performance REST API.
               </p>
+              <div className="flex gap-4">
+                <button className="px-6 py-3 bg-slate-900 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-slate-800 transition-all shadow-lg">
+                  Get API Key <Key size={18} />
+                </button>
+                <button className="px-6 py-3 bg-white text-slate-900 border border-slate-200 rounded-xl font-bold flex items-center gap-2 hover:bg-slate-50 transition-all">
+                  SDKs <ChevronRight size={18} />
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* All Endpoints List */}
-      <section className="py-16">
+      {/* Endpoints Reference */}
+      <section className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold mb-8">All Available Endpoints</h2>
-
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-8">
             {/* Verification Endpoints */}
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h3 className="text-xl font-semibold mb-4 text-primary-900">Verification APIs</h3>
@@ -214,114 +223,57 @@ const ApiDocumentation = () => {
                 </li>
               </ul>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      <section className="py-20">
+      {/* Error Codes */}
+      <section className="bg-gray-100 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-12">
-            
-            {/* Sidebar Navigation */}
-            <aside className="lg:w-64 flex-shrink-0">
-               <div className="sticky top-24 space-y-8">
-                  <div>
-                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 ml-2">Getting Started</h3>
-                    <nav className="space-y-1">
-                       <a href="#" className="flex items-center gap-3 px-4 py-2 bg-blue-50 text-blue-600 rounded-xl font-bold text-sm">
-                         <BookOpen size={16} /> Authentication
-                       </a>
-                       <a href="#" className="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl font-medium text-sm transition-colors">
-                         <Globe size={16} /> Base URL
-                       </a>
-                       <a href="#" className="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl font-medium text-sm transition-colors">
-                         <Zap size={16} /> Rate Limits
-                       </a>
-                    </nav>
-                  </div>
+          <h2 className="text-3xl font-bold mb-8">Response Codes</h2>
 
-                  <div>
-                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 ml-2">Endpoints</h3>
-                    <nav className="space-y-1">
-                       {Object.keys(endpoints).map(id => (
-                         <button
-                           key={id}
-                           onClick={() => setSelectedEndpoint(id)}
-                           className={`w-full text-left px-4 py-2 rounded-xl text-sm font-bold transition-all ${
-                             selectedEndpoint === id ? 'bg-slate-900 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'
-                           }`}
-                         >
-                           {endpoints[id].title}
-                         </button>
-                       ))}
-                    </nav>
-                  </div>
-               </div>
-            </aside>
-
-            {/* Documentation Content */}
-            <main className="flex-grow">
-               <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-8 md:p-12">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={selectedEndpoint}
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <div className="flex items-center gap-4 mb-6">
-                        <span className="px-3 py-1 bg-green-500 text-white rounded-lg text-xs font-black uppercase">
-                          {endpoints[selectedEndpoint].method}
-                        </span>
-                        <code className="text-lg font-mono text-slate-800 font-bold">
-                          {endpoints[selectedEndpoint].url}
-                        </code>
-                      </div>
-
-                      <h2 className="text-3xl font-bold text-slate-900 mb-4">{endpoints[selectedEndpoint].title}</h2>
-                      <p className="text-slate-600 text-lg mb-10 leading-relaxed">
-                        {endpoints[selectedEndpoint].desc}
-                      </p>
-
-                      <div className="grid lg:grid-cols-2 gap-8">
-                        {/* Request Box */}
-                        <div>
-                          <div className="flex items-center justify-between mb-4 ml-1">
-                            <span className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                              <Terminal size={14} /> Request Body
-                            </span>
-                          </div>
-                          <div className="relative group">
-                             <pre className="bg-slate-900 rounded-2xl p-6 text-blue-300 font-mono text-sm overflow-x-auto border border-white/5">
-                               {endpoints[selectedEndpoint].request}
-                             </pre>
-                             <button 
-                               onClick={() => copyToClipboard(endpoints[selectedEndpoint].request)}
-                               className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all"
-                             >
-                               {copied ? <Check size={16} className="text-green-400" /> : <Copy size={16} />}
-                             </button>
-                          </div>
-                        </div>
-
-                        {/* Response Box */}
-                        <div>
-                          <div className="flex items-center justify-between mb-4 ml-1">
-                            <span className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                              <CheckCircle2 size={14} className="text-green-600" /> Response (200 OK)
-                            </span>
-                          </div>
-                          <pre className="bg-slate-900 rounded-2xl p-6 text-emerald-400 font-mono text-sm overflow-x-auto border border-white/5">
-                            {endpoints[selectedEndpoint].response}
-                          </pre>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-               </div>
-            </main>
-
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Code</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Description</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                <tr>
+                  <td className="px-6 py-4 text-sm font-mono">200</td>
+                  <td className="px-6 py-4 text-sm font-semibold text-green-600">Success</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">Credential verified successfully</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 text-sm font-mono">401</td>
+                  <td className="px-6 py-4 text-sm font-semibold text-red-600">Unauthorized</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">Invalid or missing API key</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 text-sm font-mono">403</td>
+                  <td className="px-6 py-4 text-sm font-semibold text-red-600">Forbidden</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">User has not granted consent</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 text-sm font-mono">404</td>
+                  <td className="px-6 py-4 text-sm font-semibold text-orange-600">Not Found</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">Credential not found</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 text-sm font-mono">429</td>
+                  <td className="px-6 py-4 text-sm font-semibold text-orange-600">Rate Limit</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">Too many requests, try again later</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 text-sm font-mono">500</td>
+                  <td className="px-6 py-4 text-sm font-semibold text-red-600">Server Error</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">Internal server error</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>

@@ -29,6 +29,33 @@ const features = [
   },
 ];
 
+const LandingPage = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 }
+  };
+
+  const FeatureCard = ({ icon: Icon, title, description }) => (
+    <motion.div
+      variants={itemVariants}
+      className="rounded-[2rem] border border-slate-100 bg-white p-7 shadow-[0_20px_50px_rgba(15,23,42,0.08)]"
+    >
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-900/10 text-primary-900">
+        <Icon size={22} />
+      </div>
+      <h3 className="mt-5 text-xl font-bold">{title}</h3>
+      <p className="mt-3 text-sm leading-relaxed text-slate-600">{description}</p>
+    </motion.div>
+  );
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <Navbar />
@@ -169,6 +196,30 @@ const features = [
               );
             })}
           </div>
+
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid md:grid-cols-3 gap-8"
+          >
+            <FeatureCard 
+              icon={Shield} 
+              title="Immutable Security" 
+              description="Each credential is crypographically hashed and anchored to the blockchain, ensuring it can never be altered or forged."
+            />
+            <FeatureCard 
+              icon={Zap} 
+              title="Real-time Engine" 
+              description="Our optimized API delivers verification results in under 2 seconds, eliminating weeks of manual background checks."
+            />
+            <FeatureCard 
+              icon={Globe} 
+              title="Universal Standards" 
+              description="Built on open standards to ensure your digital workforce credentials are recognized by employers and institutions globally."
+            />
+          </motion.div>
         </div>
       </section>
 

@@ -72,14 +72,6 @@ const Navbar = () => {
               Get Started
             </Link>
           </div>
-
-          {/* Mobile Toggle */}
-          <button 
-            className="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
         </div>
       </div>
 
