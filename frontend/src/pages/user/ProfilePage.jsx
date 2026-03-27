@@ -79,37 +79,37 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50 text-slate-900">
       {/* Sidebar */}
-      <aside className="fixed inset-y-0 left-0 w-64 bg-indigo-900 text-white">
+      <aside className="fixed inset-y-0 left-0 w-64 border-r border-slate-200 bg-white/90 text-slate-900 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl">
         <div className="p-6">
-          <h1 className="text-2xl font-bold">TrustVault</h1>
-          <p className="text-indigo-300 text-sm">User Portal</p>
+          <h1 className="text-2xl font-black tracking-tight text-slate-900">TrustVault</h1>
+          <p className="text-sm text-slate-500">User Portal</p>
         </div>
 
-        <nav className="mt-6">
-          <Link to="/user/dashboard" className="flex items-center px-6 py-3 text-indigo-300 hover:bg-indigo-800 hover:text-white transition">
+        <nav className="mt-3 px-3">
+          <Link to="/user/dashboard" className="flex items-center rounded-2xl px-4 py-3 text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
             <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
             Dashboard
           </Link>
 
-          <Link to="/user/wallet" className="flex items-center px-6 py-3 text-indigo-300 hover:bg-indigo-800 hover:text-white transition">
+          <Link to="/user/wallet" className="mt-2 flex items-center rounded-2xl px-4 py-3 text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
             <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
             </svg>
             My Wallet
           </Link>
 
-          <Link to="/user/audit-log" className="flex items-center px-6 py-3 text-indigo-300 hover:bg-indigo-800 hover:text-white transition">
+          <Link to="/user/audit-log" className="mt-2 flex items-center rounded-2xl px-4 py-3 text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
             <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
             Audit Log
           </Link>
 
-          <Link to="/user/profile" className="flex items-center px-6 py-3 bg-indigo-800 border-r-4 border-white">
+          <Link to="/user/profile" className="mt-2 flex items-center rounded-2xl border border-transparent bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-3 text-white shadow-lg shadow-purple-200/50">
             <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
@@ -120,7 +120,7 @@ const ProfilePage = () => {
         <div className="absolute bottom-0 w-full p-6">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center px-4 py-2 text-indigo-300 hover:bg-indigo-800 hover:text-white rounded transition"
+            className="w-full flex items-center rounded-2xl px-4 py-3 text-slate-600 transition hover:bg-slate-50 hover:text-slate-900"
           >
             <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -131,50 +131,50 @@ const ProfilePage = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="ml-64 p-8">
+      <main className="ml-64 min-h-screen p-8">
         <div className="max-w-2xl">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">My Profile</h1>
-          <p className="text-gray-600 mb-8">Manage your personal information</p>
+          <h1 className="text-3xl font-black tracking-tight text-slate-900 mb-2">My Profile</h1>
+          <p className="mb-8 text-slate-600">Manage your personal information</p>
 
           {loading ? (
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
               <div className="animate-pulse space-y-4">
                 {[1, 2, 3, 4].map((i) => (
                   <div key={i}>
-                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-                    <div className="h-10 bg-gray-200 rounded"></div>
+                    <div className="mb-2 h-4 w-1/4 rounded bg-slate-200"></div>
+                    <div className="h-10 rounded-2xl bg-slate-200"></div>
                   </div>
                 ))}
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow">
+            <form onSubmit={handleSubmit} className="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
               <div className="p-6 space-y-6">
                 {/* Success Message */}
                 {success && (
-                  <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+                  <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-700">
                     {success}
                   </div>
                 )}
 
                 {/* Error Message */}
                 {error && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                  <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
                     {error}
                   </div>
                 )}
 
                 {/* KYC Status */}
-                <div className="bg-gray-50 rounded-lg p-4">
+                <div className="rounded-2xl bg-slate-50 p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium text-gray-900">KYC Verification Status</h3>
-                      <p className="text-sm text-gray-500">Complete verification to receive credentials</p>
+                      <h3 className="font-medium text-slate-900">KYC Verification Status</h3>
+                      <p className="text-sm text-slate-500">Complete verification to receive credentials</p>
                     </div>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    <span className={`rounded-full px-3 py-1 text-sm font-medium ${
                       user?.kycStatus === 'verified' || user?.kyc_status === 'verified'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-yellow-100 text-yellow-800'
+                        ? 'bg-emerald-100 text-emerald-800'
+                        : 'bg-amber-100 text-amber-800'
                     }`}>
                       {user?.kycStatus || user?.kyc_status || 'Pending'}
                     </span>
@@ -192,7 +192,7 @@ const ProfilePage = () => {
                       name="firstName"
                       value={profile.firstName}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-purple-500 focus:bg-white focus:ring-4 focus:ring-purple-100"
                       required
                     />
                   </div>
@@ -205,7 +205,7 @@ const ProfilePage = () => {
                       name="lastName"
                       value={profile.lastName}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-purple-500 focus:bg-white focus:ring-4 focus:ring-purple-100"
                       required
                     />
                   </div>
@@ -220,9 +220,9 @@ const ProfilePage = () => {
                     type="email"
                     value={profile.email}
                     disabled
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-500"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-slate-500"
                   />
-                  <p className="mt-1 text-sm text-gray-500">Email cannot be changed</p>
+                  <p className="mt-1 text-sm text-slate-500">Email cannot be changed</p>
                 </div>
 
                 {/* Phone */}
@@ -236,7 +236,7 @@ const ProfilePage = () => {
                     value={profile.phone}
                     onChange={handleChange}
                     placeholder="+1-555-555-5555"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-purple-500 focus:bg-white focus:ring-4 focus:ring-purple-100"
                   />
                 </div>
 
@@ -250,18 +250,18 @@ const ProfilePage = () => {
                     name="dateOfBirth"
                     value={profile.dateOfBirth}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-purple-500 focus:bg-white focus:ring-4 focus:ring-purple-100"
                   />
                 </div>
               </div>
 
               {/* Form Actions */}
-              <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg flex justify-end">
+              <div className="flex justify-end border-t border-slate-100 bg-slate-50 px-6 py-4">
                 <button
                   type="submit"
                   disabled={saving}
-                  className={`px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium ${
-                    saving ? 'opacity-70 cursor-not-allowed' : 'hover:bg-indigo-700'
+                  className={`rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-medium text-white shadow-lg shadow-purple-200/50 ${
+                    saving ? 'cursor-not-allowed opacity-70' : 'hover:shadow-xl'
                   } transition`}
                 >
                   {saving ? 'Saving...' : 'Save Changes'}
@@ -271,24 +271,24 @@ const ProfilePage = () => {
           )}
 
           {/* Change Password Section */}
-          <div className="mt-8 bg-white rounded-lg shadow">
+          <div className="mt-8 rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
             <div className="p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">Change Password</h2>
-              <p className="text-gray-600 mb-4">Update your password to keep your account secure</p>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+              <h2 className="mb-2 text-lg font-bold text-slate-900">Change Password</h2>
+              <p className="mb-4 text-slate-600">Update your password to keep your account secure</p>
+              <button className="rounded-2xl border border-slate-200 px-4 py-2 text-slate-700 transition hover:bg-slate-50">
                 Change Password
               </button>
             </div>
           </div>
 
           {/* Danger Zone */}
-          <div className="mt-8 bg-white rounded-lg shadow border border-red-200">
+          <div className="mt-8 rounded-[1.75rem] border border-red-200 bg-white shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
             <div className="p-6">
-              <h2 className="text-lg font-semibold text-red-600 mb-2">Danger Zone</h2>
-              <p className="text-gray-600 mb-4">
+              <h2 className="mb-2 text-lg font-bold text-red-600">Danger Zone</h2>
+              <p className="mb-4 text-slate-600">
                 Once you delete your account, there is no going back. Please be certain.
               </p>
-              <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+              <button className="rounded-2xl bg-red-600 px-4 py-2 text-white transition hover:bg-red-700">
                 Delete Account
               </button>
             </div>
