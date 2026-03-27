@@ -113,10 +113,10 @@ function ApiDocumentation() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-16">
+      <section className="bg-gradient-to-r from-primary-700 to-primary-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-bold mb-4">API Documentation</h1>
-          <p className="text-xl text-primary-100">
+          <p className="text-xl text-slate-200">
             Simple, powerful APIs for instant credential verification
           </p>
         </div>
@@ -162,7 +162,7 @@ function ApiDocumentation() {
                 onClick={() => setSelectedEndpoint(key)}
                 className={`px-4 py-2 rounded-lg font-semibold transition ${
                   selectedEndpoint === key
-                    ? 'bg-primary-600 text-white'
+                    ? 'bg-primary-800 text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
@@ -211,7 +211,7 @@ function ApiDocumentation() {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Verification Endpoints */}
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-4 text-primary-600">Verification APIs</h3>
+              <h3 className="text-xl font-semibold mb-4 text-primary-900">Verification APIs</h3>
               <ul className="space-y-3">
                 <li className="flex items-center">
                   <span className="bg-green-500 text-white px-2 py-1 rounded text-xs mr-3">POST</span>
@@ -234,10 +234,10 @@ function ApiDocumentation() {
 
             {/* Management Endpoints */}
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-4 text-primary-600">Management APIs</h3>
+              <h3 className="text-xl font-semibold mb-4 text-primary-900">Management APIs</h3>
               <ul className="space-y-3">
                 <li className="flex items-center">
-                  <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs mr-3">GET</span>
+                  <span className="bg-primary-800 text-white px-2 py-1 rounded text-xs mr-3">GET</span>
                   <code className="text-sm">/api/verifier/reports</code>
                 </li>
                 <li className="flex items-center">
@@ -245,7 +245,7 @@ function ApiDocumentation() {
                   <code className="text-sm">/api/verifier/api-key</code>
                 </li>
                 <li className="flex items-center">
-                  <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs mr-3">GET</span>
+                  <span className="bg-primary-800 text-white px-2 py-1 rounded text-xs mr-3">GET</span>
                   <code className="text-sm">/api/verifier/usage</code>
                 </li>
                 <li className="flex items-center">
@@ -337,13 +337,13 @@ function ApiDocumentation() {
       </section>
 
       {/* CTA */}
-      <section className="bg-primary-600 text-white py-16">
+      <section className="bg-gradient-to-r from-primary-700 to-primary-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Integrate?</h2>
-          <p className="text-xl mb-8 text-primary-100">
+          <p className="text-xl mb-8 text-slate-200">
             Get your API key and start verifying in minutes
           </p>
-          <Link to="/register" className="px-8 py-3 bg-white text-primary-600 rounded-lg font-semibold hover:bg-gray-100 transition inline-block">
+          <Link to="/register" className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold transition hover:-translate-y-0.5 hover:shadow-lg inline-block">
             Get API Key
           </Link>
         </div>

@@ -1,118 +1,223 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import Navbar from '../../components/Navbar'
-import Footer from '../../components/Footer'
+import React from 'react';
+import { motion } from 'framer-motion';
+import { ArrowRight, CheckCircle2, Globe, Lock, Shield, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
+
+const stats = [
+  { value: '3', label: 'Secure roles', icon: Shield },
+  { value: '2s', label: 'Verification target', icon: Zap },
+  { value: '24/7', label: 'Platform access', icon: Globe },
+];
+
+const features = [
+  {
+    icon: Lock,
+    title: 'Secure & immutable',
+    description: 'Credential hashes stay verifiable and tamper-resistant through the same trust layer used across the platform.',
+  },
+  {
+    icon: Zap,
+    title: 'Instant verification',
+    description: 'Fast flows for users, institutions, and verifiers without changing the visual language from page to page.',
+  },
+  {
+    icon: CheckCircle2,
+    title: 'Consent-driven sharing',
+    description: 'Users stay in control while organizations request and receive only the data they are allowed to see.',
+  },
+];
 
 function LandingPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-slate-50 text-slate-900">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl font-bold mb-6">
-            Upload once. Verify everywhere. Instantly.
-          </h1>
-          <p className="text-xl mb-8 text-primary-100">
-            The future of credential verification. Secure, instant, and blockchain-powered.
-          </p>
-          <div className="flex justify-center space-x-4">
-            <Link to="/register" className="px-8 py-3 bg-white text-primary-600 rounded-lg font-semibold hover:bg-gray-100 transition">
-              Get Your Wallet
-            </Link>
-            <Link to="/how-it-works" className="px-8 py-3 bg-primary-700 text-white rounded-lg font-semibold hover:bg-primary-800 transition border border-white">
-              See How It Works
-            </Link>
-          </div>
+      <section className="relative overflow-hidden pt-32 pb-20">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(30,64,175,0.18),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(88,28,135,0.16),_transparent_28%)]" />
+        <motion.div
+          aria-hidden="true"
+          className="absolute left-0 top-10 h-80 w-80 rounded-full bg-primary-900/15 blur-3xl"
+          animate={{ x: [0, 20, 0], y: [0, -14, 0], scale: [1, 1.08, 1] }}
+          transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          aria-hidden="true"
+          className="absolute right-0 top-24 h-96 w-96 rounded-full bg-primary-800/12 blur-3xl"
+          animate={{ x: [0, -18, 0], y: [0, 18, 0], scale: [1, 1.1, 1] }}
+          transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
+        />
+
+        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, x: -28 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.55 }}
+          >
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-primary-900">
+              <Shield size={14} /> TrustVault Platform
+            </div>
+            <h1 className="mt-6 max-w-3xl text-5xl font-black tracking-tight sm:text-6xl">
+              Upload once. Verify everywhere. Instantly.
+            </h1>
+            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-600">
+              A secure, modern credential platform for users, institutions, and verifiers. Same palette, same trust layer, cleaner motion.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              <Link
+                to="/register"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 text-white shadow-lg shadow-purple-200/60 transition-all hover:-translate-y-0.5 hover:shadow-2xl"
+              >
+                Create your account <ArrowRight size={18} />
+              </Link>
+              <Link
+                to="/how-it-works"
+                className="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-8 py-4 font-semibold text-slate-700 transition-all hover:-translate-y-0.5 hover:border-purple-200 hover:bg-slate-50"
+              >
+                See how it works
+              </Link>
+            </div>
+
+            <div className="mt-10 grid gap-4 sm:grid-cols-3">
+              {stats.map((stat, index) => {
+                const Icon = stat.icon;
+                return (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.12 * index, duration: 0.4 }}
+                    className="rounded-3xl border border-white/70 bg-white/90 p-5 shadow-[0_20px_50px_rgba(15,23,42,0.08)] backdrop-blur-xl"
+                  >
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-900/10 text-primary-900">
+                      <Icon size={20} />
+                    </div>
+                    <div className="mt-4 text-3xl font-black text-slate-900">{stat.value}</div>
+                    <p className="mt-1 text-sm text-slate-500">{stat.label}</p>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, x: 24 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="rounded-[2.5rem] border border-white/70 bg-white/85 p-6 shadow-[0_30px_80px_rgba(15,23,42,0.12)] backdrop-blur-xl"
+          >
+            <div className="rounded-[2rem] bg-slate-900 p-6 text-white">
+              <div className="flex items-center justify-between text-sm text-slate-400">
+                <span className="font-mono uppercase tracking-[0.2em]">TrustVault console</span>
+                <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold text-emerald-300">Live</span>
+              </div>
+              <div className="mt-6 space-y-4">
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div className="text-xs uppercase tracking-[0.2em] text-slate-400">Credential status</div>
+                  <div className="mt-2 flex items-center justify-between gap-4">
+                    <div>
+                      <div className="text-lg font-bold">Verified</div>
+                      <p className="text-sm text-slate-400">Issued by trusted institution</p>
+                    </div>
+                    <div className="rounded-full bg-emerald-400/15 px-3 py-1 text-xs font-bold text-emerald-300">Authentic</div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <div className="text-xs uppercase tracking-[0.2em] text-slate-400">Flow</div>
+                    <div className="mt-2 text-xl font-black">Issue</div>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <div className="text-xs uppercase tracking-[0.2em] text-slate-400">Flow</div>
+                    <div className="mt-2 text-xl font-black">Verify</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Why TrustVault?</h2>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto mb-14 max-w-2xl text-center">
+            <h2 className="text-3xl font-black tracking-tight sm:text-4xl">Why TrustVault?</h2>
+            <p className="mt-4 text-slate-600">
+              Modern credential infrastructure with a consistent visual system across the public pages and auth flows.
+            </p>
+          </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-              <div className="text-4xl mb-4">🔒</div>
-              <h3 className="text-xl font-semibold mb-3">Secure & Immutable</h3>
-              <p className="text-gray-600">
-                All credentials are hashed and stored on blockchain, making them tamper-proof and verifiable forever.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-              <div className="text-4xl mb-4">⚡</div>
-              <h3 className="text-xl font-semibold mb-3">Instant Verification</h3>
-              <p className="text-gray-600">
-                Verify any credential in under 2 seconds through our API. No more waiting days for manual verification.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-              <div className="text-4xl mb-4">🌐</div>
-              <h3 className="text-xl font-semibold mb-3">Universal Access</h3>
-              <p className="text-gray-600">
-                Upload once, share everywhere. Your credentials work across education, employment, and financial sectors.
-              </p>
-            </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.08 * index, duration: 0.4 }}
+                  className="rounded-[2rem] border border-slate-100 bg-white p-7 shadow-[0_20px_50px_rgba(15,23,42,0.08)] transition-transform hover:-translate-y-1"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-900/10 text-primary-900">
+                    <Icon size={22} />
+                  </div>
+                  <h3 className="mt-5 text-xl font-bold">{feature.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-600">{feature.description}</p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="bg-gray-100 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-primary-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
-              <h3 className="text-xl font-semibold mb-3">Institutions Issue</h3>
-              <p className="text-gray-600">
-                Universities, employers, and banks issue verified credentials directly to your wallet.
+      <section className="bg-white py-20">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-3 lg:px-8">
+          {[
+            'Institutions issue trusted records',
+            'Users keep full control of access',
+            'Verifiers confirm authenticity fast',
+          ].map((item, index) => (
+            <motion.div
+              key={item}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.08 * index, duration: 0.4 }}
+              className="rounded-[2rem] border border-slate-100 bg-slate-50 p-6"
+            >
+              <div className="text-sm font-bold uppercase tracking-[0.22em] text-primary-900">Step {index + 1}</div>
+              <h3 className="mt-3 text-xl font-bold text-slate-900">{item}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-slate-600">
+                Built with the same palette and motion language used throughout the updated TrustVault experience.
               </p>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-primary-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
-              <h3 className="text-xl font-semibold mb-3">You Store Safely</h3>
-              <p className="text-gray-600">
-                All your credentials live in one secure digital wallet. Access them anytime, anywhere.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-primary-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
-              <h3 className="text-xl font-semibold mb-3">Organizations Verify</h3>
-              <p className="text-gray-600">
-                With your consent, anyone can verify your credentials instantly through our API.
-              </p>
-            </div>
-          </div>
+            </motion.div>
+          ))}
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="bg-primary-600 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
-          <p className="text-xl mb-8 text-primary-100">
-            Join thousands of users who trust TrustVault for their credential verification needs.
+      <section className="bg-slate-900 py-16 text-white">
+        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-black tracking-tight sm:text-4xl">Ready to get started?</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-slate-300">
+            Use the updated public experience, then sign in or register with the new motion-driven auth pages.
           </p>
-          <Link to="/register" className="px-8 py-3 bg-white text-primary-600 rounded-lg font-semibold hover:bg-gray-100 transition inline-block">
-            Create Your Wallet Now
-          </Link>
+          <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+              <Link to="/register" className="rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-lg">
+              Create your wallet
+            </Link>
+            <Link to="/login" className="rounded-2xl border border-white/20 bg-white/5 px-8 py-4 font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-white/10">
+              Sign in
+            </Link>
+          </div>
         </div>
       </section>
 
       <Footer />
     </div>
-  )
+  );
 }
 
-export default LandingPage
+export default LandingPage;

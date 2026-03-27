@@ -35,35 +35,35 @@ const InstitutionDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <aside className="fixed inset-y-0 left-0 w-64 bg-blue-900 text-white">
+      <aside className="fixed inset-y-0 left-0 w-64 bg-purple-900 text-white">
         <div className="p-6">
           <h1 className="text-2xl font-bold">TrustVault</h1>
-          <p className="text-blue-300 text-sm">Institution Portal</p>
+          <p className="text-purple-300 text-sm">Institution Portal</p>
         </div>
 
         <nav className="mt-6">
-          <Link to="/institution/dashboard" className="flex items-center px-6 py-3 bg-blue-800 border-r-4 border-white">
+          <Link to="/institution/dashboard" className="flex items-center px-6 py-3 bg-purple-800 border-r-4 border-white">
             <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
             Dashboard
           </Link>
 
-          <Link to="/institution/issue" className="flex items-center px-6 py-3 text-gray-200 hover:bg-blue-800">
+          <Link to="/institution/issue" className="flex items-center px-6 py-3 text-gray-200 hover:bg-purple-800">
             <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
             Issue Credential
           </Link>
 
-          <Link to="/institution/manage" className="flex items-center px-6 py-3 text-gray-200 hover:bg-blue-800">
+          <Link to="/institution/manage" className="flex items-center px-6 py-3 text-gray-200 hover:bg-purple-800">
             <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
             </svg>
             Manage Credentials
           </Link>
 
-          <Link to="/institution/history" className="flex items-center px-6 py-3 text-gray-200 hover:bg-blue-800">
+          <Link to="/institution/history" className="flex items-center px-6 py-3 text-gray-200 hover:bg-purple-800">
             <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>

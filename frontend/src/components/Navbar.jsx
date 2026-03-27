@@ -8,39 +8,39 @@ function Navbar() {
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="text-2xl font-bold text-primary-600 hover:text-primary-700">
+            <Link to="/" className="text-2xl font-bold text-primary-800 hover:text-primary-900">
               TrustVault
             </Link>
           </div>
 
           {/* Navigation Links */}
           <div className="hidden md:flex space-x-8">
-            <Link to="/" className="text-gray-700 hover:text-primary-600 transition">
+            <Link to="/" className="text-gray-700 hover:text-primary-800 transition">
               Home
             </Link>
-            <Link to="/how-it-works" className="text-gray-700 hover:text-primary-600 transition">
+            <Link to="/how-it-works" className="text-gray-700 hover:text-primary-800 transition">
               How It Works
             </Link>
-            <Link to="/for-institutions" className="text-gray-700 hover:text-primary-600 transition">
+            <Link to="/for-institutions" className="text-gray-700 hover:text-primary-800 transition">
               For Institutions
             </Link>
-            <Link to="/for-verifiers" className="text-gray-700 hover:text-primary-600 transition">
+            <Link to="/for-verifiers" className="text-gray-700 hover:text-primary-800 transition">
               For Verifiers
             </Link>
-            <Link to="/api-docs" className="text-gray-700 hover:text-primary-600 transition">
+            <Link to="/api-docs" className="text-gray-700 hover:text-primary-800 transition">
               API Docs
             </Link>
-            <Link to="/contact" className="text-gray-700 hover:text-primary-600 transition">
+            <Link to="/contact" className="text-gray-700 hover:text-primary-800 transition">
               Contact
             </Link>
           </div>
 
           {/* Action Buttons */}
           <div className="flex space-x-4">
-            <Link to="/login" className="px-4 py-2 text-primary-600 hover:text-primary-700 transition">
+            <Link to="/login" className="px-4 py-2 text-primary-800 hover:text-primary-900 transition">
               Login
             </Link>
-            <Link to="/register" className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition">
+            <Link to="/register" className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition">
               Get Started
             </Link>
           </div>

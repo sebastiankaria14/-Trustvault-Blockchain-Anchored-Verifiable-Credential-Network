@@ -28,16 +28,16 @@ const HistoryPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <aside className="fixed inset-y-0 left-0 w-64 bg-blue-900 text-white">
+      <aside className="fixed inset-y-0 left-0 w-64 bg-purple-900 text-white">
         <div className="p-6">
           <h1 className="text-2xl font-bold">TrustVault</h1>
-          <p className="text-blue-300 text-sm">Institution Portal</p>
+          <p className="text-purple-300 text-sm">Institution Portal</p>
         </div>
         <nav className="mt-6">
-          <Link to="/institution/dashboard" className="block px-6 py-3 hover:bg-blue-800">Dashboard</Link>
-          <Link to="/institution/issue" className="block px-6 py-3 hover:bg-blue-800">Issue</Link>
-          <Link to="/institution/manage" className="block px-6 py-3 hover:bg-blue-800">Manage</Link>
-          <Link to="/institution/history" className="block px-6 py-3 bg-blue-800">History</Link>
+          <Link to="/institution/dashboard" className="block px-6 py-3 hover:bg-purple-800">Dashboard</Link>
+          <Link to="/institution/issue" className="block px-6 py-3 hover:bg-purple-800">Issue</Link>
+          <Link to="/institution/manage" className="block px-6 py-3 hover:bg-purple-800">Manage</Link>
+          <Link to="/institution/history" className="block px-6 py-3 bg-purple-800">History</Link>
         </nav>
         <div className="absolute bottom-6 left-6 right-6">
           <button onClick={() => { logout(); navigate('/login'); }} className="w-full px-4 py-2 hover:bg-red-600 rounded">Logout</button>
@@ -58,7 +58,7 @@ const HistoryPage = () => {
             ) : (
               <div className="p-6">
                 {history.map((item, index) => (
-                  <div key={index} className="border-l-4 border-blue-500 pl-4 pb-6 mb-6">
+                  <div key={index} className="border-l-4 border-purple-500 pl-4 pb-6 mb-6">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-gray-900">{item.credential_name}</p>

@@ -78,16 +78,16 @@ const IssueCredentialPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <aside className="fixed inset-y-0 left-0 w-64 bg-blue-900 text-white">
+      <aside className="fixed inset-y-0 left-0 w-64 bg-purple-900 text-white">
         <div className="p-6">
           <h1 className="text-2xl font-bold">TrustVault</h1>
-          <p className="text-blue-300 text-sm">Institution Portal</p>
+          <p className="text-purple-300 text-sm">Institution Portal</p>
         </div>
         <nav className="mt-6">
-          <Link to="/institution/dashboard" className="flex items-center px-6 py-3 text-gray-200 hover:bg-blue-800">Dashboard</Link>
-          <Link to="/institution/issue" className="flex items-center px-6 py-3 bg-blue-800 border-r-4 border-white">Issue Credential</Link>
-          <Link to="/institution/manage" className="flex items-center px-6 py-3 text-gray-200 hover:bg-blue-800">Manage Credentials</Link>
-          <Link to="/institution/history" className="flex items-center px-6 py-3 text-gray-200 hover:bg-blue-800">History</Link>
+          <Link to="/institution/dashboard" className="flex items-center px-6 py-3 text-gray-200 hover:bg-purple-800">Dashboard</Link>
+          <Link to="/institution/issue" className="flex items-center px-6 py-3 bg-purple-800 border-r-4 border-white">Issue Credential</Link>
+          <Link to="/institution/manage" className="flex items-center px-6 py-3 text-gray-200 hover:bg-purple-800">Manage Credentials</Link>
+          <Link to="/institution/history" className="flex items-center px-6 py-3 text-gray-200 hover:bg-purple-800">History</Link>
         </nav>
         <div className="absolute bottom-6 left-6 right-6">
           <button onClick={handleLogout} className="w-full flex items-center px-4 py-2 text-gray-200 hover:bg-red-600 rounded">Logout</button>
@@ -149,7 +149,7 @@ const IssueCredentialPage = () => {
                   name="lifetime"
                   checked={formData.lifetime}
                   onChange={handleChange}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded cursor-pointer"
+                  className="w-4 h-4 text-purple-600 border-gray-300 rounded cursor-pointer"
                 />
                 <label htmlFor="lifetime" className="ml-2 text-sm font-medium text-gray-700 cursor-pointer">
                   ✓ This credential has lifetime validity (never expires)
@@ -159,7 +159,7 @@ const IssueCredentialPage = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700">Upload Document (Photo of Certificate/Degree)</label>
                 <p className="text-xs text-gray-500 mb-2">Optional. Upload a photo of the credential (max 2MB). JPG, PNG supported.</p>
-                <div className="mt-1 flex items-center justify-center px-6 py-4 border-2 border-dashed border-gray-300 rounded-md hover:border-blue-500 cursor-pointer">
+                <div className="mt-1 flex items-center justify-center px-6 py-4 border-2 border-dashed border-gray-300 rounded-md hover:border-purple-500 cursor-pointer">
                   <input
                     type="file"
                     accept="image/*"
@@ -176,7 +176,7 @@ const IssueCredentialPage = () => {
               </div>
 
               <div className="flex gap-4">
-                <button type="submit" disabled={loading} className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400">
+                <button type="submit" disabled={loading} className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg disabled:bg-gray-400">
                   {loading ? 'Issuing...' : 'Issue Credential'}
                 </button>
                 <Link to="/institution/dashboard" className="flex-1 px-4 py-3 bg-gray-300 text-gray-800 rounded-lg text-center">Cancel</Link>

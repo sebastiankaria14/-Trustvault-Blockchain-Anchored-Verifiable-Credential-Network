@@ -9,10 +9,10 @@ function HowItWorks() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-16">
+      <section className="bg-gradient-to-r from-primary-700 to-primary-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-bold mb-4">How TrustVault Works</h1>
-          <p className="text-xl text-primary-100">
+          <p className="text-xl text-slate-200">
             Three simple steps to secure, verified credentials
           </p>
         </div>
@@ -25,7 +25,7 @@ function HowItWorks() {
             {/* Step 1 */}
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="md:w-1/2">
-                <div className="bg-primary-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mb-4">
+                <div className="bg-primary-800 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mb-4">
                   1
                 </div>
                 <h2 className="text-3xl font-bold mb-4">Institutions Issue Credentials</h2>
@@ -34,19 +34,19 @@ function HowItWorks() {
                 </p>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">✓</span>
+                    <span className="text-primary-900 mr-2">✓</span>
                     Institution logs into their portal
                   </li>
                   <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">✓</span>
+                    <span className="text-primary-900 mr-2">✓</span>
                     Fills credential details (degree, salary, medical record, etc.)
                   </li>
                   <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">✓</span>
+                    <span className="text-primary-900 mr-2">✓</span>
                     System generates a unique hash and stores it on blockchain
                   </li>
                   <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">✓</span>
+                    <span className="text-primary-900 mr-2">✓</span>
                     Credential appears instantly in user's wallet
                   </li>
                 </ul>
@@ -63,7 +63,7 @@ function HowItWorks() {
             {/* Step 2 */}
             <div className="flex flex-col md:flex-row-reverse items-center gap-8">
               <div className="md:w-1/2">
-                <div className="bg-primary-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mb-4">
+                <div className="bg-primary-800 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mb-4">
                   2
                 </div>
                 <h2 className="text-3xl font-bold mb-4">You Store in Your Wallet</h2>
@@ -72,19 +72,19 @@ function HowItWorks() {
                 </p>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">✓</span>
+                    <span className="text-primary-900 mr-2">✓</span>
                     View all your credentials in one place
                   </li>
                   <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">✓</span>
+                    <span className="text-primary-900 mr-2">✓</span>
                     Organize by type (education, employment, financial, medical)
                   </li>
                   <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">✓</span>
+                    <span className="text-primary-900 mr-2">✓</span>
                     Download or share credentials
                   </li>
                   <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">✓</span>
+                    <span className="text-primary-900 mr-2">✓</span>
                     Control who can access your data
                   </li>
                 </ul>
@@ -101,7 +101,7 @@ function HowItWorks() {
             {/* Step 3 */}
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="md:w-1/2">
-                <div className="bg-primary-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mb-4">
+                <div className="bg-primary-800 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mb-4">
                   3
                 </div>
                 <h2 className="text-3xl font-bold mb-4">Organizations Verify Instantly</h2>
@@ -110,19 +110,19 @@ function HowItWorks() {
                 </p>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">✓</span>
+                    <span className="text-primary-900 mr-2">✓</span>
                     Verifier requests access to your credential
                   </li>
                   <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">✓</span>
+                    <span className="text-primary-900 mr-2">✓</span>
                     You approve or deny the request
                   </li>
                   <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">✓</span>
+                    <span className="text-primary-900 mr-2">✓</span>
                     Verifier gets instant confirmation via API
                   </li>
                   <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">✓</span>
+                    <span className="text-primary-900 mr-2">✓</span>
                     Blockchain verification ensures authenticity
                   </li>
                 </ul>
@@ -140,14 +140,14 @@ function HowItWorks() {
       </section>
 
       {/* Benefits Section */}
-      <section className="bg-primary-50 py-16">
+      <section className="bg-slate-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12">Why This Changes Everything</h2>
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* For Users */}
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-4 text-primary-600">For You (Users)</h3>
+              <h3 className="text-xl font-semibold mb-4 text-primary-900">For You (Users)</h3>
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
@@ -170,7 +170,7 @@ function HowItWorks() {
 
             {/* For Organizations */}
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-4 text-primary-600">For Organizations</h3>
+              <h3 className="text-xl font-semibold mb-4 text-primary-900">For Organizations</h3>
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
@@ -228,17 +228,17 @@ function HowItWorks() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary-600 text-white py-16">
+      <section className="bg-gradient-to-r from-primary-700 to-primary-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
-          <p className="text-xl mb-8 text-primary-100">
+          <p className="text-xl mb-8 text-slate-200">
             Join the future of credential verification today.
           </p>
           <div className="flex justify-center space-x-4">
-            <Link to="/register" className="px-8 py-3 bg-white text-primary-600 rounded-lg font-semibold hover:bg-gray-100 transition">
+            <Link to="/register" className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold transition hover:-translate-y-0.5 hover:shadow-lg">
               Create Your Wallet
             </Link>
-            <Link to="/contact" className="px-8 py-3 bg-primary-700 text-white rounded-lg font-semibold hover:bg-primary-800 transition border border-white">
+            <Link to="/contact" className="px-8 py-3 bg-white/10 text-white rounded-lg font-semibold transition hover:-translate-y-0.5 hover:bg-white/15 border border-white/20">
               Contact Us
             </Link>
           </div>
