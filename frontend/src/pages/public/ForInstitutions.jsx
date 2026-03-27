@@ -52,64 +52,38 @@ const ForInstitutions = () => {
       {/* Who Can Use */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-center gap-16">
-            <div className="lg:w-1/2 text-left">
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <div className="inline-block px-4 py-1.5 bg-blue-50 text-blue-700 rounded-full text-sm font-bold mb-6 border border-blue-100">
-                  Institutional Portal
-                </div>
-                <h1 className="text-5xl lg:text-6xl font-extrabold text-slate-900 mb-8 leading-tight">
-                  The Gold Standard for <span className="text-blue-600">Credential Issuance</span>
-                </h1>
-                <p className="text-xl text-slate-600 mb-10 leading-relaxed max-w-xl">
-                  Empower your alumni and employees with verifiable digital credentials that are secure, portable, and instant.
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  <Link to="/register" className="px-8 py-4 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 flex items-center gap-2">
-                    Become an Issuer <ArrowRight size={20} />
-                  </Link>
-                  <Link to="/contact" className="px-8 py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition-all">
-                    Request Demo
-                  </Link>
-                </div>
-              </motion.div>
+          <h2 className="text-3xl font-bold text-center mb-12">Who Can Issue Credentials?</h2>
+
+          <div className="grid md:grid-cols-4 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <div className="text-5xl mb-3">🎓</div>
+              <h3 className="font-semibold text-lg">Universities</h3>
+              <p className="text-gray-600 text-sm mt-2">Degrees, diplomas, certificates, transcripts</p>
             </div>
-            <div className="lg:w-1/2">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-slate-900 rounded-[3rem] p-10 shadow-2xl relative"
-              >
-                 <div className="flex items-center justify-between mb-12">
-                   <div className="flex gap-2">
-                     <div className="w-3 h-3 rounded-full bg-red-400" />
-                     <div className="w-3 h-3 rounded-full bg-amber-400" />
-                     <div className="w-3 h-3 rounded-full bg-green-400" />
-                   </div>
-                   <div className="px-4 py-1 bg-slate-800 rounded-full text-xs text-slate-400 font-mono">issuer_console_v2.0</div>
-                 </div>
-                 <div className="space-y-6">
-                    <div className="h-4 w-3/4 bg-slate-800 rounded-full" />
-                    <div className="h-4 w-1/2 bg-slate-800 rounded-full" />
-                    <div className="grid grid-cols-2 gap-4 mt-12">
-                       <div className="h-24 bg-blue-600/20 border border-blue-500/30 rounded-2xl flex items-center justify-center">
-                          <BarChart3 className="text-blue-400" size={32} />
-                       </div>
-                       <div className="h-24 bg-slate-800 rounded-2xl" />
-                    </div>
-                 </div>
-              </motion.div>
+
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <div className="text-5xl mb-3">🏢</div>
+              <h3 className="font-semibold text-lg">Employers</h3>
+              <p className="text-gray-600 text-sm mt-2">Employment letters, salary slips, experience certificates</p>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <div className="text-5xl mb-3">🏦</div>
+              <h3 className="font-semibold text-lg">Banks</h3>
+              <p className="text-gray-600 text-sm mt-2">Bank statements, loan documents, credit history</p>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <div className="text-5xl mb-3">🏥</div>
+              <h3 className="font-semibold text-lg">Healthcare</h3>
+              <p className="text-gray-600 text-sm mt-2">Medical records, vaccination certificates, prescriptions</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Sectors */}
-      <section className="py-24 bg-white">
+      {/* Benefits Section */}
+      <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12">Why Choose TrustVault?</h2>
 
@@ -159,7 +133,15 @@ const ForInstitutions = () => {
                 <p className="text-gray-600">
                   Dashboard shows all issued credentials, verification requests, and analytics in real-time.
                 </p>
-              </div>
+                <div className="flex flex-wrap gap-4">
+                  <Link to="/register" className="px-8 py-4 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 flex items-center gap-2">
+                    Become an Issuer <ArrowRight size={20} />
+                  </Link>
+                  <Link to="/contact" className="px-8 py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition-all">
+                    Request Demo
+                  </Link>
+                </div>
+              </motion.div>
             </div>
 
             <div className="flex items-start space-x-4">
@@ -189,8 +171,8 @@ const ForInstitutions = () => {
         </div>
       </section>
 
-      {/* Value Prop */}
-      <section className="py-24 bg-slate-50 relative">
+      {/* Sectors */}
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12">Getting Started is Easy</h2>
 

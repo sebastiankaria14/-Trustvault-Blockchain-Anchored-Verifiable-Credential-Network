@@ -162,13 +162,13 @@ const ForVerifiers = () => {
                 <h3 className="text-lg font-semibold mb-1">Make Decisions</h3>
                 <p className="text-gray-600">Use verified data for hiring, loan approvals, admissions, or any other purpose.</p>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* API Preview */}
-      <section className="bg-white py-16">
+      {/* Workflow Section */}
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-8">Simple API Integration</h2>
           <p className="text-center text-gray-600 mb-12">
