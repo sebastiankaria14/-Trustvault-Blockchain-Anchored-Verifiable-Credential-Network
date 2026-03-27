@@ -7,27 +7,37 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "contract:compile": "hardhat compile",
+    "contract:deploy:mumbai": "hardhat run scripts/deploy-contract.js --network mumbai"
   },
-  "keywords": ["trustvault", "credentials", "blockchain", "verification"],
+  "keywords": [
+    "trustvault",
+    "credentials",
+    "blockchain",
+    "verification"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.3",
+    "@openzeppelin/contracts": "^5.1.0",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "pg": "^8.11.3",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2",
+    "ethers": "^6.11.1",
+    "express": "^4.18.3",
+    "express-rate-limit": "^7.1.5",
     "express-validator": "^7.0.1",
     "helmet": "^7.1.0",
-    "express-rate-limit": "^7.1.5",
-    "redis": "^4.6.13",
+    "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.9",
-    "ethers": "^6.11.1"
+    "nodemailer": "^8.0.3",
+    "pg": "^8.11.3",
+    "redis": "^4.6.13"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.10",
+    "nodemon": "^3.1.14"
   }
 }

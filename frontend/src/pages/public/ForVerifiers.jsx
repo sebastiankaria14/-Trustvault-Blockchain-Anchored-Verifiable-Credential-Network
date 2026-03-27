@@ -1,11 +1,33 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import Navbar from '../../components/Navbar'
-import Footer from '../../components/Footer'
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Search, ShieldAlert, Cpu, Zap, CreditCard, Home, Briefcase, GraduationCap, ArrowRight, CheckCircle2, Terminal } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 
-function ForVerifiers() {
+const ForVerifiers = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 }
+  };
+
+  const useCases = [
+    { icon: Briefcase, title: 'HR & Recruitment', desc: 'Instant background checks for degrees and past employment.' },
+    { icon: CreditCard, title: 'Lending & Fintech', desc: 'Verify income and assets with high-fidelity digital records.' },
+    { icon: Home, title: 'Real Estate', desc: 'Streamline tenant screening with verified identity and income.' },
+    { icon: GraduationCap, title: 'Admissions', desc: 'Authenticate transfer credits and international transcripts.' }
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FDFDFF]">
       <Navbar />
 
       {/* Hero Section */}
@@ -21,32 +43,30 @@ function ForVerifiers() {
       {/* Who Uses It */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Who Needs TrustVault?</h2>
-
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg transition">
-              <div className="text-5xl mb-3">💼</div>
-              <h3 className="font-semibold text-lg mb-2">HR Departments</h3>
-              <p className="text-gray-600 text-sm">Verify education and employment history during hiring</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg transition">
-              <div className="text-5xl mb-3">🏦</div>
-              <h3 className="font-semibold text-lg mb-2">Financial Institutions</h3>
-              <p className="text-gray-600 text-sm">Verify income and employment for loans and credit</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg transition">
-              <div className="text-5xl mb-3">🏠</div>
-              <h3 className="font-semibold text-lg mb-2">Landlords</h3>
-              <p className="text-gray-600 text-sm">Verify tenant income and employment instantly</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg transition">
-              <div className="text-5xl mb-3">🎓</div>
-              <h3 className="font-semibold text-lg mb-2">Universities</h3>
-              <p className="text-gray-600 text-sm">Verify prior education for admissions</p>
-            </div>
+          <div className="max-w-3xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-sm font-bold mb-6 border border-indigo-100">
+                <Search size={16} /> Verifier Ecosystem
+              </div>
+              <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 mb-8 leading-tight">
+                Trust as a <span className="text-blue-600">Service</span>
+              </h1>
+              <p className="text-xl text-slate-600 mb-10 leading-relaxed">
+                Eliminate fraud and manual background checks. Our verification engine provides cryptographically guaranteed truth in milliseconds.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link to="/register" className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-lg flex items-center gap-2">
+                  Start Verifying <ArrowRight size={20} />
+                </Link>
+                <Link to="/api-docs" className="px-8 py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition-all flex items-center gap-2">
+                  <Terminal size={20} /> API Documentation
+                </Link>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -54,8 +74,6 @@ function ForVerifiers() {
       {/* Benefits */}
       <section className="bg-slate-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Benefits for Your Organization</h2>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">⚡</div>
@@ -144,13 +162,13 @@ function ForVerifiers() {
                 <h3 className="text-lg font-semibold mb-1">Make Decisions</h3>
                 <p className="text-gray-600">Use verified data for hiring, loan approvals, admissions, or any other purpose.</p>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* API Preview */}
-      <section className="bg-white py-16">
+      {/* Workflow Section */}
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-8">Simple API Integration</h2>
           <p className="text-center text-gray-600 mb-12">
@@ -208,7 +226,7 @@ const result = await response.json();
 
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default ForVerifiers
+export default ForVerifiers;

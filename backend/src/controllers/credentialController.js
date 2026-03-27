@@ -326,6 +326,158 @@ export const getProfile = async (req, res) => {
   }
 };
 
+/**
+ * Get all available verifiers (companies) for sharing credentials
+ */
+export const getVerifiers = async (req, res) => {
+  try {
+    const result = await query(
+      `SELECT id, company_name, industry, email, phone, website
+       FROM verifiers
+       WHERE is_active = true
+       ORDER BY company_name ASC`,
+      []
+    );
+
+    res.status(200).json({
+      success: true,
+      data: {
+        verifiers: result.rows,
+        total: result.rows.length
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching verifiers:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching verifiers',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Share a credential with a verifier/company
+ */
+export const shareCredential = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { credentialId } = req.params;
+    const { verifierId } = req.body;
+
+    // Validate input
+    if (!credentialId || !verifierId) {
+      return res.status(400).json({
+        success: false,
+        message: 'credentialId and verifierId are required'
+      });
+    }
+
+    // Check if credential exists and belongs to user
+    const credentialCheck = await query(
+      `SELECT id FROM credentials WHERE id = $1 AND user_id = $2`,
+      [credentialId, userId]
+    );
+
+    if (credentialCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Credential not found or does not belong to this user'
+      });
+    }
+
+    // Check if verifier exists
+    const verifierCheck = await query(
+      `SELECT id FROM verifiers WHERE id = $1`,
+      [verifierId]
+    );
+
+    if (verifierCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Verifier not found'
+      });
+    }
+
+    // Check if already shared (prevent duplicates)
+    const duplicateCheck = await query(
+      `SELECT id FROM credential_shares WHERE credential_id = $1 AND verifier_id = $2`,
+      [credentialId, verifierId]
+    );
+
+    if (duplicateCheck.rows.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'This credential has already been shared with this company'
+      });
+    }
+
+    // Create share entry
+    const shareResult = await query(
+      `INSERT INTO credential_shares (credential_id, user_id, verifier_id, shared_at, status)
+       VALUES ($1, $2, $3, CURRENT_TIMESTAMP, $4)
+       RETURNING id, credential_id, user_id, verifier_id, shared_at, status`,
+      [credentialId, userId, verifierId, 'pending']
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'Credential shared successfully',
+      data: shareResult.rows[0]
+    });
+  } catch (error) {
+    console.error('Error sharing credential:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error sharing credential',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Get credentials shared with verifiers
+ */
+export const getSharedCredentials = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const result = await query(
+      `SELECT
+        cs.id as share_id,
+        cs.credential_id,
+        cs.shared_at,
+        cs.status,
+        cs.verified_at,
+        c.credential_name,
+        c.credential_type,
+        v.company_name,
+        v.industry
+       FROM credential_shares cs
+       JOIN credentials c ON cs.credential_id = c.id
+       JOIN verifiers v ON cs.verifier_id = v.id
+       WHERE c.user_id = $1
+       ORDER BY cs.shared_at DESC`,
+      [userId]
+    );
+
+    res.status(200).json({
+      success: true,
+      data: {
+        sharedCredentials: result.rows,
+        total: result.rows.length
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching shared credentials:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching shared credentials',
+      error: error.message
+    });
+  }
+};
+
 export default {
   getUserCredentials,
   getCredentialById,
@@ -333,5 +485,8 @@ export default {
   getUserAuditLog,
   getDashboardStats,
   updateProfile,
-  getProfile
+  getProfile,
+  getVerifiers,
+  shareCredential,
+  getSharedCredentials
 };

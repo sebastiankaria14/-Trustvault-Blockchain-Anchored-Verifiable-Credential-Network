@@ -6,7 +6,10 @@ import {
   getUserAuditLog,
   getDashboardStats,
   updateProfile,
-  getProfile
+  getProfile,
+  getVerifiers,
+  shareCredential,
+  getSharedCredentials
 } from '../controllers/credentialController.js';
 import { authenticate } from '../middleware/auth.js';
 
@@ -22,6 +25,11 @@ router.get('/dashboard/stats', getDashboardStats);
 router.get('/credentials', getUserCredentials);
 router.get('/credentials/:id', getCredentialById);
 router.get('/credentials/:id/logs', getCredentialLogs);
+
+// Sharing credentials
+router.get('/verifiers', getVerifiers);
+router.post('/credentials/:credentialId/share', shareCredential);
+router.get('/shared-credentials', getSharedCredentials);
 
 // Audit Log
 router.get('/audit-log', getUserAuditLog);

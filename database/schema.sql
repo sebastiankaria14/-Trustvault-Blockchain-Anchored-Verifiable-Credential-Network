@@ -6,7 +6,9 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Drop tables if they exist (for development)
 DROP TABLE IF EXISTS verification_logs CASCADE;
+DROP TABLE IF EXISTS consent_tiers CASCADE;
 DROP TABLE IF EXISTS consent_records CASCADE;
+DROP TABLE IF EXISTS credential_shares CASCADE;
 DROP TABLE IF EXISTS credentials CASCADE;
 DROP TABLE IF EXISTS verifier_api_keys CASCADE;
 DROP TABLE IF EXISTS institution_staff CASCADE;
@@ -152,6 +154,7 @@ CREATE TABLE credentials (
     document_url VARCHAR(500),
 
     -- Blockchain
+    did VARCHAR(255) UNIQUE,
     blockchain_hash VARCHAR(255) UNIQUE, -- SHA-256 hash of credential
     blockchain_tx_hash VARCHAR(255), -- Transaction hash from blockchain
     blockchain_network VARCHAR(50) DEFAULT 'polygon-mumbai',
@@ -187,6 +190,21 @@ CREATE TABLE consent_records (
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Consent Tiers (Type-based user consent for verifier access)
+CREATE TABLE consent_tiers (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    verifier_id UUID REFERENCES verifiers(id) ON DELETE CASCADE,
+    credential_type VARCHAR(50) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'granted', 'revoked', 'expired')),
+    granted_at TIMESTAMP,
+    expires_at TIMESTAMP,
+    revoked_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, verifier_id, credential_type)
 );
 
 -- Verification Logs (Audit Trail)
@@ -228,11 +246,16 @@ CREATE INDEX idx_credentials_user_id ON credentials(user_id);
 CREATE INDEX idx_credentials_institution_id ON credentials(institution_id);
 CREATE INDEX idx_credentials_type ON credentials(credential_type);
 CREATE INDEX idx_credentials_status ON credentials(status);
+CREATE INDEX idx_credentials_did ON credentials(did);
 CREATE INDEX idx_credentials_blockchain_hash ON credentials(blockchain_hash);
 CREATE INDEX idx_consent_user_id ON consent_records(user_id);
 CREATE INDEX idx_consent_verifier_id ON consent_records(verifier_id);
 CREATE INDEX idx_consent_credential_id ON consent_records(credential_id);
 CREATE INDEX idx_consent_status ON consent_records(status);
+CREATE INDEX idx_consent_tiers_user_id ON consent_tiers(user_id);
+CREATE INDEX idx_consent_tiers_verifier_id ON consent_tiers(verifier_id);
+CREATE INDEX idx_consent_tiers_credential_type ON consent_tiers(credential_type);
+CREATE INDEX idx_consent_tiers_status ON consent_tiers(status);
 CREATE INDEX idx_verification_logs_verifier_id ON verification_logs(verifier_id);
 CREATE INDEX idx_verification_logs_user_id ON verification_logs(user_id);
 CREATE INDEX idx_verification_logs_credential_id ON verification_logs(credential_id);
@@ -252,6 +275,7 @@ CREATE TRIGGER update_institutions_updated_at BEFORE UPDATE ON institutions FOR 
 CREATE TRIGGER update_verifiers_updated_at BEFORE UPDATE ON verifiers FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_credentials_updated_at BEFORE UPDATE ON credentials FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_consent_updated_at BEFORE UPDATE ON consent_records FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_consent_tiers_updated_at BEFORE UPDATE ON consent_tiers FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Sample Data (Optional - for testing)
 -- You can uncomment these to insert test data

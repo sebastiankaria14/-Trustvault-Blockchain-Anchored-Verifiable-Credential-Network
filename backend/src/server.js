@@ -14,10 +14,39 @@ const PORT = process.env.PORT || 5000;
 app.use(helmet());
 
 // CORS Configuration
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
-}));
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  /^http:\/\/localhost:\d+$/,
+  /^http:\/\/127\.0\.0\.1:\d+$/
+].filter(Boolean);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    const isAllowed = allowedOrigins.some((allowedOrigin) => {
+      if (typeof allowedOrigin === 'string') {
+        return allowedOrigin === origin;
+      }
+
+      return allowedOrigin.test(origin);
+    });
+
+    if (isAllowed) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // Rate Limiting
 const limiter = rateLimit({
@@ -61,12 +90,14 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import institutionRoutes from './routes/institutionRoutes.js';
 import verifierRoutes from './routes/verifierRoutes.js';
+import reVerificationRoutes from './routes/reVerificationRoutes.js';
 
 // Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/institution', institutionRoutes);
 app.use('/api/verifier', verifierRoutes);
+app.use('/api/re-verification', reVerificationRoutes);
 
 // 404 Handler
 app.use((req, res) => {

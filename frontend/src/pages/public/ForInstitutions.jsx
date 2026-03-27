@@ -1,11 +1,42 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import Navbar from '../../components/Navbar'
-import Footer from '../../components/Footer'
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Building2, GraduationCap, Landmark, HeartPulse, ShieldCheck, Zap, Globe, BarChart3, Puzzle, FileCheck, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 
-function ForInstitutions() {
+const ForInstitutions = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1, 
+      transition: { staggerChildren: 0.1 } 
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 }
+  };
+
+  const sectors = [
+    { icon: GraduationCap, name: 'Universities', desc: 'Degrees, diplomas, and official transcripts.', color: 'blue' },
+    { icon: Building2, name: 'Employers', desc: 'Work history and performance certificates.', color: 'indigo' },
+    { icon: Landmark, name: 'Financial', desc: 'Credit reports and statement verification.', color: 'cyan' },
+    { icon: HeartPulse, name: 'Healthcare', desc: 'Medical records and health certifications.', color: 'rose' }
+  ];
+
+  const benefits = [
+    { icon: Zap, title: 'Operational Efficiency', desc: 'Cut administrative costs by 80% with automated digital issuance.' },
+    { icon: ShieldCheck, title: 'Fraud Prevention', desc: 'Eliminate forged documents with blockchain-anchored signatures.' },
+    { icon: Globe, title: 'Global Portability', desc: 'Your credentials are recognized and verifiable across borders.' },
+    { icon: BarChart3, title: 'Advanced Analytics', desc: 'Insightful dashboards tracking issuance and verification trends.' },
+    { icon: Puzzle, title: 'Seamless Integration', desc: 'Connect with existing LMS/HRIS systems via our robust API.' },
+    { icon: FileCheck, title: 'Compliance First', desc: 'Full GDPR/CCPA compliance with user-centric consent flows.' }
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FDFDFF]">
       <Navbar />
 
       {/* Hero Section */}
@@ -102,7 +133,15 @@ function ForInstitutions() {
                 <p className="text-gray-600">
                   Dashboard shows all issued credentials, verification requests, and analytics in real-time.
                 </p>
-              </div>
+                <div className="flex flex-wrap gap-4">
+                  <Link to="/register" className="px-8 py-4 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 flex items-center gap-2">
+                    Become an Issuer <ArrowRight size={20} />
+                  </Link>
+                  <Link to="/contact" className="px-8 py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition-all">
+                    Request Demo
+                  </Link>
+                </div>
+              </motion.div>
             </div>
 
             <div className="flex items-start space-x-4">
@@ -132,8 +171,8 @@ function ForInstitutions() {
         </div>
       </section>
 
-      {/* How to Get Started */}
-      <section className="py-16">
+      {/* Sectors */}
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12">Getting Started is Easy</h2>
 
@@ -195,7 +234,7 @@ function ForInstitutions() {
 
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default ForInstitutions
+export default ForInstitutions;
