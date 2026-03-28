@@ -8,6 +8,8 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate:08": "node scripts/run-migration-08.js",
+    "verify:migrate:08": "node scripts/verify-admin-migration.js",
     "contract:compile": "hardhat compile",
     "contract:deploy:mumbai": "hardhat run scripts/deploy-contract.js --network mumbai"
   },

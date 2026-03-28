@@ -14,7 +14,32 @@ DROP TABLE IF EXISTS verifier_api_keys CASCADE;
 DROP TABLE IF EXISTS institution_staff CASCADE;
 DROP TABLE IF EXISTS verifiers CASCADE;
 DROP TABLE IF EXISTS institutions CASCADE;
+DROP TABLE IF EXISTS system_settings CASCADE;
+DROP TABLE IF EXISTS admins CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+
+-- Super Admins Table (Internal platform operators)
+CREATE TABLE admins (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    full_name VARCHAR(150) NOT NULL,
+    role VARCHAR(50) DEFAULT 'super_admin',
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP
+);
+
+-- System Settings (Controlled by super admin)
+CREATE TABLE system_settings (
+    key VARCHAR(100) PRIMARY KEY,
+    value_json JSONB NOT NULL,
+    description TEXT,
+    updated_by UUID REFERENCES admins(id) ON DELETE SET NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- Users Table (End Users)
 CREATE TABLE users (
@@ -237,6 +262,9 @@ CREATE TABLE verification_logs (
 -- Indexes for Performance
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_kyc_status ON users(kyc_status);
+CREATE INDEX idx_admins_email ON admins(email);
+CREATE INDEX idx_admins_is_active ON admins(is_active);
+CREATE INDEX idx_system_settings_updated_at ON system_settings(updated_at);
 CREATE INDEX idx_institutions_email ON institutions(email);
 CREATE INDEX idx_institutions_type ON institutions(type);
 CREATE INDEX idx_institutions_status ON institutions(verification_status);
@@ -271,6 +299,8 @@ END;
 $$ language 'plpgsql';
 
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_admins_updated_at BEFORE UPDATE ON admins FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_system_settings_updated_at BEFORE UPDATE ON system_settings FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_institutions_updated_at BEFORE UPDATE ON institutions FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_verifiers_updated_at BEFORE UPDATE ON verifiers FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_credentials_updated_at BEFORE UPDATE ON credentials FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
@@ -288,3 +318,6 @@ CREATE TRIGGER update_consent_tiers_updated_at BEFORE UPDATE ON consent_tiers FO
 
 -- INSERT INTO verifiers (company_name, email, password_hash, verification_status) VALUES
 -- ('Google Inc', 'verify@google.com', '$2a$10$examplehash', 'approved');
+
+-- INSERT INTO admins (email, password_hash, full_name, role) VALUES
+-- ('admin@trustvault.io', '$2a$10$examplehash', 'TrustVault Super Admin', 'super_admin');

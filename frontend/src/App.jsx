@@ -37,6 +37,14 @@ import VerificationDetailPage from './pages/verifier/VerificationDetailPage'
 import VerificationHistoryPage from './pages/verifier/VerificationHistoryPage'
 import VerifierProfilePage from './pages/verifier/VerifierProfilePage'
 
+// Admin Portal
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminUsersPage from './pages/admin/AdminUsersPage'
+import AdminInstitutionsPage from './pages/admin/AdminInstitutionsPage'
+import AdminVerifiersPage from './pages/admin/AdminVerifiersPage'
+import AdminBlockchainPage from './pages/admin/AdminBlockchainPage'
+import AdminSettingsPage from './pages/admin/AdminSettingsPage'
+
 function App() {
   useEffect(() => {
     // Initialize all animations on mount
@@ -186,8 +194,55 @@ function App() {
               }
             />
 
-            {/* Admin Portal Routes - Coming in Phase 6 */}
-            {/* <Route path="/admin/dashboard" element={<AdminDashboard />} /> */}
+            {/* Admin Portal Routes - Protected */}
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute allowedUserTypes={['admin']}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute allowedUserTypes={['admin']}>
+                  <AdminUsersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/institutions"
+              element={
+                <ProtectedRoute allowedUserTypes={['admin']}>
+                  <AdminInstitutionsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/verifiers"
+              element={
+                <ProtectedRoute allowedUserTypes={['admin']}>
+                  <AdminVerifiersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/blockchain"
+              element={
+                <ProtectedRoute allowedUserTypes={['admin']}>
+                  <AdminBlockchainPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/settings"
+              element={
+                <ProtectedRoute allowedUserTypes={['admin']}>
+                  <AdminSettingsPage />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </div>
       </AuthProvider>

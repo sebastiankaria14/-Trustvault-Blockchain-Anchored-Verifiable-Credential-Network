@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Building2, Globe, Shield } from 'lucide-react';
+import { ArrowRight, Building2, Globe, Shield, Crown } from 'lucide-react';
 import { login as loginAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
@@ -9,6 +9,7 @@ const roleOptions = [
   { key: 'user', label: 'User', icon: Shield },
   { key: 'institution', label: 'Institution', icon: Building2 },
   { key: 'verifier', label: 'Verifier', icon: Globe },
+  { key: 'admin', label: 'Super Admin', icon: Crown },
 ];
 
 const LoginPage = () => {
@@ -40,6 +41,7 @@ const LoginPage = () => {
         if (userType === 'user') navigate('/user/dashboard');
         if (userType === 'institution') navigate('/institution/dashboard');
         if (userType === 'verifier') navigate('/verifier/dashboard');
+        if (userType === 'admin') navigate('/admin/dashboard');
       }
     } catch (err) {
       setError(err.message || 'Login failed. Please try again.');
@@ -47,8 +49,6 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
-
-  const activeRole = roleOptions.find((role) => role.key === userType);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-50">
@@ -62,7 +62,7 @@ const LoginPage = () => {
             </div>
           </div>
 
-          <div className="mt-5 grid grid-cols-3 gap-2.5">
+          <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
             {roleOptions.map((role) => {
               const Icon = role.icon;
               const active = userType === role.key;

@@ -57,7 +57,7 @@ router.post(
  * @route   POST /api/auth/login
  * @desc    Login for all user types
  * @access  Public
- * @body    { email, password, userType } - userType: 'user', 'institution', or 'verifier'
+ * @body    { email, password, userType } - userType: 'user', 'institution', 'verifier', or 'admin'
  */
 router.post(
   '/login',
