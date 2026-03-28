@@ -162,6 +162,11 @@ const CredentialDetailPage = () => {
     }
   };
 
+  // Keep legacy button wired to the same share modal flow.
+  const handleShare = () => {
+    openShareModal();
+  };
+
   const fetchVerifiers = async () => {
     setVerifiersLoading(true);
     try {
