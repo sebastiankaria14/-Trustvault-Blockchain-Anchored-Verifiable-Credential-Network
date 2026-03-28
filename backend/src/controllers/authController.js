@@ -268,6 +268,12 @@ export const login = async (req, res) => {
         [email]
       );
       user = result.rows[0];
+    } else if (type === 'admin') {
+      result = await query(
+        'SELECT id, email, password_hash, full_name, role, is_active FROM admins WHERE email = $1',
+        [email]
+      );
+      user = result.rows[0];
     } else {
       return res.status(400).json({
         success: false,
@@ -302,7 +308,13 @@ export const login = async (req, res) => {
     }
 
     // Update last login
-    const tableName = type === 'user' ? 'users' : type === 'institution' ? 'institutions' : 'verifiers';
+    const tableName = type === 'user'
+      ? 'users'
+      : type === 'institution'
+        ? 'institutions'
+        : type === 'verifier'
+          ? 'verifiers'
+          : 'admins';
     await query(
       `UPDATE ${tableName} SET last_login = CURRENT_TIMESTAMP WHERE id = $1`,
       [user.id]
@@ -334,6 +346,10 @@ export const login = async (req, res) => {
           ...(type === 'verifier' && {
             companyName: user.company_name,
             verificationStatus: user.verification_status
+          }),
+          ...(type === 'admin' && {
+            fullName: user.full_name,
+            role: user.role
           })
         },
         token
@@ -369,6 +385,9 @@ export const getCurrentUser = async (req, res) => {
     } else if (userType === 'verifier') {
       tableName = 'verifiers';
       query_string = 'SELECT id, email, company_name, industry, phone, website, verification_status, is_active, created_at FROM verifiers WHERE id = $1';
+    } else if (userType === 'admin') {
+      tableName = 'admins';
+      query_string = 'SELECT id, email, full_name, role, is_active, created_at, last_login FROM admins WHERE id = $1';
     }
 
     result = await query(query_string, [id]);

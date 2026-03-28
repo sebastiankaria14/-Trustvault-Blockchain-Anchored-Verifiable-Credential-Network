@@ -79,6 +79,7 @@ app.get('/api', (req, res) => {
       users: '/api/users',
       institutions: '/api/institutions',
       verifiers: '/api/verifiers',
+      admin: '/api/admin',
       credentials: '/api/credentials',
       verify: '/api/verify'
     }
@@ -92,6 +93,7 @@ import institutionRoutes from './routes/institutionRoutes.js';
 import verifierRoutes from './routes/verifierRoutes.js';
 import reVerificationRoutes from './routes/reVerificationRoutes.js';
 import consentRoutes from './routes/consentRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 // Use routes
 app.use('/api/auth', authRoutes);
@@ -100,6 +102,7 @@ app.use('/api/institution', institutionRoutes);
 app.use('/api/verifier', verifierRoutes);
 app.use('/api/re-verification', reVerificationRoutes);
 app.use('/api/consent', consentRoutes);
+app.use('/api/admin', adminRoutes);
 
 // 404 Handler
 app.use((req, res) => {

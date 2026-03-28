@@ -31,6 +31,8 @@ const ProtectedRoute = ({ children, allowedUserTypes = [] }) => {
       return <Navigate to="/institution/dashboard" replace />;
     } else if (userType === 'verifier') {
       return <Navigate to="/verifier/dashboard" replace />;
+    } else if (userType === 'admin') {
+      return <Navigate to="/admin/dashboard" replace />;
     }
   }
 

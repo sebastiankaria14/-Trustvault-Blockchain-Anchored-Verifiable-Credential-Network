@@ -371,6 +371,110 @@ export const declineReVerification = async (requestId, reason = '') => {
   });
 };
 
+// ==========================================
+// Super Admin Portal API Functions
+// ==========================================
+
+/**
+ * Get admin dashboard stats
+ */
+export const getAdminStats = async () => {
+  return apiRequest('/admin/stats', { method: 'GET' });
+};
+
+/**
+ * Get admin users list
+ */
+export const getAdminUsers = async (filters = {}) => {
+  const params = new URLSearchParams();
+  if (filters.search) params.append('search', filters.search);
+  if (filters.status) params.append('status', filters.status);
+  if (filters.page) params.append('page', filters.page);
+  if (filters.limit) params.append('limit', filters.limit);
+
+  return apiRequest(`/admin/users?${params.toString()}`, { method: 'GET' });
+};
+
+/**
+ * Block/unblock user account
+ */
+export const updateAdminUserStatus = async (userId, isActive) => {
+  return apiRequest(`/admin/users/${userId}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ isActive })
+  });
+};
+
+/**
+ * Get institutions for admin review
+ */
+export const getAdminInstitutions = async (filters = {}) => {
+  const params = new URLSearchParams();
+  if (filters.search) params.append('search', filters.search);
+  if (filters.status) params.append('status', filters.status);
+  if (filters.page) params.append('page', filters.page);
+  if (filters.limit) params.append('limit', filters.limit);
+
+  return apiRequest(`/admin/institutions?${params.toString()}`, { method: 'GET' });
+};
+
+/**
+ * Approve/reject/suspend institution
+ */
+export const approveAdminInstitution = async (institutionId, action = 'approve') => {
+  return apiRequest(`/admin/institution/${institutionId}/approve`, {
+    method: 'PUT',
+    body: JSON.stringify({ action })
+  });
+};
+
+/**
+ * Get verifiers for admin review
+ */
+export const getAdminVerifiers = async (filters = {}) => {
+  const params = new URLSearchParams();
+  if (filters.search) params.append('search', filters.search);
+  if (filters.status) params.append('status', filters.status);
+  if (filters.page) params.append('page', filters.page);
+  if (filters.limit) params.append('limit', filters.limit);
+
+  return apiRequest(`/admin/verifiers?${params.toString()}`, { method: 'GET' });
+};
+
+/**
+ * Approve/reject/suspend verifier
+ */
+export const approveAdminVerifier = async (verifierId, action = 'approve', rateLimit) => {
+  return apiRequest(`/admin/verifier/${verifierId}/approve`, {
+    method: 'PUT',
+    body: JSON.stringify({ action, ...(Number.isInteger(rateLimit) ? { rateLimit } : {}) })
+  });
+};
+
+/**
+ * Get blockchain monitor data for admin
+ */
+export const getAdminBlockchainLogs = async () => {
+  return apiRequest('/admin/blockchain', { method: 'GET' });
+};
+
+/**
+ * Get system settings for admin
+ */
+export const getAdminSettings = async () => {
+  return apiRequest('/admin/settings', { method: 'GET' });
+};
+
+/**
+ * Update a system setting
+ */
+export const updateAdminSetting = async (key, value, description = null) => {
+  return apiRequest(`/admin/settings/${key}`, {
+    method: 'PUT',
+    body: JSON.stringify({ value, description })
+  });
+};
+
 export default {
   registerUser,
   registerInstitution,
@@ -409,5 +513,15 @@ export default {
   getUserReVerificationRequests,
   getReVerificationStatus,
   approveReVerification,
-  declineReVerification
+  declineReVerification,
+  getAdminStats,
+  getAdminUsers,
+  updateAdminUserStatus,
+  getAdminInstitutions,
+  approveAdminInstitution,
+  getAdminVerifiers,
+  approveAdminVerifier,
+  getAdminBlockchainLogs,
+  getAdminSettings,
+  updateAdminSetting
 };
