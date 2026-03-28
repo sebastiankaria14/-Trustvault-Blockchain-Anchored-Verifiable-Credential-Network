@@ -7,10 +7,10 @@ dotenv.config();
 // Create PostgreSQL connection pool for Supabase
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? true : false,
+  ssl: { rejectUnauthorized: false }, // Supabase requires SSL in all environments
   max: 20, // Maximum number of clients in the pool
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
+  connectionTimeoutMillis: 10000, // Increased from 5000 to 10000ms
   statement_timeout: 30000,
 });
 

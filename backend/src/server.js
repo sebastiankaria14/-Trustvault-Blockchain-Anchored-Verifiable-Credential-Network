@@ -91,6 +91,7 @@ import userRoutes from './routes/userRoutes.js';
 import institutionRoutes from './routes/institutionRoutes.js';
 import verifierRoutes from './routes/verifierRoutes.js';
 import reVerificationRoutes from './routes/reVerificationRoutes.js';
+import consentRoutes from './routes/consentRoutes.js';
 
 // Use routes
 app.use('/api/auth', authRoutes);
@@ -98,6 +99,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/institution', institutionRoutes);
 app.use('/api/verifier', verifierRoutes);
 app.use('/api/re-verification', reVerificationRoutes);
+app.use('/api/consent', consentRoutes);
 
 // 404 Handler
 app.use((req, res) => {

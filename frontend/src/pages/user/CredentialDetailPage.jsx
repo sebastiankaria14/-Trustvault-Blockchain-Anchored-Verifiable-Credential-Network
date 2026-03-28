@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { getCredentialById, getCredentialLogs } from '../../services/api';
+import { getCredentialById, getCredentialLogs, getVerifiers, shareCredential } from '../../services/api';
 
 const CredentialDetailPage = () => {
   const { id } = useParams();
@@ -13,6 +13,10 @@ const CredentialDetailPage = () => {
   const [activeTab, setActiveTab] = useState('details');
   const [actionMessage, setActionMessage] = useState({ type: '', text: '' });
   const [downloading, setDownloading] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [verifiers, setVerifiers] = useState([]);
+  const [verifiersLoading, setVerifiersLoading] = useState(false);
+  const [selectedVerifierId, setSelectedVerifierId] = useState('');
   const [sharing, setSharing] = useState(false);
 
   useEffect(() => {
@@ -132,34 +136,44 @@ const CredentialDetailPage = () => {
     }
   };
 
-  const handleShare = async () => {
-    if (!credential || sharing) return;
+  const handleShareWithVerifier = async () => {
+    if (!credential || !selectedVerifierId || sharing) return;
     setSharing(true);
 
     try {
-      const shareUrl = `${window.location.origin}/user/credentials/${id}`;
-      const shareText = `Check this credential: ${credential.credential_name} (${credential.credential_type})`;
-
-      if (navigator.share) {
-        await navigator.share({
-          title: credential.credential_name || 'Credential',
-          text: shareText,
-          url: shareUrl
-        });
-        showActionMessage('success', 'Share opened successfully');
-      } else {
-        await copyToClipboard(shareUrl);
-        showActionMessage('success', 'Credential link copied');
+      const response = await shareCredential(credential.id, selectedVerifierId);
+      if (response.success) {
+        showActionMessage('success', 'Credential shared successfully!');
+        setShareModalOpen(false);
+        setSelectedVerifierId('');
       }
     } catch (error) {
-      // AbortError is user cancellation in native share dialogs
-      if (error?.name === 'AbortError') {
-        return;
-      }
       console.error('Share failed:', error);
-      showActionMessage('error', 'Share failed. Please try again.');
+      showActionMessage('error', error.message || 'Failed to share credential. Please try again.');
     } finally {
       setSharing(false);
+    }
+  };
+
+  const openShareModal = async () => {
+    setShareModalOpen(true);
+    if (verifiers.length === 0) {
+      await fetchVerifiers();
+    }
+  };
+
+  const fetchVerifiers = async () => {
+    setVerifiersLoading(true);
+    try {
+      const response = await getVerifiers();
+      if (response.success) {
+        setVerifiers(response.data.verifiers || []);
+      }
+    } catch (error) {
+      console.error('Error fetching verifiers:', error);
+      showActionMessage('error', 'Failed to load verifiers');
+    } finally {
+      setVerifiersLoading(false);
     }
   };
 
@@ -288,6 +302,16 @@ const CredentialDetailPage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
               </svg>
               {sharing ? 'Sharing...' : 'Share'}
+            </button>
+            <button
+              onClick={openShareModal}
+              disabled={sharing}
+              className="inline-flex items-center rounded-2xl bg-emerald-100 px-4 py-3 text-emerald-700 transition hover:bg-emerald-200 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+              {sharing ? 'Sharing...' : 'Share with Verifier'}
             </button>
           </div>
 
@@ -519,8 +543,117 @@ const CredentialDetailPage = () => {
           </div>
         </div>
       </main>
+
+      {/* Share Modal */}
+      {shareModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-[1.75rem] border border-slate-200 bg-white shadow-xl">
+            {/* Modal Header */}
+            <div className="border-b border-slate-100 px-6 py-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-slate-900">Share Credential</h2>
+                <button
+                  onClick={() => {
+                    setShareModalOpen(false);
+                    setSelectedVerifierId('');
+                  }}
+                  className="text-slate-500 hover:text-slate-700"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <p className="mt-2 text-sm text-slate-600">
+                Select a company/organization to share this credential with for verification
+              </p>
+            </div>
+
+            {/* Modal Body */}
+            <div className="max-h-96 overflow-y-auto px-6 py-4">
+              {verifiersLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-purple-600"></div>
+                </div>
+              ) : verifiers.length === 0 ? (
+                <div className="text-center py-12">
+                  <svg className="mx-auto h-12 w-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  <h3 className="mt-4 text-sm font-medium text-slate-900">No verifiers found</h3>
+                  <p className="mt-1 text-sm text-slate-500">No verification companies are currently available.</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {verifiers.map((verifier) => (
+                    <button
+                      key={verifier.id}
+                      onClick={() => setSelectedVerifierId(verifier.id)}
+                      className={`w-full text-left rounded-2xl p-4 transition border-2 ${
+                        selectedVerifierId === verifier.id
+                          ? 'border-purple-600 bg-purple-50'
+                          : 'border-slate-100 bg-slate-50 hover:border-purple-300'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className={`mt-1 rounded-full p-2 ${
+                          selectedVerifierId === verifier.id
+                            ? 'bg-purple-100'
+                            : 'bg-slate-200'
+                        }`}>
+                          <svg className={`w-5 h-5 ${
+                            selectedVerifierId === verifier.id
+                              ? 'text-purple-600'
+                              : 'text-slate-600'
+                          }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-semibold text-slate-900">{verifier.company_name}</p>
+                          <p className="text-sm text-slate-600">{verifier.industry || 'Industry not specified'}</p>
+                          {verifier.email && (
+                            <p className="text-xs text-slate-500 mt-1">{verifier.email}</p>
+                          )}
+                        </div>
+                        {selectedVerifierId === verifier.id && (
+                          <div className="text-purple-600">
+                            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="border-t border-slate-100 bg-slate-50 px-6 py-4 rounded-b-[1.75rem] flex gap-3">
+              <button
+                onClick={() => {
+                  setShareModalOpen(false);
+                  setSelectedVerifierId('');
+                }}
+                className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 font-medium text-slate-700 transition hover:bg-slate-100"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleShareWithVerifier}
+                disabled={!selectedVerifierId || sharing || verifiersLoading}
+                className="flex-1 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-3 font-medium text-white shadow-lg shadow-purple-200/50 transition hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {sharing ? 'Sharing...' : 'Share Credential'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default CredentialDetailPage;
+export default CredentialDetailPage;  

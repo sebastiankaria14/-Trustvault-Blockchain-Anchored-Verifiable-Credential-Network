@@ -3,7 +3,6 @@ import crypto from 'crypto';
 import { hashCredentialData } from '../utils/hashing.js';
 import { generateCredentialDID } from '../utils/did.js';
 import { registerCredentialOnBlockchain } from '../utils/blockchain.js';
-import { calculateCredentialHash } from '../utils/hash.js';
 
 /**
  * Get institution dashboard stats
@@ -104,11 +103,6 @@ export const issueCredential = async (req, res) => {
     const chainResult = await registerCredentialOnBlockchain(did, credentialHash);
 
     // Insert credential with blockchain metadata
-    // IMPORTANT: Calculate SHA-256 hash of credential data for blockchain verification
-    // Use deterministic hashing to ensure same data always produces same hash
-    const blockchainHash = calculateCredentialHash(credentialData);
-
-    // Insert credential using correct column names
     const result = await query(
       `INSERT INTO credentials
         (user_id, institution_id, credential_type, credential_name, description, credential_data, issue_date, expiry_date, status, did, blockchain_hash, blockchain_tx_hash, blockchain_network, document_url)
@@ -125,10 +119,9 @@ export const issueCredential = async (req, res) => {
         expiryDate || null,
         'active',
         did,
-        credentialHash,
+        credentialHash,  // SHA-256 hash stored in blockchain_hash column
         chainResult.txHash,
         chainResult.network || 'polygon-mumbai',
-        blockchainHash,  // Actual SHA-256 hash of credential data
         documentUrl || null
       ]
     );
