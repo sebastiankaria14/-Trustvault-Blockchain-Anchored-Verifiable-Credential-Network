@@ -7,12 +7,13 @@ import {
   getActiveConsents,
   getRevokedConsents
 } from '../controllers/consentController.js';
-import { authenticate } from '../middleware/auth.js';
+import { authenticate, requireApprovedAccount } from '../middleware/auth.js';
 
 const router = Router();
 
 // All routes require authentication
 router.use(authenticate);
+router.use(requireApprovedAccount());
 
 // Granular Consent Routes
 router.post('/grant-granular', grantConsentGranular);

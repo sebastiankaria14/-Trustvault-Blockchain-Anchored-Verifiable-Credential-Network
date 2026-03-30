@@ -1,4 +1,5 @@
 import { verifyToken } from '../utils/jwt.js';
+import { query } from '../utils/database.js';
 
 /**
  * Middleware to authenticate JWT token
@@ -81,8 +82,216 @@ export const authorizeOwnership = (req, res, next) => {
   next();
 };
 
+/**
+ * Middleware to enforce approval/active status for protected routes.
+ * This protects APIs even if a token was issued before suspension/rejection.
+ */
+export const requireApprovedAccount = () => {
+  return async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Authentication required'
+        });
+      }
+
+      const { id, userType } = req.user;
+
+      if (userType === 'admin') {
+        const result = await query('SELECT is_active FROM admins WHERE id = $1', [id]);
+        const account = result.rows[0];
+
+        if (!account || !account.is_active) {
+          return res.status(403).json({
+            success: false,
+            message: 'Admin account is inactive.',
+            code: 'ACCOUNT_NOT_ACTIVE'
+          });
+        }
+
+        return next();
+      }
+
+      if (userType === 'user') {
+        const result = await query('SELECT is_active, kyc_status FROM users WHERE id = $1', [id]);
+        const account = result.rows[0];
+
+        if (!account) {
+          return res.status(401).json({
+            success: false,
+            message: 'User account not found'
+          });
+        }
+
+        if (!account.is_active) {
+          return res.status(403).json({
+            success: false,
+            message: 'Your account has been deactivated. Please contact support.',
+            code: 'ACCOUNT_NOT_ACTIVE'
+          });
+        }
+
+        if (account.kyc_status !== 'approved') {
+          return res.status(403).json({
+            success: false,
+            message: 'Your account is pending Super Admin KYC approval.',
+            code: 'ACCOUNT_PENDING_APPROVAL',
+            data: {
+              userType,
+              approvalStatus: account.kyc_status
+            }
+          });
+        }
+
+        return next();
+      }
+
+      if (userType === 'institution') {
+        const result = await query('SELECT is_active, verification_status FROM institutions WHERE id = $1', [id]);
+        const account = result.rows[0];
+
+        if (!account) {
+          return res.status(401).json({
+            success: false,
+            message: 'Institution account not found'
+          });
+        }
+
+        if (!account.is_active) {
+          return res.status(403).json({
+            success: false,
+            message: 'Your institution account has been deactivated.',
+            code: 'ACCOUNT_NOT_ACTIVE'
+          });
+        }
+
+        if (account.verification_status !== 'approved') {
+          return res.status(403).json({
+            success: false,
+            message: 'Your institution account is pending Super Admin approval.',
+            code: 'ACCOUNT_PENDING_APPROVAL',
+            data: {
+              userType,
+              approvalStatus: account.verification_status
+            }
+          });
+        }
+
+        return next();
+      }
+
+      if (userType === 'verifier') {
+        const result = await query('SELECT is_active, verification_status FROM verifiers WHERE id = $1', [id]);
+        const account = result.rows[0];
+
+        if (!account) {
+          return res.status(401).json({
+            success: false,
+            message: 'Verifier account not found'
+          });
+        }
+
+        if (!account.is_active) {
+          return res.status(403).json({
+            success: false,
+            message: 'Your verifier account has been deactivated.',
+            code: 'ACCOUNT_NOT_ACTIVE'
+          });
+        }
+
+        if (account.verification_status !== 'approved') {
+          return res.status(403).json({
+            success: false,
+            message: 'Your verifier account is pending Super Admin approval.',
+            code: 'ACCOUNT_PENDING_APPROVAL',
+            data: {
+              userType,
+              approvalStatus: account.verification_status
+            }
+          });
+        }
+
+        return next();
+      }
+
+      return next();
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: 'Error validating account approval status',
+        error: error.message
+      });
+    }
+  };
+};
+
+/**
+ * Middleware to enforce only active status (approval not required).
+ * Used for verification-center flows where pending/rejected users must still access upload/status pages.
+ */
+export const requireActiveAccount = () => {
+  return async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Authentication required'
+        });
+      }
+
+      const { id, userType } = req.user;
+
+      if (userType === 'user') {
+        const result = await query('SELECT is_active FROM users WHERE id = $1', [id]);
+        const account = result.rows[0];
+
+        if (!account || !account.is_active) {
+          return res.status(403).json({
+            success: false,
+            message: 'Your account has been deactivated. Please contact support.',
+            code: 'ACCOUNT_NOT_ACTIVE'
+          });
+        }
+      } else if (userType === 'institution') {
+        const result = await query('SELECT is_active FROM institutions WHERE id = $1', [id]);
+        const account = result.rows[0];
+
+        if (!account || !account.is_active) {
+          return res.status(403).json({
+            success: false,
+            message: 'Your institution account has been deactivated.',
+            code: 'ACCOUNT_NOT_ACTIVE'
+          });
+        }
+      } else if (userType === 'verifier') {
+        const result = await query('SELECT is_active FROM verifiers WHERE id = $1', [id]);
+        const account = result.rows[0];
+
+        if (!account || !account.is_active) {
+          return res.status(403).json({
+            success: false,
+            message: 'Your verifier account has been deactivated.',
+            code: 'ACCOUNT_NOT_ACTIVE'
+          });
+        }
+      }
+
+      return next();
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: 'Error validating account active status',
+        error: error.message
+      });
+    }
+  };
+};
+
 export default {
   authenticate,
   authorizeUserType,
-  authorizeOwnership
+  authorizeOwnership,
+  requireApprovedAccount,
+  requireActiveAccount
 };

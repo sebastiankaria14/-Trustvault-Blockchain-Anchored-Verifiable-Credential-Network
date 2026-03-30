@@ -6,12 +6,14 @@ import {
   revokeCredential,
   getInstitutionHistory
 } from '../controllers/institutionController.js';
-import { authenticate } from '../middleware/auth.js';
+import { authenticate, authorizeUserType, requireApprovedAccount } from '../middleware/auth.js';
 
 const router = Router();
 
 // All routes require authentication
 router.use(authenticate);
+router.use(authorizeUserType('institution'));
+router.use(requireApprovedAccount());
 
 // Dashboard
 router.get('/dashboard/stats', getInstitutionStats);

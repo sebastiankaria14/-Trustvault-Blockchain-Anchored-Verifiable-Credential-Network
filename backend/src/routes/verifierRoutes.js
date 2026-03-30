@@ -10,13 +10,14 @@ import {
   updateVerifierProfile,
   downloadCredentialPDF
 } from '../controllers/verifierController.js';
-import { authenticate, authorizeUserType } from '../middleware/auth.js';
+import { authenticate, authorizeUserType, requireApprovedAccount } from '../middleware/auth.js';
 
 const router = Router();
 
 // All routes require authentication and must be verifier
 router.use(authenticate);
 router.use(authorizeUserType('verifier'));
+router.use(requireApprovedAccount());
 
 // Dashboard
 router.get('/dashboard/stats', getVerifierDashboardStats);

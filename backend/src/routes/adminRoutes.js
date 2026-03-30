@@ -3,10 +3,16 @@ import {
   getAdminStats,
   getAdminUsers,
   updateUserStatus,
+  approveUserKyc,
   getAdminInstitutions,
   approveInstitution,
   getAdminVerifiers,
   approveVerifier,
+  getAdminApprovalLogs,
+  getAdminApprovalChecklist,
+  updateAdminApprovalChecklistItem,
+  getAdminKycReviewCase,
+  updateAdminReviewDocumentStatus,
   getAdminBlockchainLogs,
   getAdminSettings,
   upsertAdminSetting
@@ -23,12 +29,18 @@ router.get('/stats', getAdminStats);
 
 router.get('/users', getAdminUsers);
 router.patch('/users/:id/status', updateUserStatus);
+router.put('/user/:id/approve', approveUserKyc);
 
 router.get('/institutions', getAdminInstitutions);
 router.put('/institution/:id/approve', approveInstitution);
 
 router.get('/verifiers', getAdminVerifiers);
 router.put('/verifier/:id/approve', approveVerifier);
+router.get('/approval-logs', getAdminApprovalLogs);
+router.get('/checklist/:entityType/:entityId', getAdminApprovalChecklist);
+router.put('/checklist/:entityType/:entityId/:checklistKey', updateAdminApprovalChecklistItem);
+router.get('/review/:entityType/:entityId', getAdminKycReviewCase);
+router.patch('/review/:entityType/:entityId/documents/:documentId', updateAdminReviewDocumentStatus);
 
 router.get('/blockchain', getAdminBlockchainLogs);
 

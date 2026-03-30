@@ -63,7 +63,11 @@ const AdminDashboard = () => {
           <section className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
               <h3 className="text-lg font-bold text-slate-900">Pending Approvals</h3>
-              <div className="mt-4 grid grid-cols-2 gap-3">
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="rounded-xl bg-blue-50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">Users (KYC)</p>
+                  <p className="mt-2 text-2xl font-black text-blue-900">{approvals.pendingUsers || 0}</p>
+                </div>
                 <div className="rounded-xl bg-amber-50 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">Institutions</p>
                   <p className="mt-2 text-2xl font-black text-amber-900">{approvals.pendingInstitutions || 0}</p>

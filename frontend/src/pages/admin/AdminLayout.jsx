@@ -6,6 +6,8 @@ import {
   Users,
   Building2,
   ShieldCheck,
+  ScrollText,
+  ClipboardCheck,
   Blocks,
   Settings,
   LogOut,
@@ -17,6 +19,8 @@ const navigation = [
   { label: 'Users', href: '/admin/users', icon: Users },
   { label: 'Institutions', href: '/admin/institutions', icon: Building2 },
   { label: 'Verifiers', href: '/admin/verifiers', icon: ShieldCheck },
+  { label: 'Review Workbench', href: '/admin/review-workbench', icon: ClipboardCheck },
+  { label: 'Approval Logs', href: '/admin/approval-logs', icon: ScrollText },
   { label: 'Blockchain', href: '/admin/blockchain', icon: Blocks },
   { label: 'Settings', href: '/admin/settings', icon: Settings }
 ];

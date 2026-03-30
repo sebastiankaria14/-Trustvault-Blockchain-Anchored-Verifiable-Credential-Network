@@ -15,6 +15,7 @@ import Contact from './pages/public/Contact'
 // Auth Pages
 import LoginPage from './pages/auth/LoginPage'
 import RegisterPage from './pages/auth/RegisterPage'
+import VerificationCenterPage from './pages/auth/VerificationCenterPage'
 
 // User Portal
 import UserDashboard from './pages/user/UserDashboard'
@@ -42,6 +43,8 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminUsersPage from './pages/admin/AdminUsersPage'
 import AdminInstitutionsPage from './pages/admin/AdminInstitutionsPage'
 import AdminVerifiersPage from './pages/admin/AdminVerifiersPage'
+import AdminReviewWorkbenchPage from './pages/admin/AdminReviewWorkbenchPage'
+import AdminApprovalLogsPage from './pages/admin/AdminApprovalLogsPage'
 import AdminBlockchainPage from './pages/admin/AdminBlockchainPage'
 import AdminSettingsPage from './pages/admin/AdminSettingsPage'
 
@@ -67,6 +70,14 @@ function App() {
             {/* Auth Routes */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route
+              path="/verification-center"
+              element={
+                <ProtectedRoute allowedUserTypes={['user', 'institution', 'verifier']} allowPending>
+                  <VerificationCenterPage />
+                </ProtectedRoute>
+              }
+            />
 
             {/* User Portal Routes - Protected */}
             <Route
@@ -224,6 +235,22 @@ function App() {
               element={
                 <ProtectedRoute allowedUserTypes={['admin']}>
                   <AdminVerifiersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/review-workbench"
+              element={
+                <ProtectedRoute allowedUserTypes={['admin']}>
+                  <AdminReviewWorkbenchPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/approval-logs"
+              element={
+                <ProtectedRoute allowedUserTypes={['admin']}>
+                  <AdminApprovalLogsPage />
                 </ProtectedRoute>
               }
             />

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import AdminLayout from './AdminLayout';
-import { getAdminVerifiers, approveAdminVerifier } from '../../services/api';
+import { getAdminVerifiers } from '../../services/api';
 
 const AdminVerifiersPage = () => {
   const [verifiers, setVerifiers] = useState([]);
@@ -30,17 +31,8 @@ const AdminVerifiersPage = () => {
     fetchVerifiers();
   };
 
-  const handleAction = async (verifierId, action) => {
-    try {
-      await approveAdminVerifier(verifierId, action);
-      await fetchVerifiers();
-    } catch (err) {
-      setError(err.message || `Failed to ${action} verifier`);
-    }
-  };
-
   return (
-    <AdminLayout title="Verifier Management" subtitle="Approve and control organizations that perform verifications">
+    <AdminLayout title="Verifier Management" subtitle="Move each verifier into the dedicated review screen for all approval decisions">
       {error ? (
         <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
       ) : null}
@@ -97,24 +89,12 @@ const AdminVerifiersPage = () => {
                     <td className="px-4 py-3">{new Date(verifier.created_at).toLocaleDateString()}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-2">
-                        <button
-                          onClick={() => handleAction(verifier.id, 'approve')}
-                          className="rounded-lg bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-200"
+                        <Link
+                          to={`/admin/review-workbench?entityType=verifier&entityId=${verifier.id}`}
+                          className="rounded-lg bg-indigo-100 px-3 py-1.5 text-xs font-semibold text-indigo-700 hover:bg-indigo-200"
                         >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => handleAction(verifier.id, 'reject')}
-                          className="rounded-lg bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700 hover:bg-amber-200"
-                        >
-                          Reject
-                        </button>
-                        <button
-                          onClick={() => handleAction(verifier.id, 'suspend')}
-                          className="rounded-lg bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-700 hover:bg-red-200"
-                        >
-                          Suspend
-                        </button>
+                          Go To Review
+                        </Link>
                       </div>
                     </td>
                   </tr>

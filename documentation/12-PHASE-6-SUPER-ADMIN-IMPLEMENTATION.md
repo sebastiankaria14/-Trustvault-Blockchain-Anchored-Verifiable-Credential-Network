@@ -103,6 +103,23 @@ Outcome:
 
 ---
 
+### 7. Approval-Gated Access (Phase 6 Continuation)
+
+The governance enforcement flow has now been finalized:
+
+1. Pending/rejected accounts can login but are restricted to Verification Center
+2. Registration no longer auto-logs pending accounts
+3. Protected feature APIs require approved status
+4. Super Admin decisions are centralized in Review Workbench
+5. Final approval requires required documents and checklist completion
+
+Outcome:
+1. Pending or rejected users/institutions/verifiers cannot use protected feature APIs until approved
+2. Pending/rejected users can upload documents and track status from Verification Center
+3. Super Admin can perform document review, checklist review, and final decision from one page
+
+---
+
 ## 🧭 Super Admin Workflows Currently Supported
 
 ### A) Daily Dashboard Workflow

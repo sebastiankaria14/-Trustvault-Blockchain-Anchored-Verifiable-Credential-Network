@@ -6,12 +6,13 @@ import {
   declineReVerification,
   getReVerificationStatus
 } from '../controllers/reVerificationController.js';
-import { authenticate } from '../middleware/auth.js';
+import { authenticate, requireApprovedAccount } from '../middleware/auth.js';
 
 const router = Router();
 
 // All routes require authentication
 router.use(authenticate);
+router.use(requireApprovedAccount());
 
 // User endpoints - GET pending re-verification requests
 router.get('/user/re-verification-requests', getUserReVerificationRequests);

@@ -2,8 +2,24 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const ProtectedRoute = ({ children, allowedUserTypes = [] }) => {
-  const { isAuthenticated, userType, loading } = useAuth();
+const getApprovalStatus = (currentUserType, currentUser) => {
+  if (!currentUserType || !currentUser) {
+    return null;
+  }
+
+  if (currentUserType === 'user') {
+    return currentUser.kyc_status || currentUser.kycStatus || null;
+  }
+
+  if (currentUserType === 'institution' || currentUserType === 'verifier') {
+    return currentUser.verification_status || currentUser.verificationStatus || null;
+  }
+
+  return null;
+};
+
+const ProtectedRoute = ({ children, allowedUserTypes = [], allowPending = false }) => {
+  const { isAuthenticated, userType, user, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -34,6 +50,13 @@ const ProtectedRoute = ({ children, allowedUserTypes = [] }) => {
     } else if (userType === 'admin') {
       return <Navigate to="/admin/dashboard" replace />;
     }
+  }
+
+  const approvalStatus = getApprovalStatus(userType, user);
+  const isNonAdmin = userType === 'user' || userType === 'institution' || userType === 'verifier';
+
+  if (isNonAdmin && approvalStatus && approvalStatus !== 'approved' && !allowPending) {
+    return <Navigate to="/verification-center" replace />;
   }
 
   return children;

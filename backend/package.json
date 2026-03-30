@@ -10,6 +10,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate:08": "node scripts/run-migration-08.js",
     "verify:migrate:08": "node scripts/verify-admin-migration.js",
+    "migrate:09": "node scripts/run-migration-09.js",
+    "verify:migrate:09": "node scripts/verify-migration-09.js",
+    "migrate:10": "node scripts/run-migration-10.js",
+    "verify:migrate:10": "node scripts/verify-migration-10.js",
+    "migrate:11": "node scripts/run-migration-11.js",
+    "verify:migrate:11": "node scripts/verify-migration-11.js",
     "contract:compile": "hardhat compile",
     "contract:deploy:mumbai": "hardhat run scripts/deploy-contract.js --network mumbai"
   },
