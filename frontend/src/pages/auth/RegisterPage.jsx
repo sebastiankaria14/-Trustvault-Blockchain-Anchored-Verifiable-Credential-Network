@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Building2, Globe, Shield } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { registerUser, registerInstitution, registerVerifier } from '../../services/api';
-import { useAuth } from '../../context/AuthContext';
 
 const registrationTabs = [
   { key: 'user', label: 'User', icon: Shield },
@@ -63,7 +62,6 @@ const inputClass = 'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
 
   const [activeTab, setActiveTab] = useState('user');
   const [error, setError] = useState('');
@@ -89,7 +87,13 @@ const RegisterPage = () => {
     try {
       const { confirmPassword, ...userData } = userForm;
       const response = await registerUser(userData);
-      if (response.success) { login(response.data.token, response.data.user, 'user'); navigate('/user/dashboard'); }
+      if (response.success) {
+        navigate('/login', {
+          state: {
+            registrationMessage: response.message || 'Registration submitted. Your account is pending Super Admin approval.'
+          }
+        });
+      }
     } catch (err) { setError(err.message || 'Registration failed. Please try again.'); } finally { setLoading(false); }
   };
 
@@ -101,7 +105,13 @@ const RegisterPage = () => {
     try {
       const { confirmPassword, ...institutionData } = institutionForm;
       const response = await registerInstitution(institutionData);
-      if (response.success) { login(response.data.token, response.data.institution, 'institution'); navigate('/institution/dashboard'); }
+      if (response.success) {
+        navigate('/login', {
+          state: {
+            registrationMessage: response.message || 'Registration submitted. Your account is pending Super Admin approval.'
+          }
+        });
+      }
     } catch (err) { setError(err.message || 'Registration failed. Please try again.'); } finally { setLoading(false); }
   };
 
@@ -113,7 +123,13 @@ const RegisterPage = () => {
     try {
       const { confirmPassword, ...verifierData } = verifierForm;
       const response = await registerVerifier(verifierData);
-      if (response.success) { login(response.data.token, response.data.verifier, 'verifier'); navigate('/verifier/dashboard'); }
+      if (response.success) {
+        navigate('/login', {
+          state: {
+            registrationMessage: response.message || 'Registration submitted. Your account is pending Super Admin approval.'
+          }
+        });
+      }
     } catch (err) { setError(err.message || 'Registration failed. Please try again.'); } finally { setLoading(false); }
   };
 

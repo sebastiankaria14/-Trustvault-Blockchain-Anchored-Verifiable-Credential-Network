@@ -5,9 +5,10 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
  */
 const apiRequest = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
+  const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
 
   const headers = {
-    'Content-Type': 'application/json',
+    ...(!isFormData && { 'Content-Type': 'application/json' }),
     ...(token && { Authorization: `Bearer ${token}` }),
     ...options.headers
   };
@@ -76,6 +77,25 @@ export const login = async (email, password, userType = 'user') => {
 export const getCurrentUser = async () => {
   return apiRequest('/auth/me', {
     method: 'GET'
+  });
+};
+
+// ==========================================
+// Verification Center API Functions
+// ==========================================
+
+export const getVerificationCenterStatus = async () => {
+  return apiRequest('/verification-center/status', { method: 'GET' });
+};
+
+export const uploadVerificationDocument = async (documentType, file) => {
+  const formData = new FormData();
+  formData.append('documentType', documentType);
+  formData.append('file', file);
+
+  return apiRequest('/verification-center/documents', {
+    method: 'POST',
+    body: formData
   });
 };
 
@@ -389,6 +409,8 @@ export const getAdminUsers = async (filters = {}) => {
   const params = new URLSearchParams();
   if (filters.search) params.append('search', filters.search);
   if (filters.status) params.append('status', filters.status);
+  if (filters.accountStatus) params.append('accountStatus', filters.accountStatus);
+  if (filters.kycStatus) params.append('kycStatus', filters.kycStatus);
   if (filters.page) params.append('page', filters.page);
   if (filters.limit) params.append('limit', filters.limit);
 
@@ -398,10 +420,20 @@ export const getAdminUsers = async (filters = {}) => {
 /**
  * Block/unblock user account
  */
-export const updateAdminUserStatus = async (userId, isActive) => {
+export const updateAdminUserStatus = async (userId, isActive, reason = '') => {
   return apiRequest(`/admin/users/${userId}/status`, {
     method: 'PATCH',
-    body: JSON.stringify({ isActive })
+    body: JSON.stringify({ isActive, reason })
+  });
+};
+
+/**
+ * Approve/reject/reset user KYC
+ */
+export const approveAdminUserKyc = async (userId, action = 'approve', reason = '') => {
+  return apiRequest(`/admin/user/${userId}/approve`, {
+    method: 'PUT',
+    body: JSON.stringify({ action, reason })
   });
 };
 
@@ -421,10 +453,10 @@ export const getAdminInstitutions = async (filters = {}) => {
 /**
  * Approve/reject/suspend institution
  */
-export const approveAdminInstitution = async (institutionId, action = 'approve') => {
+export const approveAdminInstitution = async (institutionId, action = 'approve', reason = '') => {
   return apiRequest(`/admin/institution/${institutionId}/approve`, {
     method: 'PUT',
-    body: JSON.stringify({ action })
+    body: JSON.stringify({ action, reason })
   });
 };
 
@@ -444,10 +476,74 @@ export const getAdminVerifiers = async (filters = {}) => {
 /**
  * Approve/reject/suspend verifier
  */
-export const approveAdminVerifier = async (verifierId, action = 'approve', rateLimit) => {
+export const approveAdminVerifier = async (verifierId, action = 'approve', reason = '', rateLimit) => {
   return apiRequest(`/admin/verifier/${verifierId}/approve`, {
     method: 'PUT',
-    body: JSON.stringify({ action, ...(Number.isInteger(rateLimit) ? { rateLimit } : {}) })
+    body: JSON.stringify({
+      action,
+      reason,
+      ...(Number.isInteger(rateLimit) ? { rateLimit } : {})
+    })
+  });
+};
+
+/**
+ * Get admin approval logs
+ */
+export const getAdminApprovalLogs = async (filters = {}) => {
+  const params = new URLSearchParams();
+  if (filters.entityType) params.append('entityType', filters.entityType);
+  if (filters.action) params.append('action', filters.action);
+  if (filters.search) params.append('search', filters.search);
+  if (filters.page) params.append('page', filters.page);
+  if (filters.limit) params.append('limit', filters.limit);
+
+  return apiRequest(`/admin/approval-logs?${params.toString()}`, { method: 'GET' });
+};
+
+/**
+ * Get approval checklist for one entity
+ */
+export const getAdminApprovalChecklist = async (entityType, entityId) => {
+  return apiRequest(`/admin/checklist/${entityType}/${entityId}`, { method: 'GET' });
+};
+
+/**
+ * Update one approval checklist item
+ */
+export const updateAdminApprovalChecklistItem = async (
+  entityType,
+  entityId,
+  checklistKey,
+  status,
+  notes = ''
+) => {
+  return apiRequest(`/admin/checklist/${entityType}/${entityId}/${checklistKey}`, {
+    method: 'PUT',
+    body: JSON.stringify({ status, notes })
+  });
+};
+
+/**
+ * Get one centralized KYC review case
+ */
+export const getAdminReviewCase = async (entityType, entityId) => {
+  return apiRequest(`/admin/review/${entityType}/${entityId}`, { method: 'GET' });
+};
+
+/**
+ * Update one verification document decision from review page
+ */
+export const updateAdminReviewDocumentStatus = async (
+  entityType,
+  entityId,
+  documentId,
+  status,
+  rejectionReason = ''
+) => {
+  return apiRequest(`/admin/review/${entityType}/${entityId}/documents/${documentId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status, rejectionReason })
   });
 };
 
@@ -482,6 +578,8 @@ export default {
   login,
   logout,
   getCurrentUser,
+  getVerificationCenterStatus,
+  uploadVerificationDocument,
   isAuthenticated,
   getToken,
   storeAuthData,
@@ -517,10 +615,16 @@ export default {
   getAdminStats,
   getAdminUsers,
   updateAdminUserStatus,
+  approveAdminUserKyc,
   getAdminInstitutions,
   approveAdminInstitution,
   getAdminVerifiers,
   approveAdminVerifier,
+  getAdminApprovalLogs,
+  getAdminApprovalChecklist,
+  updateAdminApprovalChecklistItem,
+  getAdminReviewCase,
+  updateAdminReviewDocumentStatus,
   getAdminBlockchainLogs,
   getAdminSettings,
   updateAdminSetting

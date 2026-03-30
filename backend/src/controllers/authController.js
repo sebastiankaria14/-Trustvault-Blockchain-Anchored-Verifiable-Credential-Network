@@ -35,12 +35,9 @@ export const registerUser = async (req, res) => {
 
     const user = result.rows[0];
 
-    // Generate JWT token
-    const token = generateAuthToken(user, 'user');
-
     res.status(201).json({
       success: true,
-      message: 'User registered successfully',
+      message: 'User registered successfully. Login and upload verification documents to start KYC review.',
       data: {
         user: {
           id: user.id,
@@ -51,8 +48,7 @@ export const registerUser = async (req, res) => {
           dateOfBirth: user.date_of_birth,
           kycStatus: user.kyc_status,
           createdAt: user.created_at
-        },
-        token
+        }
       }
     });
   } catch (error) {
@@ -119,12 +115,9 @@ export const registerInstitution = async (req, res) => {
 
     const institution = result.rows[0];
 
-    // Generate JWT token
-    const token = generateAuthToken(institution, 'institution');
-
     res.status(201).json({
       success: true,
-      message: 'Institution registered successfully. Pending admin approval.',
+      message: 'Institution registered successfully. Login and upload verification documents for review.',
       data: {
         institution: {
           id: institution.id,
@@ -136,8 +129,7 @@ export const registerInstitution = async (req, res) => {
           website: institution.website,
           verificationStatus: institution.verification_status,
           createdAt: institution.created_at
-        },
-        token
+        }
       }
     });
   } catch (error) {
@@ -203,12 +195,9 @@ export const registerVerifier = async (req, res) => {
 
     const verifier = result.rows[0];
 
-    // Generate JWT token
-    const token = generateAuthToken(verifier, 'verifier');
-
     res.status(201).json({
       success: true,
-      message: 'Verifier registered successfully. Pending admin approval.',
+      message: 'Verifier registered successfully. Login and upload verification documents for review.',
       data: {
         verifier: {
           id: verifier.id,
@@ -219,8 +208,7 @@ export const registerVerifier = async (req, res) => {
           website: verifier.website,
           verificationStatus: verifier.verification_status,
           createdAt: verifier.created_at
-        },
-        token
+        }
       }
     });
   } catch (error) {
@@ -304,6 +292,13 @@ export const login = async (req, res) => {
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password'
+      });
+    }
+
+    if ((type === 'institution' || type === 'verifier') && user.verification_status === 'suspended') {
+      return res.status(403).json({
+        success: false,
+        message: 'Your account is suspended. Please contact support.'
       });
     }
 

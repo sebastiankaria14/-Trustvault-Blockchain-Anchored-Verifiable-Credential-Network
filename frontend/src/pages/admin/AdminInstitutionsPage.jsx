@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import AdminLayout from './AdminLayout';
-import { getAdminInstitutions, approveAdminInstitution } from '../../services/api';
+import { getAdminInstitutions } from '../../services/api';
 
 const AdminInstitutionsPage = () => {
   const [institutions, setInstitutions] = useState([]);
@@ -30,17 +31,8 @@ const AdminInstitutionsPage = () => {
     fetchInstitutions();
   };
 
-  const handleAction = async (institutionId, action) => {
-    try {
-      await approveAdminInstitution(institutionId, action);
-      await fetchInstitutions();
-    } catch (err) {
-      setError(err.message || `Failed to ${action} institution`);
-    }
-  };
-
   return (
-    <AdminLayout title="Institution Management" subtitle="Approve, reject, or suspend issuing institutions">
+    <AdminLayout title="Institution Management" subtitle="Move each institution into the dedicated review screen for all approval decisions">
       {error ? (
         <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
       ) : null}
@@ -97,24 +89,12 @@ const AdminInstitutionsPage = () => {
                     <td className="px-4 py-3">{institution.api_enabled ? 'Enabled' : 'Disabled'}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-2">
-                        <button
-                          onClick={() => handleAction(institution.id, 'approve')}
-                          className="rounded-lg bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-200"
+                        <Link
+                          to={`/admin/review-workbench?entityType=institution&entityId=${institution.id}`}
+                          className="rounded-lg bg-indigo-100 px-3 py-1.5 text-xs font-semibold text-indigo-700 hover:bg-indigo-200"
                         >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => handleAction(institution.id, 'reject')}
-                          className="rounded-lg bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700 hover:bg-amber-200"
-                        >
-                          Reject
-                        </button>
-                        <button
-                          onClick={() => handleAction(institution.id, 'suspend')}
-                          className="rounded-lg bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-700 hover:bg-red-200"
-                        >
-                          Suspend
-                        </button>
+                          Go To Review
+                        </Link>
                       </div>
                     </td>
                   </tr>

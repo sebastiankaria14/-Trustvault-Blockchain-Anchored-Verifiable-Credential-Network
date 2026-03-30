@@ -3,12 +3,16 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Security Middleware
 app.use(helmet());
@@ -59,6 +63,7 @@ app.use('/api/', limiter);
 // Body Parser Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use('/uploads', express.static(path.resolve(__dirname, '../uploads')));
 
 // Health Check Route
 app.get('/health', (req, res) => {
@@ -94,6 +99,7 @@ import verifierRoutes from './routes/verifierRoutes.js';
 import reVerificationRoutes from './routes/reVerificationRoutes.js';
 import consentRoutes from './routes/consentRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import verificationCenterRoutes from './routes/verificationCenterRoutes.js';
 
 // Use routes
 app.use('/api/auth', authRoutes);
@@ -103,6 +109,7 @@ app.use('/api/verifier', verifierRoutes);
 app.use('/api/re-verification', reVerificationRoutes);
 app.use('/api/consent', consentRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/verification-center', verificationCenterRoutes);
 
 // 404 Handler
 app.use((req, res) => {

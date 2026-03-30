@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowRight, Building2, Globe, Shield, Crown } from 'lucide-react';
 import { login as loginAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
@@ -13,13 +13,21 @@ const roleOptions = [
 ];
 
 const LoginPage = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const [userType, setUserType] = useState('user');
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const [info, setInfo] = useState(location.state?.registrationMessage || '');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (location.state?.registrationMessage) {
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.pathname, location.state, navigate]);
 
   const handleChange = (e) => {
     setFormData({
@@ -31,6 +39,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setInfo('');
     setError('');
     setLoading(true);
 
@@ -38,6 +47,17 @@ const LoginPage = () => {
       const response = await loginAPI(formData.email, formData.password, userType);
       if (response.success) {
         login(response.data.token, response.data.user, userType);
+        const userData = response.data.user || {};
+        const approvalStatus =
+          userType === 'user'
+            ? (userData.kycStatus || userData.kyc_status)
+            : (userData.verificationStatus || userData.verification_status);
+
+        if (userType !== 'admin' && approvalStatus && approvalStatus !== 'approved') {
+          navigate('/verification-center');
+          return;
+        }
+
         if (userType === 'user') navigate('/user/dashboard');
         if (userType === 'institution') navigate('/institution/dashboard');
         if (userType === 'verifier') navigate('/verifier/dashboard');
@@ -85,6 +105,12 @@ const LoginPage = () => {
           </div>
 
           <AnimatePresence mode="wait">
+            {info ? (
+              <motion.div key="login-info" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                {info}
+              </motion.div>
+            ) : null}
+
             {error ? (
               <motion.div key="login-error" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
                 {error}
